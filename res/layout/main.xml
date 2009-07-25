@@ -1,12 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    />
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="@string/title" />
+
+	<TableLayout android:id="@+id/TableLayout01"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:stretchColumns="1">
+		<TableRow android:id="@+id/TableRow01" android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/form_id" />
+
+			<EditText android:text="" android:id="@+id/form_id"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_marginLeft="10px" android:layout_marginRight="10px"></EditText>
+		</TableRow>
+		<TableRow android:id="@+id/TableRow02" android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/form_password" />
+			<EditText android:text="" android:id="@+id/fomr_password"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:layout_marginLeft="10px" android:layout_marginRight="10px" />
+		</TableRow>
+	</TableLayout>
+
+	<LinearLayout android:id="@+id/LinearLayout01"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_marginTop="20px" android:layout_gravity="center">
+		<Button android:text="@string/button_ok" android:id="@+id/button_ok"
+			android:layout_width="120px" android:layout_height="wrap_content"
+			android:layout_marginRight="3px" />
+		<Button android:text="@string/button_cancel" android:id="@+id/button_ok"
+			android:layout_width="120px" android:layout_height="wrap_content"
+			android:layout_marginLeft="3px" />
+	</LinearLayout>
 </LinearLayout>

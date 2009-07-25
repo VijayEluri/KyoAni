@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, KyouAni!</string>
-    <string name="app_name">KyouAni</string>
+	<string name="title">アニメワンIDの登録/変更</string>
+	<string name="app_name">今日アニ!!</string>
+	<string name="form_id">ID</string>
+	<string name="form_password">パスワード</string>
+	<string name="button_ok">変更</string>
+	<string name="button_cancel">キャンセル</string>
 </resources>
