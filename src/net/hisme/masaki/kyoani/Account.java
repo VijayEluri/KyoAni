@@ -32,10 +32,6 @@ public class Account {
 		return this.password;
 	}
 
-	private boolean test() {
-		return false;
-	}
-
 	private void save() {
 		try {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(context
