@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="title">アニメワンIDの登録/変更</string>
-	<string name="form_description">予定を取得するためにアニメワンのアカウントを登録してください
-	</string>
 	<string name="app_name">今日アニ!!</string>
-	<string name="widget_name">今日アニ</string>
-	<string name="form_id">メールアドレス</string>
-	<string name="form_password">パスワード</string>
-	<string name="button_ok">変更</string>
-	<string name="button_cancel">キャンセル</string>
+	<string name="form_title">アニメワンIDの登録/変更</string>
+	<string name="form_description">アニメワンのIDを使ってアクセスします。</string>
+	<string name="form_account_title">ACCOUNT</string>
+	<string name="form_account_description">アニメワンに登録したメールアドレス</string>
+	<string name="form_password_title">PASSWORD</string>
 </resources>
