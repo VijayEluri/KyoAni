@@ -3,8 +3,11 @@
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="@string/title" />
-
+		android:layout_height="wrap_content" android:text="@string/title"
+		android:textSize="20px" />
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="@string/form_description"
+		android:layout_margin="5px" />
 	<TableLayout android:id="@+id/TableLayout01"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:stretchColumns="1">
@@ -25,7 +28,7 @@
 			<EditText android:text="" android:id="@+id/form_password"
 				android:layout_width="wrap_content" android:layout_height="wrap_content"
 				android:layout_marginLeft="10px" android:layout_marginRight="10px"
-				android:maxLines="1"  android:password="true"/>
+				android:maxLines="1" android:password="true" />
 		</TableRow>
 	</TableLayout>
 
@@ -39,4 +42,6 @@
 			android:layout_width="120px" android:layout_height="wrap_content"
 			android:layout_marginLeft="3px" />
 	</LinearLayout>
+	<TextView android:text="" android:id="@+id/result_area"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
 </LinearLayout>

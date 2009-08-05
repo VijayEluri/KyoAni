@@ -21,7 +21,6 @@ public class Account {
 	public void setAccount(String user, String password) {
 		this.user_id = user;
 		this.password = password;
-		save();
 	}
 
 	public String getUser() {
@@ -32,7 +31,7 @@ public class Account {
 		return this.password;
 	}
 
-	private void save() {
+	public void save() {
 		try {
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(context
 					.openFileOutput(ACCOUNT_FILE, Context.MODE_PRIVATE)));
@@ -51,7 +50,7 @@ public class Account {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(context
 					.openFileInput(ACCOUNT_FILE)));
-			
+
 			this.user_id = reader.readLine();
 			this.password = reader.readLine();
 		} catch (java.io.FileNotFoundException e) {
