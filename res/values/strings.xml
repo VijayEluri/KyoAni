@@ -6,4 +6,7 @@
 	<string name="form_account_title">ACCOUNT</string>
 	<string name="form_account_description">アニメワンに登録したメールアドレス</string>
 	<string name="form_password_title">PASSWORD</string>
+	<string name="login_failure">ログインに失敗しました。アカウントを再設定してください。
+	</string>
+	<string name="reload_button">Reload</string>
 </resources>
