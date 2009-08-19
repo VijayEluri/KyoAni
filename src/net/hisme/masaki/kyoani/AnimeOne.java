@@ -32,7 +32,8 @@ public class AnimeOne {
 		this.http = new DefaultHttpClient();
 	}
 
-	public void mypage() {
+	public ArrayList<String[]> mypage() {
+		ArrayList<String[]> result = new ArrayList<String[]>();
 		try {
 			HttpGet get = new HttpGet(MYPAGE_URI);
 			HttpResponse response = http.execute(get);
@@ -68,17 +69,19 @@ public class AnimeOne {
 						if (tmp.item(j).getNodeName().compareTo("img") == 0
 								&& tmp.item(j).getAttributes().getNamedItem("alt")
 										.getNodeValue().compareTo("ネット配信") != 0) {
+							String[] entry = new String[3];
 							// String schedule = nodeToString(td_list.item(i * TDNUMS + 0));
 							values = nodeMapString(td_list.item(i * TDNUMS + 0));
 							if (values.size() == 1) {
 								Matcher m = Pattern.compile("([0-9:]+) +(.+)").matcher(
 										values.get(0));
 								m.find();
-								String time = m.group(1);
-								String channel = m.group(2);
+								entry[1] = m.group(1);
+								entry[2] = m.group(2);
 							}
 							values = nodeMapString(td_list.item(i * TDNUMS + 2));
-							String title = values.get(0);
+							entry[0] = values.get(0);
+							result.add(entry);
 							break;
 						}
 					}
@@ -93,6 +96,7 @@ public class AnimeOne {
 		} catch (org.xml.sax.SAXException e) {
 			log(e.toString());
 		}
+		return result;
 	}
 
 	public void logout() {
