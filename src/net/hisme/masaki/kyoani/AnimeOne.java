@@ -40,7 +40,13 @@ public class AnimeOne {
 	}
 
 	public ArrayList<String[]> mypage() {
+		return mypage(3);
+	}
+
+	public ArrayList<String[]> mypage(int retry_count) {
+		log("MyPage Start");
 		ArrayList<String[]> result = new ArrayList<String[]>();
+		boolean retry = true;
 		try {
 			HttpGet get = new HttpGet(MYPAGE_URI);
 			HttpResponse response = http.execute(get);
