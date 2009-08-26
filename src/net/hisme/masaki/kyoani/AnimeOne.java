@@ -24,7 +24,7 @@ public class AnimeOne {
 	Account account = null;
 	DefaultHttpClient http;
 	private static final String MYPAGE_URI = "http://anime.biglobe.ne.jp/program/myprogram";
-	private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login";
+	private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login/index";
 	private static final String LOGIN_URI = "https://anime.biglobe.ne.jp/login/login_ajax";
 	private static final String LOGOUT_URI = "https://anime.biglobe.ne.jp/login/logout_ajax";
 	private static final int BUFFSIZE = 1024;
@@ -88,7 +88,6 @@ public class AnimeOne {
 								&& tmp.item(j).getAttributes().getNamedItem("alt")
 										.getNodeValue().compareTo("ネット配信") != 0) {
 							String[] entry = new String[3];
-							// String schedule = nodeToString(td_list.item(i * TDNUMS + 0));
 							values = nodeMapString(td_list.item(i * TDNUMS + 0));
 							if (values.size() == 1) {
 								Matcher m = Pattern.compile("([0-9:]+) +(.+)").matcher(
@@ -210,6 +209,6 @@ public class AnimeOne {
 	}
 
 	private void log(String str) {
-		Log.d("AnimeOne", str);
+		Log.d("KyoAni", "[AnimeOne] " + str);
 	}
 }
