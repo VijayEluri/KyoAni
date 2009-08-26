@@ -7,6 +7,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import java.lang.StringBuffer;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
@@ -29,7 +31,12 @@ public class AnimeOne {
 
 	public AnimeOne(Account account) {
 		this.account = account;
-		this.http = new DefaultHttpClient();
+		BasicHttpParams params = new BasicHttpParams();
+		int timeout = 10000;
+		HttpConnectionParams.setConnectionTimeout(params, timeout);
+		HttpConnectionParams.setSoTimeout(params, timeout);
+		
+		this.http = new DefaultHttpClient(params);
 	}
 
 	public ArrayList<String[]> mypage() {
@@ -48,13 +55,18 @@ public class AnimeOne {
 			while ((read_size = reader.read(buf, 0, BUFFSIZE)) != -1) {
 				responseText = responseText.append(buf, 0, read_size);
 			}
+			get.abort();
+			log("GET MyPage");
+
 			Pattern pattern = Pattern
 					.compile(
 							"(<div class=\"w220Box program program2 marginLeft10px\">.*</div>).*<div class=\"w220Box program marginLeft10px\">",
 							Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE
 									| Pattern.UNIX_LINES);
 			Matcher match = pattern.matcher(new String(responseText));
+			log("Parse MyPage");
 			if (match.find()) {
+				retry = false;
 				NodeList tmp;
 				String body = match.group(1);
 				DocumentBuilder builder = DocumentBuilderFactory.newInstance()
@@ -96,30 +108,39 @@ public class AnimeOne {
 		} catch (org.xml.sax.SAXException e) {
 			log(e.toString());
 		}
+		if (retry && retry_count > 0) {
+			log("Retry MyPage");
+			return mypage(retry_count - 1);
+		}
+		log("MyPage Finish");
 		return result;
 	}
 
 	public void logout() {
+		log("Logout Start");
 		try {
 			HttpPost post = new HttpPost(LOGOUT_URI);
 			http.execute(post);
-			for (Cookie cookie : http.getCookieStore().getCookies()) {
-				log(cookie.getName() + "=" + cookie.getValue());
-			}
+			post.abort();
 		} catch (Exception e) {
 			log(e.toString());
 		}
+		log("Logout Finish");
 	}
 
 	public boolean login() {
+		log("Login Start");
 		boolean result = false;
-		logout();
+		// logout();
 		try {
 			HttpGet get = new HttpGet(LOGIN_FORM);
-			http.execute(get);
+			HttpResponse res = http.execute(get);
+			get.abort();
+			log("GET LoginForm");
 
 			String user_id = account.getUser();
 			String password = account.getPassword();
+
 			HttpPost post = new HttpPost(LOGIN_URI);
 			post.addHeader("Referer", LOGIN_FORM);
 			post.addHeader("X-Requested-With", "XMLHttpRequest");
@@ -128,19 +149,24 @@ public class AnimeOne {
 					"application/x-www-form-urlencoded; charset=UTF-8");
 			post.setEntity(new StringEntity("mail=" + user_id + "&password="
 					+ password));
-			http.execute(post);
 
+			http.execute(post);
 			for (Cookie cookie : http.getCookieStore().getCookies()) {
 				if (cookie.getName().equals("user[id_nick]")) {
 					result = true;
 					break;
 				}
 			}
+			post.abort();
+			log("POST Login Form");
 		} catch (org.apache.http.client.ClientProtocolException e) {
 			log(e.toString());
 		} catch (java.io.IOException e) {
 			log(e.toString());
+		} catch (Exception e) {
+			log(e.toString());
 		}
+		log("Login Finish");
 		return result;
 	}
 
