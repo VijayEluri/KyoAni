@@ -24,6 +24,8 @@ public class KyoAniWidget extends AppWidgetProvider {
 				.getDefaultSharedPreferences(context);
 		RemoteViews views = new RemoteViews(context.getPackageName(),
 				R.layout.widget_layout);
+		views.setTextViewText(R.id.next_log, "updating...");
+
 		String account = pref.getString("account", "");
 		String password = pref.getString("password", "");
 		AnimeOne anime_one = new AnimeOne(new Account(account, password));
@@ -45,6 +47,6 @@ public class KyoAniWidget extends AppWidgetProvider {
 	}
 
 	private static void log(String str) {
-		Log.d("Widget", str);
+		Log.d("KyoAni", "[KyoAniWidget] " + str);
 	}
 }
