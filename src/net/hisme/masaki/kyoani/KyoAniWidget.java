@@ -10,6 +10,9 @@ import android.content.ComponentName;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class KyoAniWidget extends AppWidgetProvider {
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -31,11 +34,24 @@ public class KyoAniWidget extends AppWidgetProvider {
 		AnimeOne anime_one = new AnimeOne(new Account(account, password));
 
 		if (anime_one.login()) {
+			GregorianCalendar now = new GregorianCalendar();
+			GregorianCalendar today = new GregorianCalendar(now.get(Calendar.YEAR),
+					now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), now
+							.get(Calendar.HOUR) - 6, 0, 0);
 			ArrayList<String[]> schedules = anime_one.mypage();
-			String schedule_str = "";
+			String schedule_str = "今日の予定は終了\nおやすみなさい...";
 			for (String[] schedule : schedules) {
-				schedule_str += schedule[1] + " " + schedule[2] + "\n" + schedule[0]
-						+ "\n";
+				String[] times = schedule[1].split(":");
+				GregorianCalendar start = new GregorianCalendar(today
+						.get(Calendar.YEAR), today.get(Calendar.MONTH), today
+						.get(Calendar.DAY_OF_MONTH), Integer.parseInt(times[0]), Integer
+						.parseInt(times[1]), 0);
+				
+				if (now.compareTo(start) == -1) {
+					schedule_str = schedule[1] + " " + schedule[2] + "\n" + schedule[0]
+							+ "\n";
+					break;
+				}
 			}
 			views.setTextViewText(R.id.next_log, schedule_str);
 		} else {
@@ -44,6 +60,14 @@ public class KyoAniWidget extends AppWidgetProvider {
 		}
 		manager.updateAppWidget(new ComponentName(context, KyoAniWidget.class),
 				views);
+	}
+
+	private static void log(boolean b) {
+		log(b ? "true" : "false");
+	}
+
+	private static void log(int n) {
+		log(new Integer(n).toString());
 	}
 
 	private static void log(String str) {
