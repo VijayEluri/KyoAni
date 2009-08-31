@@ -2,6 +2,7 @@ package net.hisme.masaki.kyoani;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
@@ -28,5 +29,13 @@ public class KyoAni extends Activity {
 				startActivity(intent);
 			}
 		});
+	}
+
+	private void log(int n) {
+		log(new Integer(n).toString());
+	}
+
+	private void log(String str) {
+		Log.d("KyoAni", "[KyoAniWidget] " + str);
 	}
 }

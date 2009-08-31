@@ -35,7 +35,7 @@ public class AnimeOne {
 		int timeout = 10000;
 		HttpConnectionParams.setConnectionTimeout(params, timeout);
 		HttpConnectionParams.setSoTimeout(params, timeout);
-		
+
 		this.http = new DefaultHttpClient(params);
 	}
 
@@ -104,6 +104,7 @@ public class AnimeOne {
 					}
 				}
 			}
+			log("Parse Finish: " + result.size() + " items found.");
 		} catch (org.apache.http.client.ClientProtocolException e) {
 			log(e.toString());
 		} catch (java.io.IOException e) {
