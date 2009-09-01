@@ -8,6 +8,7 @@
 	<string name="form_password_title">PASSWORD</string>
 	<string name="login_failure">ログインに失敗しました。アカウントを再設定してください。
 	</string>
+	<string name="no_schedule">今日の予定は終了\nおやすみなさい...</string>
 	<string name="help_description">
 		｢今日アニ」はアニメのスケジュールをウィジェットとして表示するアプリです。\n
 		以下の手順でセットアップしてください。
