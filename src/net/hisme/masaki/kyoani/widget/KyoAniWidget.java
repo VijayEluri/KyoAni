@@ -1,8 +1,10 @@
 package net.hisme.masaki.kyoani.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetProvider;
 import android.appwidget.AppWidgetManager;
 import android.widget.RemoteViews;
+import android.content.Intent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.ComponentName;
@@ -27,14 +29,24 @@ public class KyoAniWidget extends AppWidgetProvider {
 		updateAppWidget(context);
 	}
 
+	public void onReceive(Context context, Intent intent) {
+		super.onReceive(context, intent);
+		if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+			updateAppWidget(context);
+		}
+	}
+
 	public static void updateAppWidget(Context _context) {
 		context = _context;
 		manager = AppWidgetManager.getInstance(context);
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(context);
 		views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-		views.setTextViewText(R.id.next_log, "updating...");
 
+		Intent reload_intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
+				reload_intent, 0);
+		views.setOnClickPendingIntent(R.id.reload_button, pendingIntent);
 		final String account = pref.getString("account", "");
 		final String password = pref.getString("password", "");
 
@@ -45,12 +57,11 @@ public class KyoAniWidget extends AppWidgetProvider {
 				int login_result = anime_one.login();
 				if (login_result == AnimeOne.LOGIN_OK) {
 					GregorianCalendar now = new GregorianCalendar();
-					log(now.getTime().toString());
+
 					GregorianCalendar today = new GregorianCalendar(now
 							.get(Calendar.YEAR), now.get(Calendar.MONTH), now
 							.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY) - 6,
 							0, 0);
-					log(today.getTime().toString());
 					ArrayList<String[]> schedules = anime_one.mypage();
 					schedule_str = context.getText(R.string.no_schedule).toString();
 					for (String[] schedule : schedules) {
@@ -59,7 +70,7 @@ public class KyoAniWidget extends AppWidgetProvider {
 								.get(Calendar.YEAR), today.get(Calendar.MONTH), today
 								.get(Calendar.DAY_OF_MONTH), Integer.parseInt(times[0]),
 								Integer.parseInt(times[1]), 0);
-						log(start.getTime().toString());
+
 						if (now.compareTo(start) == -1) {
 							schedule_str = schedule[1] + " " + schedule[2] + "\n"
 									+ schedule[0] + "\n";
@@ -71,9 +82,9 @@ public class KyoAniWidget extends AppWidgetProvider {
 					views.setTextViewText(R.id.next_log, context
 							.getText(R.string.login_failure));
 				}
+				log("Update Widget View");
 				manager.updateAppWidget(new ComponentName(context, KyoAniWidget.class),
 						views);
-				log(schedule_str);
 			}
 		});
 		log("Thread Start");
