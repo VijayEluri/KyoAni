@@ -29,6 +29,10 @@ public class AnimeOne {
 	private static final String LOGOUT_URI = "https://anime.biglobe.ne.jp/login/logout_ajax";
 	private static final int BUFFSIZE = 1024;
 
+	public static final int LOGIN_OK = 0;
+	public static final int LOGIN_NG = 1;
+	public static final int NETWORK_ERROR = 2;
+
 	public AnimeOne(Account account) {
 		this.account = account;
 		BasicHttpParams params = new BasicHttpParams();
@@ -134,10 +138,9 @@ public class AnimeOne {
 		log("Logout Finish");
 	}
 
-	public boolean login() {
+	public int login() {
 		log("Login Start");
-		boolean result = false;
-		// logout();
+		int result;
 		try {
 			HttpGet get = new HttpGet(LOGIN_FORM);
 			HttpResponse res = http.execute(get);
@@ -147,6 +150,7 @@ public class AnimeOne {
 			String user_id = account.getUser();
 			String password = account.getPassword();
 
+			result = LOGIN_NG;
 			HttpPost post = new HttpPost(LOGIN_URI);
 			post.addHeader("Referer", LOGIN_FORM);
 			post.addHeader("X-Requested-With", "XMLHttpRequest");
@@ -159,18 +163,15 @@ public class AnimeOne {
 			http.execute(post);
 			for (Cookie cookie : http.getCookieStore().getCookies()) {
 				if (cookie.getName().equals("user[id_nick]")) {
-					result = true;
+					result = LOGIN_OK;
 					break;
 				}
 			}
 			post.abort();
 			log("POST Login Form");
-		} catch (org.apache.http.client.ClientProtocolException e) {
-			log(e.toString());
-		} catch (java.io.IOException e) {
-			log(e.toString());
 		} catch (Exception e) {
 			log(e.toString());
+			result = NETWORK_ERROR;
 		}
 		log("Login Finish");
 		return result;

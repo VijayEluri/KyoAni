@@ -42,7 +42,8 @@ public class KyoAniWidget extends AppWidgetProvider {
 			public void run() {
 				AnimeOne anime_one = new AnimeOne(new Account(account, password));
 				String schedule_str = "ログインできませんでした";
-				if (anime_one.login()) {
+				int login_result = anime_one.login();
+				if (login_result == AnimeOne.LOGIN_OK) {
 					GregorianCalendar now = new GregorianCalendar();
 					log(now.getTime().toString());
 					GregorianCalendar today = new GregorianCalendar(now
@@ -51,7 +52,7 @@ public class KyoAniWidget extends AppWidgetProvider {
 							0, 0);
 					log(today.getTime().toString());
 					ArrayList<String[]> schedules = anime_one.mypage();
-					schedule_str = "今日の予定は終了\nおやすみなさい...";
+					schedule_str = context.getText(R.string.no_schedule).toString();
 					for (String[] schedule : schedules) {
 						String[] times = schedule[1].split(":");
 						GregorianCalendar start = new GregorianCalendar(today
@@ -66,7 +67,7 @@ public class KyoAniWidget extends AppWidgetProvider {
 						}
 					}
 					views.setTextViewText(R.id.next_log, schedule_str);
-				} else {
+				} else if (login_result == AnimeOne.LOGIN_NG) {
 					views.setTextViewText(R.id.next_log, context
 							.getText(R.string.login_failure));
 				}
