@@ -27,18 +27,25 @@ public class KyoAniWidget extends AppWidgetProvider {
 			int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
 		updateAppWidget(context);
+		log("CallUpdate from onUpdate");
 	}
 
 	public void onReceive(Context context, Intent intent) {
 		super.onReceive(context, intent);
-		if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-			updateAppWidget(context);
-		}
+		Log.d("KyoAni", intent.toString());
+		// if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE))
+		// {
+		// updateAppWidget(context);
+		// log("CallUpdate from onReceive");
+		// } else {
+		// super.onReceive(context, intent);
+		// }
 	}
 
 	public static void updateAppWidget(Context _context) {
 		context = _context;
 		manager = AppWidgetManager.getInstance(context);
+
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(context);
 		views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
@@ -72,7 +79,7 @@ public class KyoAniWidget extends AppWidgetProvider {
 								Integer.parseInt(times[1]), 0);
 
 						if (now.compareTo(start) == -1) {
-							schedule_str = schedule[1] + " " + schedule[2] + "\n"
+							schedule_str = schedule[1] + "\n" + schedule[2] + "\n"
 									+ schedule[0] + "\n";
 							break;
 						}
