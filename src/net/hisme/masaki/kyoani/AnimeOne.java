@@ -79,6 +79,7 @@ public class AnimeOne {
 				retry = false;
 				NodeList tmp;
 				String body = match.group(1);
+				body = body.replace("&","&amp;");
 				DocumentBuilder builder = DocumentBuilderFactory.newInstance()
 						.newDocumentBuilder();
 				Document doc = builder.parse(new InputSource(new StringReader(body)));
@@ -116,7 +117,8 @@ public class AnimeOne {
 		} catch (ParserConfigurationException e) {
 			log(e.toString());
 		} catch (org.xml.sax.SAXException e) {
-			log(e.toString());
+			org.xml.sax.SAXParseException ex = (org.xml.sax.SAXParseException) e;
+			log("row:" + ex.getLineNumber() + "   col: " + ex.getColumnNumber());
 		}
 		if (retry && retry_count > 0) {
 			log("Retry MyPage");
