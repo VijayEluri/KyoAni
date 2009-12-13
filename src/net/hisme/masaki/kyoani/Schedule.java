@@ -8,17 +8,18 @@ import java.util.GregorianCalendar;
 import android.content.Context;
 import android.util.Log;
 
-public class Schedule {
+public class Schedule implements Serializable {
+	public static String LIST_FILE = "list.obj";
 	private String channel;
 	private String name;
 	private GregorianCalendar start;
 
 	public Schedule(String channel, String name, String start) {
 		GregorianCalendar now = new GregorianCalendar();
-
 		GregorianCalendar today = new GregorianCalendar(now.get(Calendar.YEAR), now
 				.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), now
 				.get(Calendar.HOUR_OF_DAY) - 6, 0, 0);
+
 		String[] times = start.split(":");
 		GregorianCalendar _start = new GregorianCalendar(today.get(Calendar.YEAR),
 				today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), Integer
@@ -55,17 +56,14 @@ public class Schedule {
 		return String.format("%02d:%02d", h, m);
 	}
 
-	public static File getFile(Context context) {
-		return context.getFileStreamPath("today_list");
-	}
-
 	public static boolean saveSchedules(Context context,
 			ArrayList<Schedule> schedules) {
 		boolean ret = false;
 		try {
-			ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(
-					Schedule.getFile(context)));
+			ObjectOutputStream writer = new ObjectOutputStream(context
+					.openFileOutput(LIST_FILE, 0));
 			writer.writeObject(schedules);
+			writer.close();
 			ret = true;
 		} catch (FileNotFoundException e) {
 			log("FileNotFound in save");
@@ -78,9 +76,10 @@ public class Schedule {
 	public static ArrayList<Schedule> loadSchedules(Context context) {
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 		try {
-			ObjectInputStream reader = new ObjectInputStream(new FileInputStream(
-					Schedule.getFile(context)));
+			ObjectInputStream reader = new ObjectInputStream(context
+					.openFileInput(LIST_FILE));
 			schedules = (ArrayList<Schedule>) reader.readObject();
+			reader.close();
 		} catch (FileNotFoundException e) {
 			log("FileNotFound in load");
 		} catch (ClassNotFoundException e) {
@@ -96,7 +95,7 @@ public class Schedule {
 	}
 
 	private static void log(String str) {
-		Log.d("KyoAni", "[ScheduleListActivity] " + str);
+		Log.d("KyoAni", "[Schedule] " + str);
 	}
 
 	public String toString() {

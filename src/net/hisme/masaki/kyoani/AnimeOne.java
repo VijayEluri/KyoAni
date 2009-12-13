@@ -10,15 +10,22 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import java.lang.StringBuffer;
+import java.io.OutputStreamWriter;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.BufferedReader;
 import java.io.StringReader;
+import java.io.BufferedReader;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import java.util.regex.*;
 import java.util.ArrayList;
 import android.util.Log;
+import android.content.Context;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 
 public class AnimeOne {
 	Account account = null;
@@ -28,6 +35,8 @@ public class AnimeOne {
 	private static final String LOGIN_URI = "https://anime.biglobe.ne.jp/login/login_ajax";
 	private static final String LOGOUT_URI = "https://anime.biglobe.ne.jp/login/logout_ajax";
 	private static final int BUFFSIZE = 1024;
+
+	public static final String DATE_FILE = "updated.txt";
 
 	public static final int LOGIN_OK = 0;
 	public static final int LOGIN_NG = 1;
@@ -47,12 +56,80 @@ public class AnimeOne {
 
 	}
 
+	public ArrayList<Schedule> getSchedules(Context context) {
+		if (needUpdate(context)) {
+			log("Need Update");
+			return reloadSchedules(context);
+		} else {
+			return Schedule.loadSchedules(context);
+		}
+	}
+
+	public ArrayList<Schedule> reloadSchedules(Context context) {
+		ArrayList<Schedule> schedules = mypage();
+		if (Schedule.saveSchedules(context, schedules)) {
+			GregorianCalendar today = today();
+			try {
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+						context.openFileOutput(DATE_FILE, 0)));
+				writer.write(String.format("%04d-%02d-%02d", today.get(Calendar.YEAR),
+						today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH)));
+				writer.flush();
+				writer.close();
+			} catch (FileNotFoundException e) {
+				log("FileNotFound in write updated date");
+			} catch (IOException e) {
+				log("IOException in write updated date");
+			}
+		}
+		return schedules;
+	}
+
 	public ArrayList<Schedule> mypage() {
 		return mypage(3);
 	}
 
+	public GregorianCalendar today() {
+		GregorianCalendar now = new GregorianCalendar();
+		now.add(GregorianCalendar.HOUR, -6);
+		return new GregorianCalendar(now.get(GregorianCalendar.YEAR), now
+				.get(GregorianCalendar.MONTH), now.get(GregorianCalendar.DAY_OF_MONTH));
+	}
+
+	public boolean needUpdate(Context context) {
+		GregorianCalendar updated = updatedDate(context);
+		if (updated == null)
+			return true;
+
+		GregorianCalendar now = new GregorianCalendar();
+		return now.compareTo(today()) > 1 ? true : false;
+	}
+
+	public GregorianCalendar updatedDate(Context context) {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(context
+					.openFileInput(DATE_FILE)));
+			String line = reader.readLine();
+			reader.close();
+			if (line != null) {
+				Matcher m = Pattern.compile("([0-9]{4})-([0-9]{2})-([0-9]{2})")
+						.matcher(line);
+				if (m.find()) {
+					int year = Integer.parseInt(m.group(1));
+					int month = Integer.parseInt(m.group(2));
+					int day = Integer.parseInt(m.group(3));
+					return new GregorianCalendar(year, month, day);
+				}
+			}
+			return null;
+		} catch (FileNotFoundException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
 	public ArrayList<Schedule> mypage(int retry_count) {
-		log("MyPage Start");
 		ArrayList<Schedule> result = new ArrayList<Schedule>();
 		boolean retry = true;
 		try {
@@ -70,7 +147,6 @@ public class AnimeOne {
 				responseText = responseText.append(buf, 0, read_size);
 			}
 			get.abort();
-			log("GET MyPage");
 
 			Pattern pattern = Pattern
 					.compile(
@@ -78,7 +154,6 @@ public class AnimeOne {
 							Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE
 									| Pattern.UNIX_LINES);
 			Matcher match = pattern.matcher(new String(responseText));
-			log("Parse MyPage");
 			if (match.find()) {
 				retry = false;
 				NodeList tmp;
@@ -87,6 +162,13 @@ public class AnimeOne {
 				DocumentBuilder builder = DocumentBuilderFactory.newInstance()
 						.newDocumentBuilder();
 				Document doc = builder.parse(new InputSource(new StringReader(body)));
+				Matcher date_matcher = Pattern.compile("([0-9]+)月([0-9]+)").matcher(
+						nodeMapString(doc.getElementsByTagName("span").item(0)).get(0));
+				date_matcher.find();
+
+				int month = Integer.parseInt(date_matcher.group(1));
+				int day = Integer.parseInt(date_matcher.group(2));
+
 				NodeList td_list = doc.getElementsByTagName("td");
 				final int TDNUMS = 4;
 				for (int i = 0; i < td_list.getLength() / TDNUMS; i++) {
@@ -131,15 +213,12 @@ public class AnimeOne {
 			log("row:" + ex.getLineNumber() + "   col: " + ex.getColumnNumber());
 		}
 		if (retry && retry_count > 0) {
-			log("Retry MyPage");
 			return mypage(retry_count - 1);
 		}
-		log("MyPage Finish");
 		return result;
 	}
 
 	public void logout() {
-		log("Logout Start");
 		try {
 			HttpPost post = new HttpPost(LOGOUT_URI);
 			http.execute(post);
@@ -147,17 +226,14 @@ public class AnimeOne {
 		} catch (Exception e) {
 			log(e.toString());
 		}
-		log("Logout Finish");
 	}
 
 	public int login() {
-		log("Login Start");
 		int result;
 		try {
 			HttpGet get = new HttpGet(LOGIN_FORM);
 			HttpResponse res = http.execute(get);
 			get.abort();
-			log("GET LoginForm");
 
 			String user_id = account.getUser();
 			String password = account.getPassword();
@@ -180,12 +256,10 @@ public class AnimeOne {
 				}
 			}
 			post.abort();
-			log("POST Login Form");
 		} catch (Exception e) {
 			log(e.toString());
 			result = NETWORK_ERROR;
 		}
-		log("Login Finish");
 		return result;
 	}
 
