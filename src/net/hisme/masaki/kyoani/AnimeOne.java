@@ -96,9 +96,9 @@ public class AnimeOne {
 
 	public GregorianCalendar today() {
 		GregorianCalendar now = new GregorianCalendar();
-		now.add(GregorianCalendar.HOUR, -6);
-		return new GregorianCalendar(now.get(GregorianCalendar.YEAR), now
-				.get(GregorianCalendar.MONTH), now.get(GregorianCalendar.DAY_OF_MONTH));
+		now.add(GregorianCalendar.HOUR_OF_DAY, -6);
+		return new GregorianCalendar(now.get(Calendar.YEAR), now
+				.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
 	}
 
 	public boolean needUpdate(Context context) {
@@ -107,7 +107,7 @@ public class AnimeOne {
 			return true;
 
 		GregorianCalendar now = new GregorianCalendar();
-		return now.compareTo(today()) > 1 ? true : false;
+		return now.compareTo(today()) == 1 ? true : false;
 	}
 
 	public GregorianCalendar updatedDate(Context context) {
@@ -121,7 +121,7 @@ public class AnimeOne {
 						.matcher(line);
 				if (m.find()) {
 					int year = Integer.parseInt(m.group(1));
-					int month = Integer.parseInt(m.group(2));
+					int month = Integer.parseInt(m.group(2)) - 1;
 					int day = Integer.parseInt(m.group(3));
 					return new GregorianCalendar(year, month, day);
 				}
