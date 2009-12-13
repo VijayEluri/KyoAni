@@ -66,23 +66,28 @@ public class AnimeOne {
 	}
 
 	public ArrayList<Schedule> reloadSchedules(Context context) {
-		ArrayList<Schedule> schedules = mypage();
-		if (Schedule.saveSchedules(context, schedules)) {
-			GregorianCalendar today = today();
-			try {
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-						context.openFileOutput(DATE_FILE, 0)));
-				writer.write(String.format("%04d-%02d-%02d", today.get(Calendar.YEAR),
-						today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH)));
-				writer.flush();
-				writer.close();
-			} catch (FileNotFoundException e) {
-				log("FileNotFound in write updated date");
-			} catch (IOException e) {
-				log("IOException in write updated date");
+		if (login() == LOGIN_OK) {
+			ArrayList<Schedule> schedules = mypage();
+			if (Schedule.saveSchedules(context, schedules)) {
+				GregorianCalendar today = today();
+				try {
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+							context.openFileOutput(DATE_FILE, 0)));
+					writer.write(String.format("%04d-%02d-%02d",
+							today.get(Calendar.YEAR), today.get(Calendar.MONTH) + 1, today
+									.get(Calendar.DAY_OF_MONTH)));
+					writer.flush();
+					writer.close();
+				} catch (FileNotFoundException e) {
+					log("FileNotFound in write updated date");
+				} catch (IOException e) {
+					log("IOException in write updated date");
+				}
 			}
+			return schedules;
+		} else {
+			return null;
 		}
-		return schedules;
 	}
 
 	public ArrayList<Schedule> mypage() {
