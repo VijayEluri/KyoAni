@@ -62,12 +62,10 @@ public class KyoAniWidget extends AppWidgetProvider {
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
 				AnimeOne anime_one = new AnimeOne(new Account(account, password));
-
 				String schedule_str = "ログインできませんでした";
 				int login_result = anime_one.login();
 				if (login_result == AnimeOne.LOGIN_OK) {
-
-					ArrayList<Schedule> schedules = anime_one.mypage();
+					ArrayList<Schedule> schedules = anime_one.getSchedules(context);
 					schedule_str = context.getText(R.string.no_schedule).toString();
 					for (Schedule schedule : schedules) {
 						GregorianCalendar now = new GregorianCalendar();
