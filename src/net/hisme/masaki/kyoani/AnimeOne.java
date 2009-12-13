@@ -45,7 +45,7 @@ public class AnimeOne {
 	public AnimeOne(Account account) {
 		this.account = account;
 		BasicHttpParams params = new BasicHttpParams();
-		int timeout = 10000;
+		int timeout = 0;
 		HttpConnectionParams.setConnectionTimeout(params, timeout);
 		HttpConnectionParams.setSoTimeout(params, timeout);
 
@@ -57,18 +57,23 @@ public class AnimeOne {
 	}
 
 	public ArrayList<Schedule> getSchedules(Context context) {
+		log("Get Schedules");
 		if (needUpdate(context)) {
 			log("Need Update");
 			return reloadSchedules(context);
 		} else {
+			log("Cached");
 			return Schedule.loadSchedules(context);
 		}
 	}
 
 	public ArrayList<Schedule> reloadSchedules(Context context) {
+		log("Reload Schedule");
 		if (login() == LOGIN_OK) {
+			log("Login Success");
 			ArrayList<Schedule> schedules = mypage();
 			if (Schedule.saveSchedules(context, schedules)) {
+				log("Update cached date");
 				GregorianCalendar today = today();
 				try {
 					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
@@ -98,7 +103,7 @@ public class AnimeOne {
 		GregorianCalendar now = new GregorianCalendar();
 		now.add(GregorianCalendar.HOUR_OF_DAY, -6);
 		return new GregorianCalendar(now.get(Calendar.YEAR), now
-				.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+				.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 	}
 
 	public boolean needUpdate(Context context) {
@@ -106,8 +111,7 @@ public class AnimeOne {
 		if (updated == null)
 			return true;
 
-		GregorianCalendar now = new GregorianCalendar();
-		return now.compareTo(today()) == 1 ? true : false;
+		return today().compareTo(updated) == 1 ? true : false;
 	}
 
 	public GregorianCalendar updatedDate(Context context) {
@@ -123,7 +127,7 @@ public class AnimeOne {
 					int year = Integer.parseInt(m.group(1));
 					int month = Integer.parseInt(m.group(2)) - 1;
 					int day = Integer.parseInt(m.group(3));
-					return new GregorianCalendar(year, month, day);
+					return new GregorianCalendar(year, month, day, 0, 0, 0);
 				}
 			}
 			return null;
@@ -135,6 +139,7 @@ public class AnimeOne {
 	}
 
 	public ArrayList<Schedule> mypage(int retry_count) {
+		log("MyPage Start");
 		ArrayList<Schedule> result = new ArrayList<Schedule>();
 		boolean retry = true;
 		try {
@@ -217,6 +222,7 @@ public class AnimeOne {
 			org.xml.sax.SAXParseException ex = (org.xml.sax.SAXParseException) e;
 			log("row:" + ex.getLineNumber() + "   col: " + ex.getColumnNumber());
 		}
+		log("MyPage Finish");
 		if (retry && retry_count > 0) {
 			return mypage(retry_count - 1);
 		}
@@ -234,6 +240,7 @@ public class AnimeOne {
 	}
 
 	public int login() {
+		log("Login Start");
 		int result;
 		try {
 			HttpGet get = new HttpGet(LOGIN_FORM);
@@ -265,6 +272,7 @@ public class AnimeOne {
 			log(e.toString());
 			result = NETWORK_ERROR;
 		}
+		log("Login Finish");
 		return result;
 	}
 
