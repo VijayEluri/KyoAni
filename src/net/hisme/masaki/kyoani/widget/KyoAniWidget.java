@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import net.hisme.masaki.kyoani.Account;
-import net.hisme.masaki.kyoani.AnimeOne;
-import net.hisme.masaki.kyoani.R;
+import net.hisme.masaki.kyoani.*;
 
 public class KyoAniWidget extends AppWidgetProvider {
 	private static AppWidgetManager manager;
@@ -48,39 +46,36 @@ public class KyoAniWidget extends AppWidgetProvider {
 
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
-
-		Intent reload_intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
-				reload_intent, 0);
-		views.setOnClickPendingIntent(R.id.reload_button, pendingIntent);
+		/*
+		 * views = new RemoteViews(context.getPackageName(),
+		 * R.layout.widget_layout);
+		 * 
+		 * Intent setting_intent = new Intent(context, SettingActivity.class);
+		 * PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+		 * setting_intent, 0);
+		 * 
+		 * views.setOnClickPendingIntent(R.id.next_log, pendingIntent);
+		 */
 		final String account = pref.getString("account", "");
 		final String password = pref.getString("password", "");
 
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
 				AnimeOne anime_one = new AnimeOne(new Account(account, password));
+
 				String schedule_str = "ログインできませんでした";
 				int login_result = anime_one.login();
 				if (login_result == AnimeOne.LOGIN_OK) {
-					GregorianCalendar now = new GregorianCalendar();
 
-					GregorianCalendar today = new GregorianCalendar(now
-							.get(Calendar.YEAR), now.get(Calendar.MONTH), now
-							.get(Calendar.DAY_OF_MONTH), now.get(Calendar.HOUR_OF_DAY) - 6,
-							0, 0);
-					ArrayList<String[]> schedules = anime_one.mypage();
+					ArrayList<Schedule> schedules = anime_one.mypage();
 					schedule_str = context.getText(R.string.no_schedule).toString();
-					for (String[] schedule : schedules) {
-						String[] times = schedule[1].split(":");
-						GregorianCalendar start = new GregorianCalendar(today
-								.get(Calendar.YEAR), today.get(Calendar.MONTH), today
-								.get(Calendar.DAY_OF_MONTH), Integer.parseInt(times[0]),
-								Integer.parseInt(times[1]), 0);
+					for (Schedule schedule : schedules) {
+						GregorianCalendar now = new GregorianCalendar();
 
-						if (now.compareTo(start) == -1) {
-							schedule_str = schedule[1] + "\n" + schedule[2] + "\n"
-									+ schedule[0] + "\n";
+						if (now.compareTo(schedule.getStart()) == -1) {
+							schedule_str = schedule.getChannel() + "\n"
+									+ schedule.getStartString() + "\n" + schedule.getName()
+									+ "\n";
 							break;
 						}
 					}

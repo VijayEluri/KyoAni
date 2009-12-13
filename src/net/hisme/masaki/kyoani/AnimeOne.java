@@ -43,13 +43,17 @@ public class AnimeOne {
 		this.http = new DefaultHttpClient(params);
 	}
 
-	public ArrayList<String[]> mypage() {
+	public void nextAnime() {
+
+	}
+
+	public ArrayList<Schedule> mypage() {
 		return mypage(3);
 	}
 
-	public ArrayList<String[]> mypage(int retry_count) {
+	public ArrayList<Schedule> mypage(int retry_count) {
 		log("MyPage Start");
-		ArrayList<String[]> result = new ArrayList<String[]>();
+		ArrayList<Schedule> result = new ArrayList<Schedule>();
 		boolean retry = true;
 		try {
 			HttpGet get = new HttpGet(MYPAGE_URI);
@@ -79,7 +83,7 @@ public class AnimeOne {
 				retry = false;
 				NodeList tmp;
 				String body = match.group(1);
-				body = body.replace("&","&amp;");
+				body = body.replace("&", "&amp;");
 				DocumentBuilder builder = DocumentBuilderFactory.newInstance()
 						.newDocumentBuilder();
 				Document doc = builder.parse(new InputSource(new StringReader(body)));
@@ -92,18 +96,24 @@ public class AnimeOne {
 						if (tmp.item(j).getNodeName().compareTo("img") == 0
 								&& tmp.item(j).getAttributes().getNamedItem("alt")
 										.getNodeValue().compareTo("ネット配信") != 0) {
-							String[] entry = new String[3];
+							String channel = "";
+							String name = "";
+							String start = "";
+
 							values = nodeMapString(td_list.item(i * TDNUMS + 0));
 							if (values.size() == 1) {
 								Matcher m = Pattern.compile("([0-9:]+) +(.+)").matcher(
 										values.get(0));
 								m.find();
-								entry[1] = m.group(1);
-								entry[2] = m.group(2);
+								start = m.group(1);
+								channel = m.group(2);
 							}
 							values = nodeMapString(td_list.item(i * TDNUMS + 2));
-							entry[0] = values.get(0);
-							result.add(entry);
+							name = values.get(0);
+							Schedule schedule = new Schedule(channel, name, start);
+							log(schedule.toString());
+							result.add(schedule);
+
 							break;
 						}
 					}
