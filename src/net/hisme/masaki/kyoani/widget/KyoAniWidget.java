@@ -46,16 +46,6 @@ public class KyoAniWidget extends AppWidgetProvider {
 
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		/*
-		 * views = new RemoteViews(context.getPackageName(),
-		 * R.layout.widget_layout);
-		 * 
-		 * Intent setting_intent = new Intent(context, SettingActivity.class);
-		 * PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-		 * setting_intent, 0);
-		 * 
-		 * views.setOnClickPendingIntent(R.id.next_log, pendingIntent);
-		 */
 		final String account = pref.getString("account", "");
 		final String password = pref.getString("password", "");
 
