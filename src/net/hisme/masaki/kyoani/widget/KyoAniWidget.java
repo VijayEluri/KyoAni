@@ -46,16 +46,19 @@ public class KyoAniWidget extends AppWidgetProvider {
 
 		SharedPreferences pref = PreferenceManager
 				.getDefaultSharedPreferences(context);
+		views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+
 		final String account = pref.getString("account", "");
 		final String password = pref.getString("password", "");
 
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
 				AnimeOne anime_one = new AnimeOne(new Account(account, password));
-				String schedule_str = "ログインできませんでした";
-				int login_result = anime_one.login();
-				if (login_result == AnimeOne.LOGIN_OK) {
-					ArrayList<Schedule> schedules = anime_one.getSchedules(context);
+				String schedule_str = null;
+				schedule_str = context.getText(R.string.login_failure).toString();
+				log("getSchedules");
+				ArrayList<Schedule> schedules = anime_one.getSchedules(context);
+				if (schedules != null) {
 					schedule_str = context.getText(R.string.no_schedule).toString();
 					for (Schedule schedule : schedules) {
 						GregorianCalendar now = new GregorianCalendar();
@@ -67,11 +70,8 @@ public class KyoAniWidget extends AppWidgetProvider {
 							break;
 						}
 					}
-					views.setTextViewText(R.id.next_log, schedule_str);
-				} else if (login_result == AnimeOne.LOGIN_NG) {
-					views.setTextViewText(R.id.next_log, context
-							.getText(R.string.login_failure));
 				}
+				views.setTextViewText(R.id.next_log, schedule_str);
 				log("Update Widget View");
 				manager.updateAppWidget(new ComponentName(context, KyoAniWidget.class),
 						views);
