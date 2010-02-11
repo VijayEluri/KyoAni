@@ -15,14 +15,6 @@ public class MainActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		TextView account = (TextView) findViewById(R.id.label_account);
-		account.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				Intent intent = new Intent(MainActivity.this,
-						AccountActivity.class);
-				startActivity(intent);
-			}
-		});
 	}
 
 	@Override
