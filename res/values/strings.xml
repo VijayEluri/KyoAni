@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">今日アニ</string>
+	<string name="title_account">アカウント設定</string>
 	<string name="form_title">アニメワンIDの登録/変更</string>
 	<string name="form_description">アニメワンのIDを使ってアクセスします。</string>
 	<string name="form_account_title">ACCOUNT</string>
