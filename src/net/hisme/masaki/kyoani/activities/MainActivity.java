@@ -30,6 +30,12 @@ public class MainActivity extends Activity {
 		case R.id.menu_account:
 			startActivity(new Intent(MainActivity.this, AccountActivity.class));
 			return true;
+		case R.id.menu_help:
+			startActivity(new Intent(MainActivity.this, HelpActivity.class));
+			return true;
+		case R.id.menu_about:
+			startActivity(new Intent(MainActivity.this, AboutActivity.class));
+			return true;
 		}
 		return false;
 	}
