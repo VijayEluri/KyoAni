@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="menu_account">Account</string>
+	<string name="menu_help">Help</string>
+	<string name="menu_about">About</string>
+	<string name="label_account_setting">アカウント設定</string>
+	<string name="label_account_test">接続テスト</string>
 	<string name="app_name">今日アニ</string>
 	<string name="title_account">アカウント設定</string>
 	<string name="form_title">アニメワンIDの登録/変更</string>
