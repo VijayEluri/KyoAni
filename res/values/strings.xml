@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<!-- global values -->
+	<string name="app_name">今日アニ</string>
+
+	<!-- menu -->
 	<string name="menu_account">Account</string>
 	<string name="menu_help">Help</string>
 	<string name="menu_about">About</string>
+
+	<!-- error messages -->
+	<string name="error_account_is_blank">アカウントが設定されていません。\nメニューからアカウントを設定してください。</string>
+	<string name="error_account_cant_authorize">アカウントの認証に失敗します。\nメニューからアカウントを修正してください。</string>
+	<string name="error_network_disable">ネットワークに接続できません。</string>
+	<string name="error_animeone_disable">アニメワンのサーバに接続できません。しばらく待ってから再試行してください。</string>
+
+	<!-- main view -->
+	<string name="button_main_reload">更新</string>
+
+	<!-- account view -->
 	<string name="label_account_setting">アカウント設定</string>
 	<string name="label_account_test">接続テスト</string>
-	<string name="app_name">今日アニ</string>
+
 	<string name="title_account">アカウント設定</string>
 	<string name="form_title">アニメワンIDの登録/変更</string>
 	<string name="form_description">アニメワンのIDを使ってアクセスします。</string>
