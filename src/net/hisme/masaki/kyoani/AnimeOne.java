@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 public class AnimeOne {
 	Account account = null;
 	DefaultHttpClient http;
+
 	private static final String MYPAGE_URI = "http://anime.biglobe.ne.jp/program/myprogram";
 	private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login/index";
 	private static final String LOGIN_URI = "https://anime.biglobe.ne.jp/login/login_ajax";
@@ -76,11 +77,12 @@ public class AnimeOne {
 				log("Update cached date");
 				GregorianCalendar today = today();
 				try {
-					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-							context.openFileOutput(DATE_FILE, 0)));
-					writer.write(String.format("%04d-%02d-%02d",
-							today.get(Calendar.YEAR), today.get(Calendar.MONTH) + 1, today
-									.get(Calendar.DAY_OF_MONTH)));
+					BufferedWriter writer = new BufferedWriter(
+							new OutputStreamWriter(context.openFileOutput(
+									DATE_FILE, 0)));
+					writer.write(String.format("%04d-%02d-%02d", today
+							.get(Calendar.YEAR), today.get(Calendar.MONTH) + 1,
+							today.get(Calendar.DAY_OF_MONTH)));
 					writer.flush();
 					writer.close();
 				} catch (FileNotFoundException e) {
@@ -116,8 +118,8 @@ public class AnimeOne {
 
 	public GregorianCalendar updatedDate(Context context) {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(context
-					.openFileInput(DATE_FILE)));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					context.openFileInput(DATE_FILE)));
 			String line = reader.readLine();
 			reader.close();
 			if (line != null) {
@@ -147,8 +149,8 @@ public class AnimeOne {
 			HttpResponse response = http.execute(get);
 			HttpEntity entity = response.getEntity();
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(entity
-					.getContent()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					entity.getContent()));
 			StringBuffer responseText = new StringBuffer();
 
 			char[] buf = new char[BUFFSIZE];
@@ -161,8 +163,8 @@ public class AnimeOne {
 			Pattern pattern = Pattern
 					.compile(
 							"(<div class=\"w220Box program program2 marginLeft10px\">.*</div>).*<div class=\"w220Box program marginLeft10px\">",
-							Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE
-									| Pattern.UNIX_LINES);
+							Pattern.DOTALL | Pattern.MULTILINE
+									| Pattern.UNICODE_CASE | Pattern.UNIX_LINES);
 			Matcher match = pattern.matcher(new String(responseText));
 			if (match.find()) {
 				retry = false;
@@ -171,9 +173,13 @@ public class AnimeOne {
 				body = body.replace("&", "&amp;");
 				DocumentBuilder builder = DocumentBuilderFactory.newInstance()
 						.newDocumentBuilder();
-				Document doc = builder.parse(new InputSource(new StringReader(body)));
-				Matcher date_matcher = Pattern.compile("([0-9]+)月([0-9]+)").matcher(
-						nodeMapString(doc.getElementsByTagName("span").item(0)).get(0));
+				Document doc = builder.parse(new InputSource(new StringReader(
+						body)));
+				Matcher date_matcher = Pattern.compile("([0-9]+)月([0-9]+)")
+						.matcher(
+								nodeMapString(
+										doc.getElementsByTagName("span")
+												.item(0)).get(0));
 				date_matcher.find();
 
 				int month = Integer.parseInt(date_matcher.group(1));
@@ -186,23 +192,25 @@ public class AnimeOne {
 					for (int j = 0; j < tmp.getLength(); j++) {
 						ArrayList<String> values = null;
 						if (tmp.item(j).getNodeName().compareTo("img") == 0
-								&& tmp.item(j).getAttributes().getNamedItem("alt")
-										.getNodeValue().compareTo("ネット配信") != 0) {
+								&& tmp.item(j).getAttributes().getNamedItem(
+										"alt").getNodeValue()
+										.compareTo("ネット配信") != 0) {
 							String channel = "";
 							String name = "";
 							String start = "";
 
 							values = nodeMapString(td_list.item(i * TDNUMS + 0));
 							if (values.size() == 1) {
-								Matcher m = Pattern.compile("([0-9:]+) +(.+)").matcher(
-										values.get(0));
+								Matcher m = Pattern.compile("([0-9:]+) +(.+)")
+										.matcher(values.get(0));
 								m.find();
 								start = m.group(1);
 								channel = m.group(2);
 							}
 							values = nodeMapString(td_list.item(i * TDNUMS + 2));
 							name = values.get(0);
-							Schedule schedule = new Schedule(channel, name, start);
+							Schedule schedule = new Schedule(channel, name,
+									start);
 							log(schedule.toString());
 							result.add(schedule);
 
@@ -283,8 +291,9 @@ public class AnimeOne {
 	}
 
 	private void _nodeToString(ArrayList<String> list, Node node) {
-		Pattern p = Pattern.compile("[ 　\t\n\r]+", Pattern.DOTALL
-				| Pattern.MULTILINE | Pattern.UNICODE_CASE | Pattern.UNIX_LINES);
+		Pattern p = Pattern
+				.compile("[ 　\t\n\r]+", Pattern.DOTALL | Pattern.MULTILINE
+						| Pattern.UNICODE_CASE | Pattern.UNIX_LINES);
 		switch (node.getNodeType()) {
 		case Node.TEXT_NODE:
 			Matcher match = p.matcher(node.getNodeValue());
