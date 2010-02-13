@@ -13,17 +13,19 @@ public class Schedule implements Serializable {
 	private String channel;
 	private String name;
 	private GregorianCalendar start;
+	static final long serialVersionUID = 2;
 
 	public Schedule(String channel, String name, String start) {
 		GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar today = new GregorianCalendar(now.get(Calendar.YEAR), now
-				.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), now
-				.get(Calendar.HOUR_OF_DAY) - 6, 0, 0);
+		GregorianCalendar today = new GregorianCalendar(now.get(Calendar.YEAR),
+				now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), now
+						.get(Calendar.HOUR_OF_DAY) - 6, 0, 0);
 
 		String[] times = start.split(":");
-		GregorianCalendar _start = new GregorianCalendar(today.get(Calendar.YEAR),
-				today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH), Integer
-						.parseInt(times[0]), Integer.parseInt(times[1]), 0);
+		GregorianCalendar _start = new GregorianCalendar(today
+				.get(Calendar.YEAR), today.get(Calendar.MONTH), today
+				.get(Calendar.DAY_OF_MONTH), Integer.parseInt(times[0]),
+				Integer.parseInt(times[1]), 0);
 		this.channel = channel;
 		this.name = name;
 		this.start = _start;
@@ -88,10 +90,6 @@ public class Schedule implements Serializable {
 			log("IOException in load");
 		}
 		return schedules;
-	}
-
-	private static void log(int n) {
-		log(new Integer(n).toString());
 	}
 
 	private static void log(String str) {
