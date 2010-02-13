@@ -6,6 +6,7 @@ import android.app.ListActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
@@ -19,26 +20,35 @@ public class AccountActivity extends ListActivity {
 				android.R.layout.simple_list_item_1, new String[] {
 						getString(R.string.label_account_setting),
 						getString(R.string.label_account_test) });
-		//setContentView(R.layout.account);
 		setListAdapter(adapter);
 		/*
-		TextView account_setting = (TextView) findViewById(R.id.account_setting);
-		account_setting.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View view) {
-				Intent intent = new Intent(AccountActivity.this,
-						SettingActivity.class);
-				startActivity(intent);
-			}
-		});
+		 * TextView account_setting = (TextView)
+		 * findViewById(R.id.account_setting);
+		 * account_setting.setOnClickListener(new View.OnClickListener() {
+		 * public void onClick(View view) { Intent intent = new
+		 * Intent(AccountActivity.this, SettingActivity.class);
+		 * startActivity(intent); } });
+		 * 
+		 * Button account_test = (Button) findViewById(R.id.account_test);
+		 * account_test.setOnClickListener(new View.OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) {
+		 * 
+		 * // TODO Auto-generated method stub } });
+		 */
+	}
 
-		Button account_test = (Button) findViewById(R.id.account_test);
-		account_test.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		switch (position) {
+		case 0:
+			startActivity(new Intent(AccountActivity.this,
+					SettingActivity.class));
+			return;
+		case 1:
 
-				// TODO Auto-generated method stub
-			}
-		});
-		*/
+			return;
+		}
+		return;
 	}
 }
