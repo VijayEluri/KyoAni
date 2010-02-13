@@ -27,7 +27,7 @@ public class KyoAniWidget extends AppWidgetProvider {
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
 		super.onUpdate(context, appWidgetManager, appWidgetIds);
-		
+
 		Intent intent = new Intent(context, MainActivity.class);
 		for (int i = 0; i < appWidgetIds.length; i++) {
 			int widgetId = appWidgetIds[i];
@@ -56,31 +56,41 @@ public class KyoAniWidget extends AppWidgetProvider {
 
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
-				AnimeOne anime_one = new AnimeOne(
-						new Account(account, password));
-				StringBuffer schedule_str = new StringBuffer();
-				schedule_str.append(context.getText(R.string.login_failure)
-						.toString());
-				log("getSchedules");
-				ArrayList<Schedule> schedules = anime_one.getSchedules(context);
-				if (schedules != null) {
-					schedule_str.append(context.getText(R.string.no_schedule)
-							.toString());
-					for (Schedule schedule : schedules) {
-						GregorianCalendar now = new GregorianCalendar();
+				try {
+					Account account = Account.load(context);
+					AnimeOne anime_one = new AnimeOne(account);
+					String schedule_str = new String();
+					schedule_str = context.getText(R.string.login_failure)
+							.toString();
+					log("getSchedules");
+					ArrayList<Schedule> schedules = anime_one
+							.getSchedules(context);
+					if (schedules != null) {
+						schedule_str = context.getText(R.string.no_schedule)
+								.toString();
+						for (Schedule schedule : schedules) {
+							GregorianCalendar now = new GregorianCalendar();
 
-						if (now.compareTo(schedule.getStart()) == -1) {
-							schedule_str.append(schedule.getChannel() + "\n"
-									+ schedule.getStartString() + "\n"
-									+ schedule.getName() + "\n");
-							break;
+							if (now.compareTo(schedule.getStart()) == -1) {
+								StringBuffer str_buf = new StringBuffer();
+								str_buf.append(schedule.getChannel());
+								str_buf.append("\n");
+								str_buf.append(schedule.getStartString());
+								str_buf.append("\n");
+								str_buf.append(schedule.getName());
+								str_buf.append("\n");
+								schedule_str = new String(str_buf);
+								break;
+							}
 						}
 					}
+					views.setTextViewText(R.id.next_log, schedule_str);
+					log("Update Widget View");
+					manager.updateAppWidget(new ComponentName(context,
+							KyoAniWidget.class), views);
+				} catch (Exception e) {
+
 				}
-				views.setTextViewText(R.id.next_log, schedule_str);
-				log("Update Widget View");
-				manager.updateAppWidget(new ComponentName(context,
-						KyoAniWidget.class), views);
 			}
 		});
 		log("Thread Start");
