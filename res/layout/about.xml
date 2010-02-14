@@ -6,9 +6,15 @@
 		<TextView android:text="About" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" />
 
-		<TextView android:text="バージョン" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-		<TextView android:text="0.52" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+		<TextView android:text="@string/label_about_version"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+		<TextView android:text="@string/app_version"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+		<TextView android:text="@string/label_about_author"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+		<TextView android:text="@string/app_author_name"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+		<TextView android:text="@string/app_author_mail" android:id="@+id/mail"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
 	</LinearLayout>
 </ScrollView>
