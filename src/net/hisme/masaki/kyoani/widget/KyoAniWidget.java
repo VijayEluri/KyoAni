@@ -48,12 +48,6 @@ public class KyoAniWidget extends AppWidgetProvider {
 		manager = _manager;
 		views = _views;
 
-		SharedPreferences pref = PreferenceManager
-				.getDefaultSharedPreferences(context);
-
-		final String account = pref.getString("account", "");
-		final String password = pref.getString("password", "");
-
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
 				try {
