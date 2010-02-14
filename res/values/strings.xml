@@ -2,6 +2,9 @@
 <resources>
 	<!-- global values -->
 	<string name="app_name">今日アニ</string>
+	<string name="app_version">0.6.0</string>
+	<string name="app_author_name">masarakki</string>
+	<string name="app_author_mail">masaki@hisme.net</string>
 
 	<!-- menu -->
 	<string name="menu_account">Account</string>
@@ -15,21 +18,17 @@
 	<string name="error_animeone_disable">アニメワンのサーバに接続できません。しばらく待ってから再試行してください。</string>
 
 	<!-- main view -->
+	<string name="title_main">今日アニ - 今日のスケジュール</string>
 	<string name="button_main_reload">更新</string>
+	<string name="label_main_setting_hint">設定変更はメニューボタンから</string>
 
 	<!-- account view -->
+	<string name="title_account">今日アニ - アカウント設定</string>
 	<string name="label_account_setting">アカウント設定</string>
 	<string name="label_account_test">接続テスト</string>
 
-	<string name="title_account">アカウント設定</string>
-	<string name="form_title">アニメワンIDの登録/変更</string>
-	<string name="form_description">アニメワンのIDを使ってアクセスします。</string>
-	<string name="form_account_title">ACCOUNT</string>
-	<string name="form_account_description">アニメワンに登録したメールアドレス</string>
-	<string name="form_password_title">PASSWORD</string>
-	<string name="login_failure">ログインに失敗しました。アカウントを再設定してください。
-	</string>
-	<string name="no_schedule">今日の予定は終了\nおやすみなさい...</string>
+	<!-- help view -->
+	<string name="title_help">今日アニ - ヘルプ</string>
 	<string name="help_description">
 		｢今日アニ」はアニメのスケジュールをウィジェットとして表示するアプリです。\n
 		以下の手順でセットアップしてください。
@@ -49,6 +48,21 @@
 		10分ごとにアニメワンにアクセスしMy番組表を表示します。
 	</string>
 	<string name="help_link_to_get_animeone_account">アカウントを取得する</string>
-
 	<string name="help_link_to_setting">アカウント設定を開く</string>
+
+	<!-- about view -->
+	<string name="title_about">今日アニ - about</string>
+	<string name="label_about_version">バージョン</string>
+	<string name="label_about_author">作成者</string>
+
+	<string name="form_title">アニメワンIDの登録/変更</string>
+	<string name="form_description">アニメワンのIDを使ってアクセスします。</string>
+	<string name="form_account_title">ACCOUNT</string>
+	<string name="form_account_description">アニメワンに登録したメールアドレス</string>
+	<string name="form_password_title">PASSWORD</string>
+	<string name="login_failure">ログインに失敗しました。アカウントを再設定してください。
+	</string>
+	<string name="no_schedule">今日の予定は終了\nおやすみなさい...</string>
+
+
 </resources>
