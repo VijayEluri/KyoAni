@@ -43,8 +43,7 @@ public class MainActivity extends Activity {
 
 	public void updateSchedule(boolean force_reload) {
 		try {
-			Account account = Account.load(this);
-			AnimeOne anime_one = new AnimeOne(account);
+			AnimeOne anime_one = new AnimeOne(this);
 
 			ArrayList<Schedule> list = new ArrayList<Schedule>();
 			if (force_reload) {

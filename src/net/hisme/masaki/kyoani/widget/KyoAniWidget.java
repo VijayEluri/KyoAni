@@ -51,8 +51,7 @@ public class KyoAniWidget extends AppWidgetProvider {
 		Thread thread = new Thread(new Runnable() {
 			public void run() {
 				try {
-					Account account = Account.load(context);
-					AnimeOne anime_one = new AnimeOne(account);
+					AnimeOne anime_one = new AnimeOne(context);
 					String schedule_str = new String();
 					schedule_str = context.getText(R.string.login_failure)
 							.toString();
@@ -89,14 +88,6 @@ public class KyoAniWidget extends AppWidgetProvider {
 		});
 		log("Thread Start");
 		thread.start();
-	}
-
-	private static void log(boolean b) {
-		log(b ? "true" : "false");
-	}
-
-	private static void log(int n) {
-		log(new Integer(n).toString());
 	}
 
 	private static void log(String str) {

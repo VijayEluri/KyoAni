@@ -44,6 +44,25 @@ public class AnimeOne {
 	public static final int LOGIN_NG = 1;
 	public static final int NETWORK_ERROR = 2;
 
+	/**
+	 * 
+	 * @param context
+	 * @throws Account.BlankException
+	 */
+	public AnimeOne(Context context) throws Account.BlankException {
+		this.account = Account.load(context);
+		BasicHttpParams params = new BasicHttpParams();
+		int timeout = 0;
+		HttpConnectionParams.setConnectionTimeout(params, timeout);
+		HttpConnectionParams.setSoTimeout(params, timeout);
+
+		this.http = new DefaultHttpClient(params);
+	}
+
+	/**
+	 * @deprecated
+	 * @param account
+	 */
 	public AnimeOne(Account account) {
 		this.account = account;
 		BasicHttpParams params = new BasicHttpParams();
