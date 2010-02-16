@@ -31,6 +31,7 @@ public class AnimeOne {
 	Account account = null;
 	DefaultHttpClient http;
 
+	public static final String REGISTER_URI = "https://anime.biglobe.ne.jp/regist/regist_user";
 	private static final String MYPAGE_URI = "http://anime.biglobe.ne.jp/program/myprogram";
 	private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login/index";
 	private static final String LOGIN_URI = "https://anime.biglobe.ne.jp/login/login_ajax";
