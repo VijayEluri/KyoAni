@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="net.hisme.masaki.kyoani" android:versionCode="19"
-	android:versionName="0.6.0">
+	package="net.hisme.masaki.kyoani" android:versionCode="20"
+	android:versionName="0.7.0">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
 		<activity android:name=".activities.MainActivity"
 			android:label="@string/title_main">
@@ -19,12 +19,19 @@
 		<activity android:name=".activities.AboutActivity"
 			android:label="@string/title_about" />
 
-		<receiver android:name=".widget.KyoAniWidget" android:label="@string/app_name">
+		<receiver android:name=".widget.KyoAniWidget1" android:label="@string/widget_1">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 			</intent-filter>
 			<meta-data android:name="android.appwidget.provider"
-				android:resource="@xml/widget" />
+				android:resource="@xml/widget_1x1" />
+		</receiver>
+		<receiver android:name=".widget.KyoAniWidget2" android:label="@string/widget_2">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/widget_2x2" />
 		</receiver>
 	</application>
 	<uses-sdk android:minSdkVersion="3" />

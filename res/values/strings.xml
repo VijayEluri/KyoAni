@@ -2,9 +2,12 @@
 <resources>
 	<!-- global values -->
 	<string name="app_name">今日アニ</string>
-	<string name="app_version">0.6.0</string>
+	<string name="app_version">0.7.0</string>
 	<string name="app_author_name">masarakki</string>
 	<string name="app_author_mail">masaki@hisme.net</string>
+
+	<string name="widget_1">今日アニ(1x1)</string>
+	<string name="widget_2">今日アニ(2x2)</string>
 
 	<!-- menu -->
 	<string name="menu_account">Account</string>
