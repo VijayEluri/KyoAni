@@ -58,7 +58,6 @@ public class MainActivity extends Activity {
 				hash.put("LINE_1", schedule.getName());
 				hash.put("LINE_2", schedule.getChannel() + " "
 						+ schedule.getStartString());
-				android.util.Log.d("[hoge]", schedule.getName());
 				schedules.add(hash);
 			}
 
