@@ -21,7 +21,7 @@
 	<string name="error_animeone_disable">アニメワンのサーバに接続できません。しばらく待ってから再試行してください。</string>
 
 	<!-- main view -->
-	<string name="title_main">今日アニ - 今日のスケジュール</string>
+	<string name="title_main">今日アニ</string>
 	<string name="button_main_reload">更新</string>
 	<string name="label_main_setting_hint">設定変更はメニューボタンから</string>
 
