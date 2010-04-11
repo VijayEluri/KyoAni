@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 
 public class AnimeOne {
+	Context context;
 	Account account = null;
 	DefaultHttpClient http;
 
@@ -50,7 +51,16 @@ public class AnimeOne {
 	 * @throws Account.BlankException
 	 */
 	public AnimeOne(Context context) throws Account.BlankException {
-		this.account = Account.load(context);
+		this.context = context;
+		initAccount();
+		initHttpClient();
+	}
+
+	private void initAccount() throws Account.BlankException {
+		this.account = Account.load(this.context);
+	}
+
+	private void initHttpClient() {
 		BasicHttpParams params = new BasicHttpParams();
 		int timeout = 0;
 		HttpConnectionParams.setConnectionTimeout(params, timeout);
