@@ -2,6 +2,7 @@ package net.hisme.masaki.kyoani.models;
 
 
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.HttpResponse;
@@ -38,6 +39,8 @@ public class AnimeOne {
 	private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login/index";
 	private static final String LOGIN_URI = "https://anime.biglobe.ne.jp/login/login_ajax";
 	private static final String LOGOUT_URI = "https://anime.biglobe.ne.jp/login/logout_ajax";
+	private static final String SESSION_COOKIE_NAME = "PHPSESSID";
+	private static final String SESSION_FILE = "_session";
 	private static final int BUFFSIZE = 1024;
 
 	public static final String DATE_FILE = "updated.txt";
@@ -68,6 +71,7 @@ public class AnimeOne {
 		HttpConnectionParams.setSoTimeout(params, timeout);
 
 		this.http = new DefaultHttpClient(params);
+		loadSessionID();
 	}
 
 	/**
@@ -82,6 +86,7 @@ public class AnimeOne {
 		HttpConnectionParams.setSoTimeout(params, timeout);
 
 		this.http = new DefaultHttpClient(params);
+
 	}
 
 	public void nextAnime() {
@@ -278,6 +283,43 @@ public class AnimeOne {
 		}
 	}
 
+	private void loadSessionID() {
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					context.openFileInput(SESSION_FILE)));
+			String session = reader.readLine();
+			this.http.getCookieStore().addCookie(
+					new BasicClientCookie(SESSION_COOKIE_NAME, session));
+			reader.close();
+		} catch (FileNotFoundException e) {
+			log("Session File not exists");
+		} catch (IOException e) {
+			log("IOException in loadSessionID()");
+		}
+	}
+
+	private void saveSessionID(String s) {
+		try {
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+					context.openFileOutput(SESSION_FILE, 0)));
+			writer.write(s);
+			writer.close();
+		} catch (FileNotFoundException e) {
+
+		} catch (IOException e) {
+
+		}
+	}
+
+	private String getSessionID() {
+		for (Cookie cookie : this.http.getCookieStore().getCookies()) {
+			if (cookie.getName().equals("PHPSESSID")) {
+				return cookie.getValue();
+			}
+		}
+		return "";
+	}
+
 	public int login() {
 		log("Login Start");
 		int result;
@@ -304,6 +346,10 @@ public class AnimeOne {
 				if (cookie.getName().equals("user[id_nick]")) {
 					result = LOGIN_OK;
 					break;
+				}
+				if (cookie.getName().equals(SESSION_COOKIE_NAME)) {
+					log("save session");
+					saveSessionID(cookie.getValue());
 				}
 			}
 			post.abort();
