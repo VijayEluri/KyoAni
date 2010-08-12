@@ -3,10 +3,10 @@ package net.hisme.masaki.kyoani.test.model;
 import junit.framework.TestCase;
 import net.hisme.masaki.kyoani.Schedule;
 
-public class ScheduleTester extends TestCase {
+public class ScheduleTest extends TestCase {
 	private Schedule schedule;
 
-	public ScheduleTester(String name) {
+	public ScheduleTest(String name) {
 		super(name);
 	}
 
