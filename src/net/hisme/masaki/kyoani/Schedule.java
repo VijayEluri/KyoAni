@@ -12,26 +12,16 @@ public class Schedule implements Serializable {
 	public static String LIST_FILE = "list.obj";
 	private String channel;
 	private String name;
-	private GregorianCalendar start;
+	private AnimeCalendar start;
 	static final long serialVersionUID = 2;
 
 	public Schedule(String channel, String name, String start) {
-		GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar today = new GregorianCalendar(now.get(Calendar.YEAR),
-				now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), now
-						.get(Calendar.HOUR_OF_DAY) - 6, 0, 0);
-
-		String[] times = start.split(":");
-		GregorianCalendar _start = new GregorianCalendar(today
-				.get(Calendar.YEAR), today.get(Calendar.MONTH), today
-				.get(Calendar.DAY_OF_MONTH), Integer.parseInt(times[0]),
-				Integer.parseInt(times[1]), 0);
 		this.channel = channel;
 		this.name = name;
-		this.start = _start;
+		this.start = new AnimeCalendar(start);
 	}
 
-	public Schedule(String channel, String name, GregorianCalendar start) {
+	public Schedule(String channel, String name, AnimeCalendar start) {
 		this.channel = channel;
 		this.name = name;
 		this.start = start;
@@ -45,17 +35,12 @@ public class Schedule implements Serializable {
 		return this.name;
 	}
 
-	public GregorianCalendar getStart() {
+	public AnimeCalendar getStart() {
 		return this.start;
 	}
 
 	public String getStartString() {
-		int h = start.get(Calendar.HOUR_OF_DAY);
-		int m = start.get(Calendar.MINUTE);
-		if (h < 6)
-			h += 24;
-
-		return String.format("%02d:%02d", h, m);
+		return start.getTimeString();
 	}
 
 	public static boolean saveSchedules(Context context,
@@ -98,6 +83,6 @@ public class Schedule implements Serializable {
 
 	public String toString() {
 		return "[Schedule] channel = " + channel + "; name = " + name
-				+ "; start = " + start;
+				+ "; start = " + start.getTimeString();
 	}
 }

@@ -21,4 +21,21 @@ public class ScheduleTest extends TestCase {
 		super.tearDown();
 	}
 
+	public void testGetChannel() {
+		assertEquals("channel", schedule.getChannel());
+	}
+
+	public void testGetName() {
+		assertEquals("title", schedule.getName());
+	}
+
+	public void testGetStartString() {
+		assertEquals("25:30", schedule.getStartString());
+	}
+
+	public void testToString() {
+		assertEquals(
+				"[Schedule] channel = channel; name = title; start = 25:30",
+				schedule.toString());
+	}
 }
