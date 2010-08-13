@@ -1,0 +1,13 @@
+#djUnit Plugin Settings
+#Fri Aug 13 16:50:19 JST 2010
+CoverageIncludedPatterns=net.hisme.masaki.*;
+VirtualMockIgnoreLibrary=false
+CoverageExcludedPatterns=.*Test$;
+UseMarker=true
+UseVirtualMock=false
+UseCoverage=true
+BytecodeLibrary=ASM
+VirtualMockNotIgnorePatterns=
+UseNoverify=false
+CoverageWorkingDirectory=/coverage
+CoverageReportCharset=utf-8
