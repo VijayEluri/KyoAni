@@ -22,27 +22,46 @@ public class ScheduleTest extends TestCase {
 		super.tearDown();
 	}
 
+	/**
+	 * new with instance of AnimeCalendar, getStart() should equal to that
+	 * instance
+	 */
 	public void testSchedule() {
-		assertEquals(schedule, new Schedule("channel", "title", schedule
-				.getStart()));
+		assertEquals(schedule.getStart().hashCode(), new Schedule("channel",
+				"title", schedule.getStart()).getStart().hashCode());
 	}
 
+	/**
+	 * getChannel() should equal to channel parameter
+	 */
 	public void testGetChannel() {
 		assertEquals("channel", schedule.getChannel());
 	}
 
+	/**
+	 * getName() should equal to name parameter
+	 */
 	public void testGetName() {
 		assertEquals("title", schedule.getName());
 	}
 
+	/**
+	 * getStart() should equal to start parameter
+	 */
 	public void testGetStart() {
 		assertEquals(new AnimeCalendar("25:30"), schedule.getStart());
 	}
 
+	/**
+	 * getStartString() should call start.getStartString()
+	 */
 	public void testGetStartString() {
 		assertEquals("25:30", schedule.getStartString());
 	}
 
+	/**
+	 * toString() should format information
+	 */
 	public void testToString() {
 		assertEquals(
 				"[Schedule] channel = channel; name = title; start = 25:30",

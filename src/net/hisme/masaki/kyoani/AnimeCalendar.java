@@ -7,6 +7,7 @@ import java.util.Calendar;
 
 /**
  * 25時 などの表記に特化したカレンダークラス
+ * 
  * @author masarakki
  */
 public class AnimeCalendar extends GregorianCalendar {
@@ -43,6 +44,7 @@ public class AnimeCalendar extends GregorianCalendar {
 	public AnimeCalendar(String time) {
 		super();
 		String[] times = time.split(":");
+		set(DAY_OF_MONTH, get(DAY_OF_MONTH));
 		set(HOUR_OF_DAY, Integer.parseInt(times[0]));
 		set(MINUTE, Integer.parseInt(times[1]));
 	}
