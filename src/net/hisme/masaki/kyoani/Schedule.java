@@ -2,9 +2,6 @@ package net.hisme.masaki.kyoani;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import android.content.Context;
 import android.util.Log;
 
