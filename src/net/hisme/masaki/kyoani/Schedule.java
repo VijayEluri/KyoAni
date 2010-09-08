@@ -37,7 +37,7 @@ public class Schedule implements Serializable {
 	}
 
 	public String getStartString() {
-		return start.getTimeString();
+		return this.start.getTimeString();
 	}
 
 	public static boolean saveSchedules(Context context,
@@ -79,7 +79,7 @@ public class Schedule implements Serializable {
 	}
 
 	public String toString() {
-		return "[Schedule] channel = " + channel + "; name = " + name
-				+ "; start = " + start.getTimeString();
+		return "[Schedule] channel = " + this.channel + "; name = " + this.name
+				+ "; start = " + this.start.getTimeString();
 	}
 }

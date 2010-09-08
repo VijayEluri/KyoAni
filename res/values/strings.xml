@@ -19,7 +19,8 @@
 	<string name="error_account_cant_authorize">アカウントの認証に失敗します。\nメニューからアカウントを修正してください。</string>
 	<string name="error_network_disable">ネットワークに接続できません。</string>
 	<string name="error_animeone_disable">アニメワンのサーバに接続できません。しばらく待ってから再試行してください。</string>
-
+	<string name="error_retry_over">リトライ回数を超えて失敗しました。しばらく待っても直らない場合はバグ報告ください。</string>
+	
 	<!-- main view -->
 	<string name="title_main">今日アニ</string>
 	<string name="button_main_reload">更新</string>

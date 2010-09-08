@@ -43,14 +43,18 @@ public class MainActivity extends Activity {
 		updateSchedule(true);
 	}
 
-	private void displaySchedule(ArrayList<Schedule> list) {
+	private void displaySchedule(ArrayList<Schedule> list, int retry_count) {
 		ArrayList<HashMap<String, String>> schedules = new ArrayList<HashMap<String, String>>();
-		for (Schedule schedule : list) {
-			HashMap<String, String> hash = new HashMap<String, String>();
-			hash.put("LINE_1", schedule.getName());
-			hash.put("LINE_2", schedule.getChannel() + " "
-					+ schedule.getStartString());
-			schedules.add(hash);
+		try {
+			for (Schedule schedule : list) {
+				HashMap<String, String> hash = new HashMap<String, String>();
+				hash.put("LINE_1", schedule.getName());
+				hash.put("LINE_2", schedule.getChannel() + " "
+						+ schedule.getStartString());
+				schedules.add(hash);
+			}
+		} catch (NullPointerException e) {
+			updateSchedule(true, retry_count - 1);
 		}
 		SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, schedules,
 				android.R.layout.simple_list_item_2, new String[] { "LINE_1",
@@ -61,44 +65,54 @@ public class MainActivity extends Activity {
 	}
 
 	private void updateSchedule(final boolean force_reload) {
+		updateSchedule(force_reload, 3);
+	}
+
+	private void updateSchedule(final boolean force_reload,
+			final int retry_count) {
 		final Handler handler = new Handler();
-		new Thread() {
-			public void run() {
-				try {
-					AnimeOne anime_one = new AnimeOne(MainActivity.this);
-					final ArrayList<Schedule> list;
-					if (force_reload) {
+		if (retry_count > 0) {
+			new Thread() {
+				public void run() {
+					try {
+						AnimeOne anime_one = new AnimeOne(MainActivity.this);
+						final ArrayList<Schedule> list;
+						if (force_reload) {
+							handler.post(new Runnable() {
+								public void run() {
+									ListView schedule_list = (ListView) MainActivity.this
+											.findViewById(R.id.schedule_list);
+									ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
+											MainActivity.this,
+											android.R.layout.simple_list_item_1);
+									array_adapter.add("更新中...");
+									schedule_list.setAdapter(array_adapter);
+								}
+							});
+							list = anime_one.reloadSchedules(MainActivity.this);
+						} else {
+							list = anime_one.getSchedules(MainActivity.this);
+						}
+
 						handler.post(new Runnable() {
 							public void run() {
-								ListView schedule_list = (ListView) MainActivity.this
-										.findViewById(R.id.schedule_list);
-								ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
-										MainActivity.this,
-										android.R.layout.simple_list_item_1);
-								array_adapter.add("更新中...");
-								schedule_list.setAdapter(array_adapter);
+								MainActivity.this.displaySchedule(list,
+										retry_count);
 							}
 						});
-						list = anime_one.reloadSchedules(MainActivity.this);
-					} else {
-						list = anime_one.getSchedules(MainActivity.this);
+					} catch (Account.BlankException e) {
+						handler.post(new Runnable() {
+							public void run() {
+								MainActivity.this
+										.displayErrorMessage(R.string.error_account_is_blank);
+							}
+						});
 					}
-
-					handler.post(new Runnable() {
-						public void run() {
-							MainActivity.this.displaySchedule(list);
-						}
-					});
-				} catch (Account.BlankException e) {
-					handler.post(new Runnable() {
-						public void run() {
-							MainActivity.this
-									.displayErrorMessage(R.string.error_account_is_blank);
-						}
-					});
 				}
-			}
-		}.start();
+			}.start();
+		} else {
+			displayErrorMessage(R.string.error_retry_over);
+		}
 	}
 
 	public void displayErrorMessage(int res_id) {
