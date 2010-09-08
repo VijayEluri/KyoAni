@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.widget.SimpleAdapter;
 import android.widget.ListView;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.ArrayAdapter;
 import android.content.Intent;
 
 public class MainActivity extends Activity {
@@ -41,36 +43,62 @@ public class MainActivity extends Activity {
 		updateSchedule(true);
 	}
 
-	public void updateSchedule(boolean force_reload) {
-		try {
-			AnimeOne anime_one = new AnimeOne(this);
-
-			ArrayList<Schedule> list = new ArrayList<Schedule>();
-			if (force_reload) {
-				list = anime_one.reloadSchedules(this);
-			} else {
-				list = anime_one.getSchedules(this);
-			}
-
-			ArrayList<HashMap<String, String>> schedules = new ArrayList<HashMap<String, String>>();
-			for (Schedule schedule : list) {
-				HashMap<String, String> hash = new HashMap<String, String>();
-				hash.put("LINE_1", schedule.getName());
-				hash.put("LINE_2", schedule.getChannel() + " "
-						+ schedule.getStartString());
-				schedules.add(hash);
-			}
-
-			SimpleAdapter adapter = new SimpleAdapter(this, schedules,
-					android.R.layout.simple_list_item_2, new String[] {
-							"LINE_1", "LINE_2" }, new int[] {
-							android.R.id.text1, android.R.id.text2 });
-			ListView schedule_list = (ListView) findViewById(R.id.schedule_list);
-
-			schedule_list.setAdapter(adapter);
-		} catch (Account.BlankException e) {
-			displayErrorMessage(R.string.error_account_is_blank);
+	private void displaySchedule(ArrayList<Schedule> list) {
+		ArrayList<HashMap<String, String>> schedules = new ArrayList<HashMap<String, String>>();
+		for (Schedule schedule : list) {
+			HashMap<String, String> hash = new HashMap<String, String>();
+			hash.put("LINE_1", schedule.getName());
+			hash.put("LINE_2", schedule.getChannel() + " "
+					+ schedule.getStartString());
+			schedules.add(hash);
 		}
+		SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, schedules,
+				android.R.layout.simple_list_item_2, new String[] { "LINE_1",
+						"LINE_2" }, new int[] { android.R.id.text1,
+						android.R.id.text2 });
+		ListView schedule_list = (ListView) findViewById(R.id.schedule_list);
+		schedule_list.setAdapter(adapter);
+	}
+
+	private void updateSchedule(final boolean force_reload) {
+		final Handler handler = new Handler();
+		new Thread() {
+			public void run() {
+				try {
+					AnimeOne anime_one = new AnimeOne(MainActivity.this);
+					final ArrayList<Schedule> list;
+					if (force_reload) {
+						handler.post(new Runnable() {
+							public void run() {
+								ListView schedule_list = (ListView) MainActivity.this
+										.findViewById(R.id.schedule_list);
+								ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
+										MainActivity.this,
+										android.R.layout.simple_list_item_1);
+								array_adapter.add("更新中...");
+								schedule_list.setAdapter(array_adapter);
+							}
+						});
+						list = anime_one.reloadSchedules(MainActivity.this);
+					} else {
+						list = anime_one.getSchedules(MainActivity.this);
+					}
+
+					handler.post(new Runnable() {
+						public void run() {
+							MainActivity.this.displaySchedule(list);
+						}
+					});
+				} catch (Account.BlankException e) {
+					handler.post(new Runnable() {
+						public void run() {
+							MainActivity.this
+									.displayErrorMessage(R.string.error_account_is_blank);
+						}
+					});
+				}
+			}
+		}.start();
 	}
 
 	public void displayErrorMessage(int res_id) {
