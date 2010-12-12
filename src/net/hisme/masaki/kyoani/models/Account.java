@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 public class Account {
     private String user_id = null;
     private String password = null;
-    private boolean loaded = false;
 
     /**
      * Create Account instance
@@ -49,7 +48,6 @@ public class Account {
             throw new BlankException();
 
         }
-        loaded = true;
         return true;
     }
 
