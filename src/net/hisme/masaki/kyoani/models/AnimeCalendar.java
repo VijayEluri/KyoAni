@@ -11,6 +11,8 @@ import java.util.Calendar;
  * @author masarakki
  */
 public class AnimeCalendar extends GregorianCalendar {
+    private static final long serialVersionUID = 1L;
+
     public AnimeCalendar() {
         super();
     }

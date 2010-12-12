@@ -415,11 +415,14 @@ public class AnimeOne {
     }
 
     class SessionExpiredException extends Exception {
+        private static final long serialVersionUID = 1L;
     }
 
     public class LoginFailureException extends Exception {
+        private static final long serialVersionUID = 1L;
     }
 
     public class NetworkUnavailableException extends Exception {
+        private static final long serialVersionUID = 1L;
     }
 }

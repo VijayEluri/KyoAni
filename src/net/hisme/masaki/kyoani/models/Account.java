@@ -64,6 +64,6 @@ public class Account {
      * 
      */
     public static class BlankException extends Exception {
-        static final long serialVersionUID = 1;
+        private static final long serialVersionUID = 1L;
     }
 }
