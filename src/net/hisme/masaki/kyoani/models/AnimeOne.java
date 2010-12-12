@@ -51,18 +51,48 @@ public class AnimeOne {
     public static final int NETWORK_ERROR = 2;
 
     /**
-     * 
+     * create new AnimeOne
+     */
+    public AnimeOne() {
+    }
+
+    /**
      * @param context
      * @throws Account.BlankException
      */
     public AnimeOne(Context context) throws Account.BlankException {
+        setContext(context);
+    }
+
+    /**
+     * @deprecated
+     * @param account
+     */
+    public AnimeOne(Account account) {
+        setAccount(account);
+        initHttpClient();
+    }
+
+    public void setContext(Context context) throws Account.BlankException {
         this.context = context;
         initAccount();
         initHttpClient();
     }
 
+    public Context getContext() {
+        return this.context;
+    }
+
     private void initAccount() throws Account.BlankException {
-        this.account = Account.load(this.context);
+        setAccount(new Account(this.context));
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Account getAccount() {
+        return this.account;
     }
 
     private void initHttpClient() {
@@ -73,21 +103,6 @@ public class AnimeOne {
 
         this.http = new DefaultHttpClient(params);
         loadSessionID();
-    }
-
-    /**
-     * @deprecated
-     * @param account
-     */
-    public AnimeOne(Account account) {
-        this.account = account;
-        BasicHttpParams params = new BasicHttpParams();
-        int timeout = 0;
-        HttpConnectionParams.setConnectionTimeout(params, timeout);
-        HttpConnectionParams.setSoTimeout(params, timeout);
-
-        this.http = new DefaultHttpClient(params);
-
     }
 
     public void nextAnime() {
