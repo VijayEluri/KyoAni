@@ -90,9 +90,9 @@ public class MainActivity extends Activity {
                                     schedule_list.setAdapter(array_adapter);
                                 }
                             });
-                            list = anime_one.reloadSchedules(MainActivity.this);
+                            list = anime_one.reloadSchedules();
                         } else {
-                            list = anime_one.getSchedules(MainActivity.this);
+                            list = anime_one.getSchedules();
                         }
 
                         handler.post(new Runnable() {
@@ -112,6 +112,7 @@ public class MainActivity extends Activity {
                         displayErrorMessage(R.string.error_account_cant_authorize);
                     } catch (AnimeOne.NetworkUnavailableException e) {
                         displayErrorMessage(R.string.error_network_disable);
+
                     }
                 }
             }.start();
