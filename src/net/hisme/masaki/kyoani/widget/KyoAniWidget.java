@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import net.hisme.masaki.kyoani.activities.MainActivity;
+import net.hisme.masaki.kyoani.models.AnimeOne;
+import net.hisme.masaki.kyoani.models.Schedule;
 
 import net.hisme.masaki.kyoani.*;
 

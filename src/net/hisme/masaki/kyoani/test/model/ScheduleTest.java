@@ -1,8 +1,8 @@
 package net.hisme.masaki.kyoani.test.model;
 
 import junit.framework.TestCase;
-import net.hisme.masaki.kyoani.Schedule;
-import net.hisme.masaki.kyoani.AnimeCalendar;
+import net.hisme.masaki.kyoani.models.AnimeCalendar;
+import net.hisme.masaki.kyoani.models.Schedule;
 
 public class ScheduleTest extends TestCase {
 	private Schedule schedule;

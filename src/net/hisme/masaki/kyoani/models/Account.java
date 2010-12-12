@@ -1,4 +1,4 @@
-package net.hisme.masaki.kyoani;
+package net.hisme.masaki.kyoani.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;

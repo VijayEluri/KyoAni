@@ -1,4 +1,5 @@
-package net.hisme.masaki.kyoani;
+package net.hisme.masaki.kyoani.models;
+
 
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.client.methods.HttpPost;

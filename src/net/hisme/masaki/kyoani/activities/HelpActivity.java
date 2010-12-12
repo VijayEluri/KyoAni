@@ -1,7 +1,7 @@
 package net.hisme.masaki.kyoani.activities;
 
-import net.hisme.masaki.kyoani.AnimeOne;
 import net.hisme.masaki.kyoani.R;
+import net.hisme.masaki.kyoani.models.AnimeOne;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;

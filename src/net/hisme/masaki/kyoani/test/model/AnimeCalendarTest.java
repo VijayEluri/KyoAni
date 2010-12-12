@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
-import net.hisme.masaki.kyoani.AnimeCalendar;
+import net.hisme.masaki.kyoani.models.AnimeCalendar;
 
 public class AnimeCalendarTest extends TestCase {
 	private AnimeCalendar cal;

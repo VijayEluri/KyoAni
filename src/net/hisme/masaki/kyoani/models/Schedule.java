@@ -1,7 +1,8 @@
-package net.hisme.masaki.kyoani;
+package net.hisme.masaki.kyoani.models;
 
 import java.io.*;
 import java.util.ArrayList;
+
 import android.content.Context;
 import android.util.Log;
 

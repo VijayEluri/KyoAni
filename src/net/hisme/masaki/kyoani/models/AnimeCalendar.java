@@ -1,4 +1,4 @@
-package net.hisme.masaki.kyoani;
+package net.hisme.masaki.kyoani.models;
 
 import java.util.GregorianCalendar;
 import java.util.Locale;

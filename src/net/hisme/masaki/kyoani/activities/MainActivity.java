@@ -1,9 +1,10 @@
 package net.hisme.masaki.kyoani.activities;
 
 import net.hisme.masaki.kyoani.R;
-import net.hisme.masaki.kyoani.AnimeOne;
-import net.hisme.masaki.kyoani.Account;
-import net.hisme.masaki.kyoani.Schedule;
+import net.hisme.masaki.kyoani.models.Account;
+import net.hisme.masaki.kyoani.models.AnimeOne;
+import net.hisme.masaki.kyoani.models.Schedule;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import android.app.Activity;
