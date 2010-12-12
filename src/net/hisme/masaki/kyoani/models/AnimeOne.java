@@ -93,7 +93,7 @@ public class AnimeOne {
 
 	}
 
-	public ArrayList<Schedule> getSchedules(Context context) {
+	public ArrayList<Schedule> getSchedules(Context context) throws LoginFailureException{
 		log("Get Schedules");
 		if (needUpdate(context)) {
 			log("Need Update");
@@ -104,36 +104,42 @@ public class AnimeOne {
 		}
 	}
 
-	public ArrayList<Schedule> reloadSchedules(Context context) {
+	public ArrayList<Schedule> reloadSchedules(Context context) throws LoginFailureException{
 		log("Reload Schedule");
-		if (login() == LOGIN_OK) {
+		if (hasSessionID()) {
 			log("Login Success");
-			ArrayList<Schedule> schedules = mypage();
-			if (Schedule.saveSchedules(context, schedules)) {
-				log("Update cached date");
-				GregorianCalendar today = today();
-				try {
-					BufferedWriter writer = new BufferedWriter(
-							new OutputStreamWriter(context.openFileOutput(
-									DATE_FILE, 0)));
-					writer.write(String.format("%04d-%02d-%02d", today
-							.get(Calendar.YEAR), today.get(Calendar.MONTH) + 1,
-							today.get(Calendar.DAY_OF_MONTH)));
-					writer.flush();
-					writer.close();
-				} catch (FileNotFoundException e) {
-					log("FileNotFound in write updated date");
-				} catch (IOException e) {
-					log("IOException in write updated date");
+			try {
+				ArrayList<Schedule> schedules = mypage();
+				if (Schedule.saveSchedules(context, schedules)) {
+					log("Update cached date");
+					GregorianCalendar today = today();
+					try {
+						BufferedWriter writer = new BufferedWriter(
+								new OutputStreamWriter(context.openFileOutput(
+										DATE_FILE, 0)));
+						writer.write(String.format("%04d-%02d-%02d", today
+								.get(Calendar.YEAR),
+								today.get(Calendar.MONTH) + 1, today
+										.get(Calendar.DAY_OF_MONTH)));
+						writer.flush();
+						writer.close();
+					} catch (FileNotFoundException e) {
+						log("FileNotFound in write updated date");
+					} catch (IOException e) {
+						log("IOException in write updated date");
+					}
 				}
+				return schedules;
+			} catch (SessionExpiredException e) {
+				login();
+				return reloadSchedules(context);
 			}
-			return schedules;
 		} else {
 			return null;
 		}
 	}
 
-	public ArrayList<Schedule> mypage() {
+	public ArrayList<Schedule> mypage() throws SessionExpiredException {
 		return mypage(3);
 	}
 
@@ -176,7 +182,8 @@ public class AnimeOne {
 		}
 	}
 
-	public ArrayList<Schedule> mypage(int retry_count) {
+	public ArrayList<Schedule> mypage(int retry_count)
+			throws SessionExpiredException {
 		log("MyPage Start");
 		ArrayList<Schedule> result = new ArrayList<Schedule>();
 		boolean retry = true;
@@ -254,6 +261,8 @@ public class AnimeOne {
 						}
 					}
 				}
+			} else {
+				throw new SessionExpiredException();
 			}
 			log("Parse Finish: " + result.size() + " items found.");
 		} catch (org.apache.http.client.ClientProtocolException e) {
@@ -311,6 +320,15 @@ public class AnimeOne {
 		}
 	}
 
+	private boolean hasSessionID() {
+		for (Cookie cookie : this.http.getCookieStore().getCookies()) {
+			if (cookie.getName().equals("PHPSESSID")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private String getSessionID() {
 		for (Cookie cookie : this.http.getCookieStore().getCookies()) {
 			if (cookie.getName().equals("PHPSESSID")) {
@@ -320,7 +338,7 @@ public class AnimeOne {
 		return "";
 	}
 
-	public int login() {
+	public int login() throws LoginFailureException {
 		log("Login Start");
 		int result;
 		try {
@@ -343,16 +361,18 @@ public class AnimeOne {
 
 			http.execute(post);
 			for (Cookie cookie : http.getCookieStore().getCookies()) {
-				if (cookie.getName().equals("user[id_nick]")) {
-					result = LOGIN_OK;
-					break;
-				}
 				if (cookie.getName().equals(SESSION_COOKIE_NAME)) {
 					log("save session");
 					saveSessionID(cookie.getValue());
 				}
+				if (cookie.getName().equals("user[id_nick]")) {
+					result = LOGIN_OK;
+				}
 			}
 			post.abort();
+			if (result == LOGIN_NG) {
+				throw new LoginFailureException();
+			}
 		} catch (Exception e) {
 			log(e.toString());
 			result = NETWORK_ERROR;
@@ -397,5 +417,11 @@ public class AnimeOne {
 
 	private void log(String str) {
 		Log.d("KyoAni", "[AnimeOne] " + str);
+	}
+
+	class SessionExpiredException extends Exception {
+	}
+
+	public class LoginFailureException extends Exception {
 	}
 }

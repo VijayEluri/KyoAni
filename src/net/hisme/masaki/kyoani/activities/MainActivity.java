@@ -108,6 +108,8 @@ public class MainActivity extends Activity {
 										.displayErrorMessage(R.string.error_account_is_blank);
 							}
 						});
+					} catch (AnimeOne.LoginFailureException e) {
+			            displayErrorMessage(R.string.error_account_cant_authorize);
 					}
 				}
 			}.start();
