@@ -1,70 +1,68 @@
 package net.hisme.masaki.kyoani.test.model;
 
-import junit.framework.TestCase;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
+import static org.junit.Assert.*;
+import org.junit.*;
 
-public class ScheduleTest extends TestCase {
-	private Schedule schedule;
+public class ScheduleTest {
+    private Schedule schedule;
 
-	public ScheduleTest(String name) {
-		super(name);
-	}
+    @Before
+    public void before() {
+        schedule = new Schedule("channel", "title", "25:30");
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		schedule = new Schedule("channel", "title", "25:30");
-	}
+    /**
+     * new with instance of AnimeCalendar, getStart() should equal to that
+     * instance
+     */
+    @Test
+    public void schedule() {
+        assertEquals(schedule.getStart().hashCode(), new Schedule("channel",
+                "title", schedule.getStart()).getStart().hashCode());
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
+    /**
+     * getChannel() should equal to channel parameter
+     */
+    @Test
+    public void getChannel() {
+        assertEquals("channel", schedule.getChannel());
+    }
 
-	/**
-	 * new with instance of AnimeCalendar, getStart() should equal to that
-	 * instance
-	 */
-	public void testSchedule() {
-		assertEquals(schedule.getStart().hashCode(), new Schedule("channel",
-				"title", schedule.getStart()).getStart().hashCode());
-	}
+    /**
+     * getName() should equal to name parameter
+     */
+    @Test
+    public void getName() {
+        assertEquals("title", schedule.getName());
+    }
 
-	/**
-	 * getChannel() should equal to channel parameter
-	 */
-	public void testGetChannel() {
-		assertEquals("channel", schedule.getChannel());
-	}
+    /**
+     * getStart() should equal to start parameter
+     */
+    @Test
+    public void getStart() {
+        assertEquals(new AnimeCalendar("25:30"), schedule.getStart());
+    }
 
-	/**
-	 * getName() should equal to name parameter
-	 */
-	public void testGetName() {
-		assertEquals("title", schedule.getName());
-	}
+    /**
+     * getStartString() should call start.getStartString()
+     */
+    @Test
+    public void getStartString() {
+        assertEquals("25:30", schedule.getStartString());
+    }
 
-	/**
-	 * getStart() should equal to start parameter
-	 */
-	public void testGetStart() {
-		assertEquals(new AnimeCalendar("25:30"), schedule.getStart());
-	}
+    /**
+     * toString() should format information
+     */
+    @Test
+    public void testToString() {
+        assertEquals(
+                "[Schedule] channel = channel; name = title; start = 25:30",
+                schedule.toString());
 
-	/**
-	 * getStartString() should call start.getStartString()
-	 */
-	public void testGetStartString() {
-		assertEquals("25:30", schedule.getStartString());
-	}
-
-	/**
-	 * toString() should format information
-	 */
-	public void testToString() {
-		assertEquals(
-				"[Schedule] channel = channel; name = title; start = 25:30",
-				schedule.toString());
-	}
+    }
 }

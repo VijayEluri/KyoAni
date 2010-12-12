@@ -1,5 +1,5 @@
 #djUnit Plugin Settings
-#Fri Aug 13 19:25:51 JST 2010
+#Mon Dec 13 01:12:44 JST 2010
 CoverageIncludedPatterns=net.hisme.masaki.*;
 VirtualMockIgnoreLibrary=false
 CoverageExcludedPatterns=.*Test$;
