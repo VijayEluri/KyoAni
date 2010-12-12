@@ -3,7 +3,6 @@ package net.hisme.masaki.kyoani.models;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.Calendar;
 
 /**
  * 25時 などの表記に特化したカレンダークラス

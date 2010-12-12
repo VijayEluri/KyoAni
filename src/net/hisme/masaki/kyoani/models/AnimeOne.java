@@ -31,9 +31,9 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 
 public class AnimeOne {
-    Context context;
-    Account account = null;
-    DefaultHttpClient http;
+    private Context context = null;
+    private Account account = null;
+    private DefaultHttpClient http = null;
 
     public static final String REGISTER_URI = "https://anime.biglobe.ne.jp/regist/regist_user";
     private static final String MYPAGE_URI = "http://anime.biglobe.ne.jp/program/myprogram";
