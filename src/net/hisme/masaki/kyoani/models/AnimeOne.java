@@ -3,6 +3,7 @@ package net.hisme.masaki.kyoani.models;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.HttpResponse;
@@ -12,6 +13,7 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import java.lang.StringBuffer;
+import java.net.UnknownHostException;
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -93,7 +95,8 @@ public class AnimeOne {
 
 	}
 
-	public ArrayList<Schedule> getSchedules(Context context) throws LoginFailureException{
+	public ArrayList<Schedule> getSchedules(Context context)
+			throws LoginFailureException, NetworkUnavailableException {
 		log("Get Schedules");
 		if (needUpdate(context)) {
 			log("Need Update");
@@ -104,10 +107,11 @@ public class AnimeOne {
 		}
 	}
 
-	public ArrayList<Schedule> reloadSchedules(Context context) throws LoginFailureException{
+	public ArrayList<Schedule> reloadSchedules(Context context)
+			throws LoginFailureException, NetworkUnavailableException {
 		log("Reload Schedule");
-		if (hasSessionID()) {
-			log("Login Success");
+		if (hasSessionID() || login()) {
+			log("Use Session");
 			try {
 				ArrayList<Schedule> schedules = mypage();
 				if (Schedule.saveSchedules(context, schedules)) {
@@ -131,12 +135,11 @@ public class AnimeOne {
 				}
 				return schedules;
 			} catch (SessionExpiredException e) {
-				login();
-				return reloadSchedules(context);
+				if (login())
+					return reloadSchedules(context);
 			}
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	public ArrayList<Schedule> mypage() throws SessionExpiredException {
@@ -338,47 +341,40 @@ public class AnimeOne {
 		return "";
 	}
 
-	public int login() throws LoginFailureException {
+	public boolean login() throws NetworkUnavailableException {
 		log("Login Start");
-		int result;
+		boolean result = false;
 		try {
-			HttpGet get = new HttpGet(LOGIN_FORM);
-			HttpResponse res = http.execute(get);
-			get.abort();
-
-			String user_id = account.getUser();
-			String password = account.getPassword();
-
-			result = LOGIN_NG;
 			HttpPost post = new HttpPost(LOGIN_URI);
 			post.addHeader("Referer", LOGIN_FORM);
 			post.addHeader("X-Requested-With", "XMLHttpRequest");
 			post.addHeader("User-Agent", "Mozilla/5.0(AnimeOneBrowser)");
 			post.addHeader("Content-Type",
 					"application/x-www-form-urlencoded; charset=UTF-8");
-			post.setEntity(new StringEntity("mail=" + user_id + "&password="
-					+ password));
+			post.setEntity(new StringEntity("mail=" + account.getUser()
+					+ "&password=" + account.getPassword()));
 
 			http.execute(post);
+
 			for (Cookie cookie : http.getCookieStore().getCookies()) {
-				if (cookie.getName().equals(SESSION_COOKIE_NAME)) {
-					log("save session");
+				if (cookie.getName().equals(SESSION_COOKIE_NAME))
 					saveSessionID(cookie.getValue());
-				}
-				if (cookie.getName().equals("user[id_nick]")) {
-					result = LOGIN_OK;
-				}
+				if (cookie.getName().equals("user[id_nick]"))
+					result = true;
 			}
 			post.abort();
-			if (result == LOGIN_NG) {
-				throw new LoginFailureException();
-			}
-		} catch (Exception e) {
-			log(e.toString());
-			result = NETWORK_ERROR;
+
+			if (result)
+				return result;
+
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			throw new NetworkUnavailableException();
+		} catch (IOException e) {
+			throw new NetworkUnavailableException();
 		}
-		log("Login Finish");
-		return result;
+		return false;
 	}
 
 	private ArrayList<String> nodeMapString(Node node) {
@@ -423,5 +419,8 @@ public class AnimeOne {
 	}
 
 	public class LoginFailureException extends Exception {
+	}
+
+	public class NetworkUnavailableException extends Exception {
 	}
 }
