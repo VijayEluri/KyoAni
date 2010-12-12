@@ -58,6 +58,7 @@ public class Schedule implements Serializable {
         return ret;
     }
 
+    @SuppressWarnings("unchecked")
     public static ArrayList<Schedule> loadSchedules(Context context) {
         ArrayList<Schedule> schedules = new ArrayList<Schedule>();
         try {

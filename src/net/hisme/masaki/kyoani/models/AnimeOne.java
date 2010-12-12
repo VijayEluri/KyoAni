@@ -417,10 +417,12 @@ public class AnimeOne {
         }
     }
 
+    @SuppressWarnings("unused")
     private void log(boolean b) {
         log(b ? "true" : "false");
     }
 
+    @SuppressWarnings("unused")
     private void log(int n) {
         log(new Integer(n).toString());
     }
