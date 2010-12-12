@@ -9,11 +9,10 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-import junit.framework.TestCase;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 
 public class AnimeCalendarTest {
-    private AnimeCalendar cal;
+    private AnimeCalendar cal = null;
 
     @Before
     public void before() {
