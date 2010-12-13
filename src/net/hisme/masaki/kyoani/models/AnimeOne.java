@@ -30,7 +30,7 @@ import java.util.GregorianCalendar;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-public class AnimeOne implements ScheduleService {
+public class AnimeOne extends AbstractScheduleService {
     private Context context = null;
     private Account account = null;
     private DefaultHttpClient http = null;
@@ -95,14 +95,14 @@ public class AnimeOne implements ScheduleService {
         return this.account;
     }
 
-    private void initHttpClient() {
-        BasicHttpParams params = new BasicHttpParams();
-        int timeout = 0;
-        HttpConnectionParams.setConnectionTimeout(params, timeout);
-        HttpConnectionParams.setSoTimeout(params, timeout);
+    @Override
+    protected String getSessionFileName() {
+        return SESSION_FILE_NAME;
+    }
 
-        this.http = new DefaultHttpClient(params);
-        loadSessionID();
+    @Override
+    protected String getSessionKeyName() {
+        return SESSION_KEY_NAME;
     }
 
     public void nextAnime() {
@@ -306,43 +306,6 @@ public class AnimeOne implements ScheduleService {
         }
     }
 
-    private void loadSessionID() {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    this.context.openFileInput(SESSION_FILE)));
-            String session = reader.readLine();
-            this.http.getCookieStore().addCookie(
-                    new BasicClientCookie(SESSION_COOKIE_NAME, session));
-            reader.close();
-        } catch (FileNotFoundException e) {
-            log("Session File not exists");
-        } catch (IOException e) {
-            log("IOException in loadSessionID()");
-        }
-    }
-
-    private void saveSessionID(String s) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                    context.openFileOutput(SESSION_FILE, 0)));
-            writer.write(s);
-            writer.close();
-        } catch (FileNotFoundException e) {
-
-        } catch (IOException e) {
-
-        }
-    }
-
-    private boolean hasSessionID() {
-        for (Cookie cookie : this.http.getCookieStore().getCookies()) {
-            if (cookie.getName().equals("PHPSESSID")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private String getSessionID() {
         for (Cookie cookie : this.http.getCookieStore().getCookies()) {
             if (cookie.getName().equals("PHPSESSID")) {
@@ -368,7 +331,7 @@ public class AnimeOne implements ScheduleService {
             http.execute(post);
 
             for (Cookie cookie : http.getCookieStore().getCookies()) {
-                if (cookie.getName().equals(SESSION_COOKIE_NAME))
+                if (cookie.getName().equals(getSessionKeyName()))
                     saveSessionID(cookie.getValue());
                 if (cookie.getName().equals("user[id_nick]"))
                     result = true;
