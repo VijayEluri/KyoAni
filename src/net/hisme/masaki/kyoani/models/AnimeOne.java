@@ -242,9 +242,6 @@ public class AnimeOne {
                                                 .item(0)).get(0));
                 date_matcher.find();
 
-                int month = Integer.parseInt(date_matcher.group(1));
-                int day = Integer.parseInt(date_matcher.group(2));
-
                 NodeList td_list = doc.getElementsByTagName("td");
                 final int TDNUMS = 4;
                 for (int i = 0; i < td_list.getLength() / TDNUMS; i++) {
