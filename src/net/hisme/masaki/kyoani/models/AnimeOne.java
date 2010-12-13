@@ -33,15 +33,15 @@ import java.io.FileNotFoundException;
 public class AnimeOne extends AbstractScheduleService {
     private Context context = null;
     private Account account = null;
-    private DefaultHttpClient http = null;
 
     public static final String REGISTER_URI = "https://anime.biglobe.ne.jp/regist/regist_user";
     private static final String MYPAGE_URI = "http://anime.biglobe.ne.jp/program/myprogram";
     private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login/index";
     private static final String LOGIN_URI = "https://anime.biglobe.ne.jp/login/login_ajax";
     private static final String LOGOUT_URI = "https://anime.biglobe.ne.jp/login/logout_ajax";
-    private static final String SESSION_COOKIE_NAME = "PHPSESSID";
-    private static final String SESSION_FILE = "_session";
+    private static final String SESSION_FILE_NAME = "_session";
+    private static final String SESSION_KEY_NAME = "PHPSESSID";
+
     private static final int BUFFSIZE = 1024;
 
     public static final String DATE_FILE = "updated.txt";
