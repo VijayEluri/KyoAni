@@ -30,7 +30,7 @@ import java.util.GregorianCalendar;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-public class AnimeOne {
+public class AnimeOne implements ScheduleService {
     private Context context = null;
     private Account account = null;
     private DefaultHttpClient http = null;
@@ -432,11 +432,4 @@ public class AnimeOne {
         private static final long serialVersionUID = 1L;
     }
 
-    public class LoginFailureException extends Exception {
-        private static final long serialVersionUID = 1L;
-    }
-
-    public class NetworkUnavailableException extends Exception {
-        private static final long serialVersionUID = 1L;
-    }
 }
