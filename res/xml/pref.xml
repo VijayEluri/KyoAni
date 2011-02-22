@@ -3,8 +3,10 @@
 	<PreferenceCategory android:title="@string/form_title"
 		android:summary="@string/form_description">
 		<EditTextPreference android:key="account"
-			android:title="@string/form_account_title" android:summary="@string/form_account_description" />
+			android:title="@string/form_account_title" android:summary="@string/form_account_description"
+			android:minHeight="24px" />
 		<EditTextPreference android:key="password"
-			android:title="@string/form_password_title" android:password="true" />
+			android:title="@string/form_password_title" android:password="true"
+			android:minHeight="24px" />
 	</PreferenceCategory>
 </PreferenceScreen>
