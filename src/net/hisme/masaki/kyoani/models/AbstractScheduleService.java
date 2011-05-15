@@ -50,6 +50,14 @@ public abstract class AbstractScheduleService implements ScheduleService {
         loadSessionID();
     }
 
+    protected void setContext(Context context) {
+        this.context = context;
+    }
+
+    protected Context getContext() {
+        return this.context;
+    }
+
     /**
      * return cookie has session id or not
      * 

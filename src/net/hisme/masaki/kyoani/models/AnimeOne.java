@@ -1,7 +1,5 @@
 package net.hisme.masaki.kyoani.models;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
@@ -9,8 +7,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
 import java.lang.StringBuffer;
 import java.net.UnknownHostException;
 import java.io.OutputStreamWriter;
@@ -31,7 +27,6 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 
 public class AnimeOne extends AbstractScheduleService {
-    private Context context = null;
     private Account account = null;
 
     public static final String REGISTER_URI = "https://anime.biglobe.ne.jp/regist/regist_user";
@@ -62,6 +57,9 @@ public class AnimeOne extends AbstractScheduleService {
      */
     public AnimeOne(Context context) throws Account.BlankException {
         setContext(context);
+        initAccount();
+        initHttpClient();
+
     }
 
     /**
@@ -73,18 +71,8 @@ public class AnimeOne extends AbstractScheduleService {
         initHttpClient();
     }
 
-    public void setContext(Context context) throws Account.BlankException {
-        this.context = context;
-        initAccount();
-        initHttpClient();
-    }
-
-    public Context getContext() {
-        return this.context;
-    }
-
     private void initAccount() throws Account.BlankException {
-        setAccount(new Account(this.context));
+        setAccount(new Account(getContext()));
     }
 
     public void setAccount(Account account) {
