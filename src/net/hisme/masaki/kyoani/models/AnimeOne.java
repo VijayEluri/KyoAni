@@ -39,8 +39,6 @@ public class AnimeOne extends AbstractScheduleService {
 
     private static final int BUFFSIZE = 1024;
 
-    public static final String DATE_FILE = "updated.txt";
-
     public static final int LOGIN_OK = 0;
     public static final int LOGIN_NG = 1;
     public static final int NETWORK_ERROR = 2;
@@ -84,6 +82,11 @@ public class AnimeOne extends AbstractScheduleService {
     }
 
     @Override
+    protected boolean isAccountPresent() {
+        return getAccount() != null;
+    }
+
+    @Override
     protected String getSessionFileName() {
         return SESSION_FILE_NAME;
     }
@@ -91,10 +94,6 @@ public class AnimeOne extends AbstractScheduleService {
     @Override
     protected String getSessionKeyName() {
         return SESSION_KEY_NAME;
-    }
-
-    public void nextAnime() {
-
     }
 
     public ArrayList<Schedule> getSchedules() throws LoginFailureException,
@@ -144,47 +143,17 @@ public class AnimeOne extends AbstractScheduleService {
         return null;
     }
 
-    public ArrayList<Schedule> mypage() throws SessionExpiredException {
-        return mypage(3);
-    }
-
-    public GregorianCalendar today() {
-        GregorianCalendar now = new GregorianCalendar();
-        now.add(GregorianCalendar.HOUR_OF_DAY, -6);
-        return new GregorianCalendar(now.get(Calendar.YEAR), now
-                .get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    }
-
-    public boolean needUpdate() {
-        GregorianCalendar updated = updatedDate();
-        if (updated == null)
-            return true;
-
-        return today().compareTo(updated) == 1 ? true : false;
-    }
-
-    public GregorianCalendar updatedDate() {
+    @Override
+    public ArrayList<Schedule> fetchSchedules() {
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    context.openFileInput(DATE_FILE)));
-            String line = reader.readLine();
-            reader.close();
-            if (line != null) {
-                Matcher m = Pattern.compile("([0-9]{4})-([0-9]{2})-([0-9]{2})")
-                        .matcher(line);
-                if (m.find()) {
-                    int year = Integer.parseInt(m.group(1));
-                    int month = Integer.parseInt(m.group(2)) - 1;
-                    int day = Integer.parseInt(m.group(3));
-                    return new GregorianCalendar(year, month, day, 0, 0, 0);
-                }
-            }
-            return null;
-        } catch (FileNotFoundException e) {
-            return null;
-        } catch (IOException e) {
+            return mypage(3);
+        } catch (SessionExpiredException e) {
             return null;
         }
+    }
+
+    public ArrayList<Schedule> mypage() throws SessionExpiredException {
+        return mypage(3);
     }
 
     public ArrayList<Schedule> mypage(int retry_count)

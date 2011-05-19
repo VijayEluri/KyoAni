@@ -26,6 +26,7 @@ import android.util.Log;
 public abstract class AbstractScheduleService implements ScheduleService {
     protected DefaultHttpClient http = null;
     protected Context context = null;
+    public static final String DATE_FILE = "updated.txt";
 
     /**
      * get session file name
@@ -40,6 +41,18 @@ public abstract class AbstractScheduleService implements ScheduleService {
      * @return key name
      */
     abstract protected String getSessionKeyName();
+
+    /**
+     * @return account is present?
+     */
+    abstract protected boolean isAccountPresent();
+
+    /**
+     * サービスに接続してスケジュールリストを取得する
+     * 
+     * @return スケジュールのリスト
+     */
+    abstract public ArrayList<Schedule> fetchSchedules();
 
     /**
      * initialize http client
@@ -90,9 +103,9 @@ public abstract class AbstractScheduleService implements ScheduleService {
                     new BasicClientCookie(getSessionKeyName(), session));
             reader.close();
         } catch (FileNotFoundException e) {
-            debug("Session File not exists");
+            log("Session File not exists");
         } catch (IOException e) {
-            debug("IOException in loadSessionID()");
+            log("IOException in loadSessionID()");
         }
     }
 
@@ -109,7 +122,7 @@ public abstract class AbstractScheduleService implements ScheduleService {
         }
     }
 
-    private void debug(String str) {
+    private void log(String str) {
         Log.d("KyoAni", "[AbstractScheduleService] " + str);
     }
 
