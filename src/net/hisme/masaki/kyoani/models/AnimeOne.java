@@ -118,7 +118,7 @@ public class AnimeOne extends AbstractScheduleService {
                 ArrayList<Schedule> schedules = mypage();
                 if (Schedule.saveSchedules(context, schedules)) {
                     log("Update cached date");
-                    GregorianCalendar today = today();
+                    AnimeCalendar today = new AnimeCalendar();
                     try {
                         BufferedWriter writer = new BufferedWriter(
                                 new OutputStreamWriter(context.openFileOutput(

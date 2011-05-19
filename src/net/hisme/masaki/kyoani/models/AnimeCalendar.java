@@ -1,5 +1,6 @@
 package net.hisme.masaki.kyoani.models;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -62,11 +63,27 @@ public class AnimeCalendar extends GregorianCalendar {
         }
     }
 
+    /**
+     * 24時以降か?
+     * 
+     * @return
+     */
     public boolean isMidnight() {
         return super.get(HOUR_OF_DAY) < 5;
     }
 
     public String getTimeString() {
         return String.format("%02d:%02d", get(HOUR_OF_DAY), get(MINUTE));
+    }
+
+    /**
+     * 今日の日付を返す ただし5時~29時
+     * 
+     * @return
+     */
+    public static GregorianCalendar today() {
+        AnimeCalendar now = new AnimeCalendar();
+        return new GregorianCalendar(now.get(Calendar.YEAR), now
+                .get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
     }
 }

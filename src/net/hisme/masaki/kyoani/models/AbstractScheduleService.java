@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
 
@@ -108,4 +112,38 @@ public abstract class AbstractScheduleService implements ScheduleService {
     private void debug(String str) {
         Log.d("KyoAni", "[AbstractScheduleService] " + str);
     }
+
+    public boolean needUpdate() {
+        GregorianCalendar updated = updatedDate();
+        if (updated == null)
+            return true;
+
+        return AnimeCalendar.today().compareTo(updated) == 1 ? true : false;
+    }
+
+    public GregorianCalendar updatedDate() {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    context.openFileInput(DATE_FILE)));
+            String line = reader.readLine();
+            reader.close();
+            if (line != null) {
+                Matcher m = Pattern.compile("([0-9]{4})-([0-9]{2})-([0-9]{2})")
+                        .matcher(line);
+                if (m.find()) {
+                    int year = Integer.parseInt(m.group(1));
+                    int month = Integer.parseInt(m.group(2)) - 1;
+                    int day = Integer.parseInt(m.group(3));
+                    return new GregorianCalendar(year, month, day, 0, 0, 0);
+                }
+            }
+            return null;
+        } catch (FileNotFoundException e) {
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+
 }
