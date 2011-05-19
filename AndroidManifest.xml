@@ -34,11 +34,8 @@
 				android:resource="@xml/widget_2x2" />
 		</receiver>
 		<service android:name=".services.KyoAniService"></service>
-		<receiver android:name=".services.DailyUpdater">
-			<intent-filter>
-				<action android:name="net.hisme.masaki.kyoani.update_daily" />
-			</intent-filter>
-		</receiver>
+		<service android:name=".services.DailyUpdater">
+		</service>
 	</application>
 	<uses-sdk android:minSdkVersion="4" />
 	<uses-permission android:name="android.permission.INTERNET" />

@@ -7,12 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
 
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -21,13 +18,12 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 
 import android.content.Context;
-import android.util.Log;
 
 public abstract class AbstractScheduleService implements ScheduleService {
     protected DefaultHttpClient http = null;
     protected Context context = null;
     public static final String DATE_FILE = "updated.txt";
-
+   
     /**
      * get session file name
      * 
@@ -123,7 +119,7 @@ public abstract class AbstractScheduleService implements ScheduleService {
     }
 
     private void log(String str) {
-        Log.d("KyoAni", "[AbstractScheduleService] " + str);
+        android.util.Log.d("KyoAni", "[AbstractScheduleService] " + str);
     }
 
     public boolean needUpdate() {
