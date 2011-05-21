@@ -20,12 +20,6 @@ import android.os.IBinder;
  */
 public class DailyUpdater extends Service {
     @Override
-    public void onCreate() {
-        super.onCreate();
-        log("onCreate");
-    }
-
-    @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         try {
@@ -34,7 +28,6 @@ public class DailyUpdater extends Service {
             e.printStackTrace();
         }
         setupNext();
-        log("onStart");
     }
 
     @Override
