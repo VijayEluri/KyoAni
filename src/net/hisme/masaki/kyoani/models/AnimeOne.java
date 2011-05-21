@@ -1,5 +1,8 @@
 package net.hisme.masaki.kyoani.models;
 
+import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
+import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
+
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
@@ -145,11 +148,15 @@ public class AnimeOne extends AbstractScheduleService {
 
     @Override
     public ArrayList<Schedule> fetchSchedules() {
+        log("fetchSchedule");
         try {
-            return mypage(3);
-        } catch (SessionExpiredException e) {
-            return null;
+            return reloadSchedules();
+        } catch (LoginFailureException e) {
+            e.printStackTrace();
+        } catch (NetworkUnavailableException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     public ArrayList<Schedule> mypage() throws SessionExpiredException {

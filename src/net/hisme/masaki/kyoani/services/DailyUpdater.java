@@ -2,6 +2,10 @@ package net.hisme.masaki.kyoani.services;
 
 import java.util.Calendar;
 
+import net.hisme.masaki.kyoani.models.AnimeCalendar;
+import net.hisme.masaki.kyoani.models.AnimeOne;
+import net.hisme.masaki.kyoani.models.Account.BlankException;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -24,8 +28,11 @@ public class DailyUpdater extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        
-        // TODO: アップデート処理
+        try {
+            new AnimeOne(this).fetchSchedules();
+        } catch (BlankException e) {
+            e.printStackTrace();
+        }
         setupNext();
         log("onStart");
     }
@@ -41,9 +48,7 @@ public class DailyUpdater extends Service {
         PendingIntent pending_intent = PendingIntent.getService(
                 DailyUpdater.this, 0, intent, 0);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 10);
+        AnimeCalendar calendar = AnimeCalendar.tomorrow();
 
         AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
