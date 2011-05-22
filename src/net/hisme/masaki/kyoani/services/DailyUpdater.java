@@ -1,7 +1,5 @@
 package net.hisme.masaki.kyoani.services;
 
-import java.util.Calendar;
-
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.AnimeOne;
 import net.hisme.masaki.kyoani.models.Account.BlankException;
@@ -22,12 +20,21 @@ public class DailyUpdater extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
+        log("started.");
         try {
             new AnimeOne(this).fetchSchedules();
+            startService(new Intent(DailyUpdater.this, WidgetUpdater.class));
         } catch (BlankException e) {
             e.printStackTrace();
         }
         setupNext();
+        stopSelf();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        log("destroid.");
     }
 
     @Override
@@ -36,6 +43,7 @@ public class DailyUpdater extends Service {
     }
 
     private void setupNext() {
+        log("setup alart for next day");
         Intent intent = new Intent(DailyUpdater.this, DailyUpdater.class);
 
         PendingIntent pending_intent = PendingIntent.getService(
