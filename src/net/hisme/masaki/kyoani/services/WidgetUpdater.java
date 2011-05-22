@@ -38,13 +38,25 @@ public class WidgetUpdater extends Service {
 
     @Override
     public void onCreate() {
+        log("onCreate");
         AppWidgetManager widget_manager = AppWidgetManager
                 .getInstance(WidgetUpdater.this);
-        RemoteViews views = new RemoteViews(getPackageName(),
-                R.layout.widget_layout_1x1);
-        views.setTextViewText(R.id.next_log, buildWidgetString());
-        ComponentName thisWidget = new ComponentName(this, KyoAniWidget1.class);
-        widget_manager.updateAppWidget(thisWidget, views);
+
+        String widget_string = buildWidgetString();
+
+        RemoteViews views;
+        ComponentName widget_class;
+        
+        views = new RemoteViews(getPackageName(), R.layout.widget_layout_1x1);
+        views.setTextViewText(R.id.next_log, widget_string);
+        widget_class = new ComponentName(this, KyoAniWidget1.class);
+        widget_manager.updateAppWidget(widget_class, views);
+
+        views = new RemoteViews(getPackageName(), R.layout.widget_layout_2x2);
+        views.setTextViewText(R.id.next_log, widget_string);
+        widget_class = new ComponentName(this, KyoAniWidget1.class);
+        widget_manager.updateAppWidget(widget_class, views);
+
         stopSelf();
     }
 
