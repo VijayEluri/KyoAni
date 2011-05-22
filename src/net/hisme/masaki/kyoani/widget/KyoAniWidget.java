@@ -8,9 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.activities.MainActivity;
 import net.hisme.masaki.kyoani.models.AnimeOne;
@@ -23,7 +20,6 @@ abstract public class KyoAniWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
             int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-        log("onUpdate");
         update(context, appWidgetManager);
 
     }
@@ -36,38 +32,6 @@ abstract public class KyoAniWidget extends AppWidgetProvider {
 
     public void log(String message) {
         android.util.Log.d("KyoAni", "KyoAniWidget0 " + message);
-    }
-
-    protected String getSchduleString(Context context) {
-        String schedule_str = new String();
-        try {
-            AnimeOne anime_one = new AnimeOne(context);
-            schedule_str = context.getText(R.string.login_failure).toString();
-            log("getSchedules");
-            ArrayList<Schedule> schedules = anime_one.getSchedules();
-            if (schedules != null) {
-                schedule_str = context.getText(R.string.no_schedule).toString();
-                for (Schedule schedule : schedules) {
-                    GregorianCalendar now = new GregorianCalendar();
-
-                    if (now.compareTo(schedule.getStart()) == -1) {
-                        StringBuffer str_buf = new StringBuffer();
-                        str_buf.append(schedule.getChannel());
-                        str_buf.append("\n");
-                        str_buf.append(schedule.getStartString());
-                        str_buf.append("\n");
-                        str_buf.append(schedule.getName());
-                        str_buf.append("\n");
-                        schedule_str = new String(str_buf);
-                        break;
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-
-        }
-        return schedule_str;
     }
 
     protected String buildWidgetString(Context context) {
