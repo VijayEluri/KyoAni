@@ -1,8 +1,6 @@
 package net.hisme.masaki.kyoani.services;
 
 import java.util.Calendar;
-import java.util.Locale;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -10,8 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.widget.Toast;
-
 import net.hisme.masaki.kyoani.models.ScheduleService;
 import net.hisme.masaki.kyoani.models.AnimeOne;
 import net.hisme.masaki.kyoani.models.Account.BlankException;
