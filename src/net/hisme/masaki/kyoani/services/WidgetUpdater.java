@@ -4,6 +4,7 @@ import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.models.AnimeOne;
 import net.hisme.masaki.kyoani.models.Schedule;
 import net.hisme.masaki.kyoani.widget.KyoAniWidget1;
+import net.hisme.masaki.kyoani.widget.KyoAniWidget2;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -47,14 +48,16 @@ public class WidgetUpdater extends Service {
         RemoteViews views;
         ComponentName widget_class;
         
+        log("Update 1x1");
         views = new RemoteViews(getPackageName(), R.layout.widget_layout_1x1);
         views.setTextViewText(R.id.next_log, widget_string);
         widget_class = new ComponentName(this, KyoAniWidget1.class);
         widget_manager.updateAppWidget(widget_class, views);
 
+        log("Update 2x2");
         views = new RemoteViews(getPackageName(), R.layout.widget_layout_2x2);
         views.setTextViewText(R.id.next_log, widget_string);
-        widget_class = new ComponentName(this, KyoAniWidget1.class);
+        widget_class = new ComponentName(this, KyoAniWidget2.class);
         widget_manager.updateAppWidget(widget_class, views);
 
         stopSelf();
