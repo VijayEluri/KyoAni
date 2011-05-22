@@ -34,7 +34,7 @@ public class DailyUpdater extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        log("destroid.");
+        log("destroyed.");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class DailyUpdater extends Service {
     }
 
     private void setupNext() {
-        log("setup alart for next day");
+        log("setup AlartManager for update next day.");
         Intent intent = new Intent(DailyUpdater.this, DailyUpdater.class);
 
         PendingIntent pending_intent = PendingIntent.getService(
@@ -59,5 +59,4 @@ public class DailyUpdater extends Service {
     public void log(String message) {
         android.util.Log.d("KyoAni", "[DailyUpdater] " + message);
     }
-
 }
