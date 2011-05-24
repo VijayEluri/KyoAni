@@ -1,5 +1,6 @@
 package net.hisme.masaki.kyoani.models;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -11,6 +12,7 @@ import java.util.TimeZone;
  */
 public class AnimeCalendar extends GregorianCalendar {
     private static final long serialVersionUID = 1L;
+    private static int BEGINNING_OF_DAY = 5;
 
     public AnimeCalendar() {
         super();
@@ -62,11 +64,60 @@ public class AnimeCalendar extends GregorianCalendar {
         }
     }
 
+    /**
+     * 24時以降か?
+     * 
+     * @return
+     */
     public boolean isMidnight() {
-        return super.get(HOUR_OF_DAY) < 5;
+        return super.get(HOUR_OF_DAY) < BEGINNING_OF_DAY;
+    }
+
+    public String getDateString() {
+        return String.format("%02d-%02d", get(MONTH) + 1, get(DAY_OF_MONTH));
     }
 
     public String getTimeString() {
         return String.format("%02d:%02d", get(HOUR_OF_DAY), get(MINUTE));
+    }
+
+    /**
+     * 日付の変わる時刻のインスタンスを取得する
+     * 
+     * @return
+     */
+    public AnimeCalendar beginningOfDay() {
+        AnimeCalendar cloned = (AnimeCalendar) this.clone();
+        cloned.set(Calendar.HOUR_OF_DAY, BEGINNING_OF_DAY);
+        cloned.set(Calendar.MINUTE, 0);
+        cloned.set(Calendar.SECOND, 0);
+        return cloned;
+    }
+
+    /**
+     * 今日の日付を返す ただし5時~29時
+     * 
+     * @return
+     */
+    public static GregorianCalendar today() {
+        AnimeCalendar now = new AnimeCalendar();
+        return new GregorianCalendar(now.get(Calendar.YEAR), now
+                .get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+    }
+
+    /**
+     * 明日の日付のオブジェクトを返す
+     * 
+     * @return
+     */
+    public static AnimeCalendar tomorrow() {
+        AnimeCalendar now = new AnimeCalendar();
+        return new AnimeCalendar(now.get(Calendar.YEAR), now
+                .get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH) + 1)
+                .beginningOfDay();
+    }
+
+    public String toString() {
+        return String.format("%s %s", getDateString(), getTimeString());
     }
 }

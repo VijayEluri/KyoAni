@@ -33,6 +33,14 @@
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/widget_2x2" />
 		</receiver>
+		<service android:name=".services.KyoAniService"></service>
+		<service android:name=".services.DailyUpdater"></service>
+		<service android:name=".services.WidgetUpdater"></service>
+		<receiver android:name=".services.StartupReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
 	</application>
 	<uses-sdk android:minSdkVersion="4" />
 	<uses-permission android:name="android.permission.INTERNET" />

@@ -1,5 +1,8 @@
 package net.hisme.masaki.kyoani.models;
 
+import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
+import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
+
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
@@ -38,8 +41,6 @@ public class AnimeOne extends AbstractScheduleService {
     private static final String SESSION_KEY_NAME = "PHPSESSID";
 
     private static final int BUFFSIZE = 1024;
-
-    public static final String DATE_FILE = "updated.txt";
 
     public static final int LOGIN_OK = 0;
     public static final int LOGIN_NG = 1;
@@ -84,6 +85,11 @@ public class AnimeOne extends AbstractScheduleService {
     }
 
     @Override
+    protected boolean isAccountPresent() {
+        return getAccount() != null;
+    }
+
+    @Override
     protected String getSessionFileName() {
         return SESSION_FILE_NAME;
     }
@@ -91,10 +97,6 @@ public class AnimeOne extends AbstractScheduleService {
     @Override
     protected String getSessionKeyName() {
         return SESSION_KEY_NAME;
-    }
-
-    public void nextAnime() {
-
     }
 
     public ArrayList<Schedule> getSchedules() throws LoginFailureException,
@@ -109,6 +111,17 @@ public class AnimeOne extends AbstractScheduleService {
         }
     }
 
+    public Schedule getNextSchedule() throws LoginFailureException,
+            NetworkUnavailableException {
+        AnimeCalendar now = new AnimeCalendar();
+        for (Schedule schedule : getSchedules()) {
+            if (now.compareTo(schedule.getStart()) == -1) {
+                return schedule;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<Schedule> reloadSchedules() throws LoginFailureException,
             NetworkUnavailableException {
         log("Reload Schedule");
@@ -118,7 +131,7 @@ public class AnimeOne extends AbstractScheduleService {
                 ArrayList<Schedule> schedules = mypage();
                 if (Schedule.saveSchedules(context, schedules)) {
                     log("Update cached date");
-                    GregorianCalendar today = today();
+                    AnimeCalendar today = new AnimeCalendar();
                     try {
                         BufferedWriter writer = new BufferedWriter(
                                 new OutputStreamWriter(context.openFileOutput(
@@ -144,47 +157,21 @@ public class AnimeOne extends AbstractScheduleService {
         return null;
     }
 
+    @Override
+    public ArrayList<Schedule> fetchSchedules() {
+        log("fetchSchedule");
+        try {
+            return reloadSchedules();
+        } catch (LoginFailureException e) {
+            e.printStackTrace();
+        } catch (NetworkUnavailableException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public ArrayList<Schedule> mypage() throws SessionExpiredException {
         return mypage(3);
-    }
-
-    public GregorianCalendar today() {
-        GregorianCalendar now = new GregorianCalendar();
-        now.add(GregorianCalendar.HOUR_OF_DAY, -6);
-        return new GregorianCalendar(now.get(Calendar.YEAR), now
-                .get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    }
-
-    public boolean needUpdate() {
-        GregorianCalendar updated = updatedDate();
-        if (updated == null)
-            return true;
-
-        return today().compareTo(updated) == 1 ? true : false;
-    }
-
-    public GregorianCalendar updatedDate() {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    context.openFileInput(DATE_FILE)));
-            String line = reader.readLine();
-            reader.close();
-            if (line != null) {
-                Matcher m = Pattern.compile("([0-9]{4})-([0-9]{2})-([0-9]{2})")
-                        .matcher(line);
-                if (m.find()) {
-                    int year = Integer.parseInt(m.group(1));
-                    int month = Integer.parseInt(m.group(2)) - 1;
-                    int day = Integer.parseInt(m.group(3));
-                    return new GregorianCalendar(year, month, day, 0, 0, 0);
-                }
-            }
-            return null;
-        } catch (FileNotFoundException e) {
-            return null;
-        } catch (IOException e) {
-            return null;
-        }
     }
 
     public ArrayList<Schedule> mypage(int retry_count)
