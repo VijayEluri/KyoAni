@@ -47,9 +47,11 @@ public class WidgetUpdater extends Service {
         if (schedule != null) {
             log("next schedule found.");
             schedule_string = buildWidgetString(schedule);
+            setupNext(schedule);
         } else {
             log("next schedule not found.");
             schedule_string = getText(R.string.no_schedule).toString();
+            setupNext();
         }
 
         RemoteViews views;
@@ -67,9 +69,6 @@ public class WidgetUpdater extends Service {
         widget_class = new ComponentName(this, KyoAniWidget2.class);
         widget_manager.updateAppWidget(widget_class, views);
 
-        if (schedule != null) {
-            setupNext(schedule);
-        }
         stopSelf();
     }
 
@@ -88,6 +87,20 @@ public class WidgetUpdater extends Service {
                 pending_intent);
     }
 
+    protected void setupNext(){
+        log("setup alart for next day");
+        Intent intent = new Intent(WidgetUpdater.this, DailyUpdater.class);
+        PendingIntent pending_intent = PendingIntent.getService(
+                WidgetUpdater.this, 0, intent, 0);
+
+        AnimeCalendar calendar = AnimeCalendar.tomorrow();
+        log(String.format("scheduled to daily update at %s", calendar
+                .toString()));
+        AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                pending_intent);
+    }
+    
     @Override
     public IBinder onBind(Intent intent) {
         return null;
