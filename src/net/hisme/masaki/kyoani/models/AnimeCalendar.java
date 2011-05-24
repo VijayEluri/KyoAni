@@ -73,6 +73,10 @@ public class AnimeCalendar extends GregorianCalendar {
         return super.get(HOUR_OF_DAY) < BEGINNING_OF_DAY;
     }
 
+    public String getDateString() {
+        return String.format("%02d-%02d", get(MONTH) + 1, get(DAY_OF_MONTH));
+    }
+
     public String getTimeString() {
         return String.format("%02d:%02d", get(HOUR_OF_DAY), get(MINUTE));
     }
@@ -111,5 +115,9 @@ public class AnimeCalendar extends GregorianCalendar {
         return new AnimeCalendar(now.get(Calendar.YEAR), now
                 .get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH) + 1)
                 .beginningOfDay();
+    }
+
+    public String toString() {
+        return String.format("%s %s", getDateString(), getTimeString());
     }
 }
