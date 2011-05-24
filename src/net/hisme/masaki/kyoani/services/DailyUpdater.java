@@ -44,12 +44,13 @@ public class DailyUpdater extends Service {
 
     private void setupNext() {
         log("setup AlartManager for update next day.");
-        Intent intent = new Intent(DailyUpdater.this, DailyUpdater.class);
 
+        Intent intent = new Intent(DailyUpdater.this, DailyUpdater.class);
         PendingIntent pending_intent = PendingIntent.getService(
                 DailyUpdater.this, 0, intent, 0);
 
         AnimeCalendar calendar = AnimeCalendar.tomorrow();
+        log(String.format("scheduled to update at %s", calendar.toString()));
 
         AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),

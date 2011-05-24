@@ -76,13 +76,13 @@ public class WidgetUpdater extends Service {
     protected void setupNext(Schedule schedule) {
         log("setup alart for next show");
         Intent intent = new Intent(WidgetUpdater.this, WidgetUpdater.class);
-
         PendingIntent pending_intent = PendingIntent.getService(
                 WidgetUpdater.this, 0, intent, 0);
 
-        AnimeCalendar calendar = AnimeCalendar.tomorrow();
+        AnimeCalendar calendar = schedule.getStart();
         calendar.add(AnimeCalendar.MINUTE, 3);
-
+        log(String.format("scheduled to update widget at %s", calendar
+                .toString()));
         AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 pending_intent);
