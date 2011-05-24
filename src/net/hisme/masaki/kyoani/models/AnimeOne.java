@@ -1,7 +1,8 @@
 package net.hisme.masaki.kyoani.models;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.cookie.BasicClientCookie;
+import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
+import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
+
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
@@ -9,8 +10,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
 import java.lang.StringBuffer;
 import java.net.UnknownHostException;
 import java.io.OutputStreamWriter;
@@ -30,21 +29,18 @@ import java.util.GregorianCalendar;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-public class AnimeOne {
-    private Context context = null;
+public class AnimeOne extends AbstractScheduleService {
     private Account account = null;
-    private DefaultHttpClient http = null;
 
     public static final String REGISTER_URI = "https://anime.biglobe.ne.jp/regist/regist_user";
     private static final String MYPAGE_URI = "http://anime.biglobe.ne.jp/program/myprogram";
     private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login/index";
     private static final String LOGIN_URI = "https://anime.biglobe.ne.jp/login/login_ajax";
     private static final String LOGOUT_URI = "https://anime.biglobe.ne.jp/login/logout_ajax";
-    private static final String SESSION_COOKIE_NAME = "PHPSESSID";
-    private static final String SESSION_FILE = "_session";
-    private static final int BUFFSIZE = 1024;
+    private static final String SESSION_FILE_NAME = "_session";
+    private static final String SESSION_KEY_NAME = "PHPSESSID";
 
-    public static final String DATE_FILE = "updated.txt";
+    private static final int BUFFSIZE = 1024;
 
     public static final int LOGIN_OK = 0;
     public static final int LOGIN_NG = 1;
@@ -62,6 +58,9 @@ public class AnimeOne {
      */
     public AnimeOne(Context context) throws Account.BlankException {
         setContext(context);
+        initAccount();
+        initHttpClient();
+
     }
 
     /**
@@ -73,18 +72,8 @@ public class AnimeOne {
         initHttpClient();
     }
 
-    public void setContext(Context context) throws Account.BlankException {
-        this.context = context;
-        initAccount();
-        initHttpClient();
-    }
-
-    public Context getContext() {
-        return this.context;
-    }
-
     private void initAccount() throws Account.BlankException {
-        setAccount(new Account(this.context));
+        setAccount(new Account(getContext()));
     }
 
     public void setAccount(Account account) {
@@ -95,18 +84,19 @@ public class AnimeOne {
         return this.account;
     }
 
-    private void initHttpClient() {
-        BasicHttpParams params = new BasicHttpParams();
-        int timeout = 0;
-        HttpConnectionParams.setConnectionTimeout(params, timeout);
-        HttpConnectionParams.setSoTimeout(params, timeout);
-
-        this.http = new DefaultHttpClient(params);
-        loadSessionID();
+    @Override
+    protected boolean isAccountPresent() {
+        return getAccount() != null;
     }
 
-    public void nextAnime() {
+    @Override
+    protected String getSessionFileName() {
+        return SESSION_FILE_NAME;
+    }
 
+    @Override
+    protected String getSessionKeyName() {
+        return SESSION_KEY_NAME;
     }
 
     public ArrayList<Schedule> getSchedules() throws LoginFailureException,
@@ -121,6 +111,17 @@ public class AnimeOne {
         }
     }
 
+    public Schedule getNextSchedule() throws LoginFailureException,
+            NetworkUnavailableException {
+        AnimeCalendar now = new AnimeCalendar();
+        for (Schedule schedule : getSchedules()) {
+            if (now.compareTo(schedule.getStart()) == -1) {
+                return schedule;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<Schedule> reloadSchedules() throws LoginFailureException,
             NetworkUnavailableException {
         log("Reload Schedule");
@@ -130,7 +131,7 @@ public class AnimeOne {
                 ArrayList<Schedule> schedules = mypage();
                 if (Schedule.saveSchedules(context, schedules)) {
                     log("Update cached date");
-                    GregorianCalendar today = today();
+                    AnimeCalendar today = new AnimeCalendar();
                     try {
                         BufferedWriter writer = new BufferedWriter(
                                 new OutputStreamWriter(context.openFileOutput(
@@ -156,47 +157,21 @@ public class AnimeOne {
         return null;
     }
 
+    @Override
+    public ArrayList<Schedule> fetchSchedules() {
+        log("fetchSchedule");
+        try {
+            return reloadSchedules();
+        } catch (LoginFailureException e) {
+            e.printStackTrace();
+        } catch (NetworkUnavailableException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public ArrayList<Schedule> mypage() throws SessionExpiredException {
         return mypage(3);
-    }
-
-    public GregorianCalendar today() {
-        GregorianCalendar now = new GregorianCalendar();
-        now.add(GregorianCalendar.HOUR_OF_DAY, -6);
-        return new GregorianCalendar(now.get(Calendar.YEAR), now
-                .get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    }
-
-    public boolean needUpdate() {
-        GregorianCalendar updated = updatedDate();
-        if (updated == null)
-            return true;
-
-        return today().compareTo(updated) == 1 ? true : false;
-    }
-
-    public GregorianCalendar updatedDate() {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    context.openFileInput(DATE_FILE)));
-            String line = reader.readLine();
-            reader.close();
-            if (line != null) {
-                Matcher m = Pattern.compile("([0-9]{4})-([0-9]{2})-([0-9]{2})")
-                        .matcher(line);
-                if (m.find()) {
-                    int year = Integer.parseInt(m.group(1));
-                    int month = Integer.parseInt(m.group(2)) - 1;
-                    int day = Integer.parseInt(m.group(3));
-                    return new GregorianCalendar(year, month, day, 0, 0, 0);
-                }
-            }
-            return null;
-        } catch (FileNotFoundException e) {
-            return null;
-        } catch (IOException e) {
-            return null;
-        }
     }
 
     public ArrayList<Schedule> mypage(int retry_count)
@@ -306,43 +281,6 @@ public class AnimeOne {
         }
     }
 
-    private void loadSessionID() {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    this.context.openFileInput(SESSION_FILE)));
-            String session = reader.readLine();
-            this.http.getCookieStore().addCookie(
-                    new BasicClientCookie(SESSION_COOKIE_NAME, session));
-            reader.close();
-        } catch (FileNotFoundException e) {
-            log("Session File not exists");
-        } catch (IOException e) {
-            log("IOException in loadSessionID()");
-        }
-    }
-
-    private void saveSessionID(String s) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-                    context.openFileOutput(SESSION_FILE, 0)));
-            writer.write(s);
-            writer.close();
-        } catch (FileNotFoundException e) {
-
-        } catch (IOException e) {
-
-        }
-    }
-
-    private boolean hasSessionID() {
-        for (Cookie cookie : this.http.getCookieStore().getCookies()) {
-            if (cookie.getName().equals("PHPSESSID")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private String getSessionID() {
         for (Cookie cookie : this.http.getCookieStore().getCookies()) {
             if (cookie.getName().equals("PHPSESSID")) {
@@ -368,7 +306,7 @@ public class AnimeOne {
             http.execute(post);
 
             for (Cookie cookie : http.getCookieStore().getCookies()) {
-                if (cookie.getName().equals(SESSION_COOKIE_NAME))
+                if (cookie.getName().equals(getSessionKeyName()))
                     saveSessionID(cookie.getValue());
                 if (cookie.getName().equals("user[id_nick]"))
                     result = true;
@@ -432,11 +370,4 @@ public class AnimeOne {
         private static final long serialVersionUID = 1L;
     }
 
-    public class LoginFailureException extends Exception {
-        private static final long serialVersionUID = 1L;
-    }
-
-    public class NetworkUnavailableException extends Exception {
-        private static final long serialVersionUID = 1L;
-    }
 }

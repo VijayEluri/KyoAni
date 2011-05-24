@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="net.hisme.masaki.kyoani" android:versionCode="25"
-	android:versionName="0.8.1">
+	package="net.hisme.masaki.kyoani" android:versionCode="26"
+	android:versionName="0.9.0">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
 		<activity android:name=".activities.MainActivity"
 			android:label="@string/title_main">
@@ -32,6 +32,14 @@
 			</intent-filter>
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/widget_2x2" />
+		</receiver>
+		<service android:name=".services.KyoAniService"></service>
+		<service android:name=".services.DailyUpdater"></service>
+		<service android:name=".services.WidgetUpdater"></service>
+		<receiver android:name=".services.StartupReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
 		</receiver>
 	</application>
 	<uses-sdk android:minSdkVersion="4" />

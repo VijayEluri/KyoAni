@@ -16,6 +16,7 @@ public class AnimeCalendarTest {
 
     @Before
     public void before() {
+        /* 2000/2/2 4:30 */
         cal = new AnimeCalendar(2000, 2, 2, 4, 30);
     }
 
