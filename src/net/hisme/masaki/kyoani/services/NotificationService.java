@@ -9,9 +9,12 @@ import android.widget.Toast;
 public class NotificationService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
-        String message = (String) intent.getExtras().get("ToastMessage");
-        getVibrator().vibrate(100);
-        Toast.makeText(NotificationService.this, message, Toast.LENGTH_LONG);
+        super.onStart(intent, startId);
+        long[] pattern = { 0, 200, 300, 200, 300, 200 };
+        getVibrator().vibrate(pattern, -1);
+        
+        //String message = (String) intent.getExtras().get("ToastMessage");
+        //Toast.makeText(NotificationService.this, message, Toast.LENGTH_LONG);        
         stopSelf();
     }
 
@@ -20,8 +23,16 @@ public class NotificationService extends Service {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    protected void log(String message) {
+        android.util.Log.d("KyoAni", "[NotificationServer]" + message);
+    }
 }
