@@ -34,7 +34,7 @@ public class Schedule implements Serializable {
     }
 
     public AnimeCalendar getStart() {
-        return this.start;
+        return (AnimeCalendar) this.start.clone();
     }
 
     public String getStartString() {
