@@ -52,6 +52,7 @@ public class WidgetUpdater extends Service {
             log("next schedule not found.");
             schedule_string = getText(R.string.no_schedule).toString();
             setupNext();
+
         }
 
         RemoteViews views;
@@ -73,8 +74,15 @@ public class WidgetUpdater extends Service {
     }
 
     protected void setupNext(Schedule schedule) {
+        setupUpdater(schedule);
+        setupNotification(schedule);
+    }
+
+    protected void setupUpdater(Schedule schedule) {
         log("setup alart for next show");
         Intent intent = new Intent(WidgetUpdater.this, WidgetUpdater.class);
+        intent.putExtra("ToastMessage", String.format("%sで%sがはじまります", schedule
+                .getChannel(), schedule.getName()));
         PendingIntent pending_intent = PendingIntent.getService(
                 WidgetUpdater.this, 0, intent, 0);
 
@@ -85,9 +93,26 @@ public class WidgetUpdater extends Service {
         AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 pending_intent);
+
     }
 
-    protected void setupNext(){
+    protected void setupNotification(Schedule schedule) {
+        log("setup notification for next show");
+        Intent intent = new Intent(WidgetUpdater.this,
+                NotificationService.class);
+        PendingIntent pending_intent = PendingIntent.getService(
+                WidgetUpdater.this, 0, intent, 0);
+
+        AnimeCalendar calendar = schedule.getStart();
+        calendar.add(AnimeCalendar.MINUTE, -2);
+        log(String.format("scheduled to notification at %s", calendar
+                .toString()));
+        AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                pending_intent);
+    }
+
+    protected void setupNext() {
         log("setup alart for next day");
         Intent intent = new Intent(WidgetUpdater.this, DailyUpdater.class);
         PendingIntent pending_intent = PendingIntent.getService(
@@ -100,7 +125,7 @@ public class WidgetUpdater extends Service {
         alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 pending_intent);
     }
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
