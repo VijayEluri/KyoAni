@@ -36,6 +36,7 @@
 		<service android:name=".services.KyoAniService"></service>
 		<service android:name=".services.DailyUpdater"></service>
 		<service android:name=".services.WidgetUpdater"></service>
+		<service android:name=".services.NotificationService"></service>
 		<receiver android:name=".services.StartupReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
