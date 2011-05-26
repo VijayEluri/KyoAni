@@ -2,7 +2,7 @@
 <resources>
 	<!-- global values -->
 	<string name="app_name">今日アニ</string>
-	<string name="app_version">0.7.0</string>
+	<string name="app_version">0.10.0</string>
 	<string name="app_author_name">masarakki</string>
 	<string name="app_author_mail">masaki@hisme.net</string>
 
