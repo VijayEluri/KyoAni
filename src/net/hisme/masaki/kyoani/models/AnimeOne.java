@@ -297,7 +297,7 @@ public class AnimeOne extends AbstractScheduleService {
             HttpPost post = new HttpPost(LOGIN_URI);
             post.addHeader("Referer", LOGIN_FORM);
             post.addHeader("X-Requested-With", "XMLHttpRequest");
-            post.addHeader("User-Agent", "Mozilla/5.0(AnimeOneBrowser)");
+            post.addHeader("User-Agent", "Mozilla/5.0(net.hisme.masaki.KyoAni;Android)");
             post.addHeader("Content-Type",
                     "application/x-www-form-urlencoded; charset=UTF-8");
             post.setEntity(new StringEntity("mail=" + account.getUser()
