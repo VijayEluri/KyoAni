@@ -1,5 +1,6 @@
 package net.hisme.masaki.kyoani.activities;
 
+import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.AnimeOne;
@@ -80,7 +81,7 @@ public class MainActivity extends Activity {
                         AnimeOne anime_one = new AnimeOne(MainActivity.this);
                         final ArrayList<Schedule> list;
                         if (force_reload) {
-                            log("refetch schedules.");
+                            App.Log.d("refetch schedules.");
                             handler.post(new Runnable() {
                                 public void run() {
                                     ListView schedule_list = (ListView) MainActivity.this
@@ -154,9 +155,5 @@ public class MainActivity extends Activity {
             return true;
         }
         return false;
-    }
-
-    public void log(String message) {
-        android.util.Log.d("KyoAni", "[MainActivity] " + message);
     }
 }

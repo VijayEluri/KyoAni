@@ -11,6 +11,8 @@ import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.hisme.masaki.kyoani.App;
+
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -99,9 +101,9 @@ public abstract class AbstractScheduleService implements ScheduleService {
                     new BasicClientCookie(getSessionKeyName(), session));
             reader.close();
         } catch (FileNotFoundException e) {
-            log("Session File not exists");
+            App.Log.d("Session File not exists");
         } catch (IOException e) {
-            log("IOException in loadSessionID()");
+            App.Log.d("IOException in loadSessionID()");
         }
     }
 
@@ -116,10 +118,6 @@ public abstract class AbstractScheduleService implements ScheduleService {
         } catch (IOException e) {
 
         }
-    }
-
-    private void log(String str) {
-        android.util.Log.d("KyoAni", "[AbstractScheduleService] " + str);
     }
 
     public boolean needUpdate() {

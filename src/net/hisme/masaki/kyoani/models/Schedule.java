@@ -3,8 +3,8 @@ package net.hisme.masaki.kyoani.models;
 import java.io.*;
 import java.util.ArrayList;
 
+import net.hisme.masaki.kyoani.App;
 import android.content.Context;
-import android.util.Log;
 
 public class Schedule implements Serializable {
     public static String LIST_FILE = "list.obj";
@@ -77,7 +77,7 @@ public class Schedule implements Serializable {
     }
 
     private static void log(String str) {
-        Log.d("KyoAni", "[Schedule] " + str);
+        App.Log.d("[Schedule] " + str);
     }
 
     public String toString() {

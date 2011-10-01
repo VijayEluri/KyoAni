@@ -8,8 +8,4 @@ public class KyoAniWidget1 extends KyoAniWidget {
     protected int getLayoutId() {
         return R.layout.widget_layout_1x1;
     }
-    
-    public void log(String message) {
-        android.util.Log.d("KyoAni", "[KyoAniWidget1] " + message);
-    }
 }

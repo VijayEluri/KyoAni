@@ -1,5 +1,6 @@
 package net.hisme.masaki.kyoani.services;
 
+import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.AnimeOne;
 import net.hisme.masaki.kyoani.models.Account.BlankException;
 
@@ -39,6 +40,6 @@ public class DailyUpdater extends Service {
     }
 
     public void log(String message) {
-        android.util.Log.d("KyoAni", "[DailyUpdater] " + message);
+        App.Log.d("[DailyUpdater] " + message);
     }
 }

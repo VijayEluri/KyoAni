@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.activities.MainActivity;
 import net.hisme.masaki.kyoani.models.AnimeOne;
@@ -30,10 +31,6 @@ abstract public class KyoAniWidget extends AppWidgetProvider {
         return new RemoteViews(context.getPackageName(), getLayoutId());
     }
 
-    public void log(String message) {
-        android.util.Log.d("KyoAni", "KyoAniWidget0 " + message);
-    }
-
     protected String buildWidgetString(Context context) {
         try {
             AnimeOne anime_one = new AnimeOne(context);
@@ -53,7 +50,7 @@ abstract public class KyoAniWidget extends AppWidgetProvider {
             }
             return schedule_str;
         } catch (Exception e) {
-            log(e.toString());
+            App.Log.d(e.toString());
 
         }
         return "";

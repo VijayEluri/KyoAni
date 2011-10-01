@@ -1,7 +1,6 @@
 package net.hisme.masaki.kyoani.models;
 
-import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
-import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
+import net.hisme.masaki.kyoani.App;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
@@ -22,10 +21,8 @@ import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import java.util.regex.*;
 import java.util.ArrayList;
-import android.util.Log;
 import android.content.Context;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
@@ -363,7 +360,7 @@ public class AnimeOne extends AbstractScheduleService {
     }
 
     private void log(String str) {
-        Log.d("KyoAni", "[AnimeOne] " + str);
+        App.Log.d("[AnimeOne] " + str);
     }
 
     class SessionExpiredException extends Exception {

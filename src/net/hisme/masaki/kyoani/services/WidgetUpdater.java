@@ -1,5 +1,6 @@
 package net.hisme.masaki.kyoani.services;
 
+import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.activities.MainActivity;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
@@ -17,133 +18,133 @@ import android.os.IBinder;
 import android.widget.RemoteViews;
 
 public class WidgetUpdater extends Service {
-    public Schedule getNextSchedule() {
-        try {
-            return new AnimeOne(this).getNextSchedule();
-        } catch (Exception e) {
-            log(e.toString());
-            return null;
-        }
-    }
+	public Schedule getNextSchedule() {
+		try {
+			return new AnimeOne(this).getNextSchedule();
+		} catch (Exception e) {
+			log(e.toString());
+			return null;
+		}
+	}
 
-    public String buildWidgetString(Schedule schedule) {
-        StringBuffer str_buf = new StringBuffer();
-        str_buf.append(schedule.getChannel());
-        str_buf.append("\n");
-        str_buf.append(schedule.getStartString());
-        str_buf.append("\n");
-        str_buf.append(schedule.getName());
-        str_buf.append("\n");
-        return new String(str_buf);
-    }
+	public String buildWidgetString(Schedule schedule) {
+		StringBuffer str_buf = new StringBuffer();
+		str_buf.append(schedule.getChannel());
+		str_buf.append("\n");
+		str_buf.append(schedule.getStartString());
+		str_buf.append("\n");
+		str_buf.append(schedule.getName());
+		str_buf.append("\n");
+		return new String(str_buf);
+	}
 
-    @Override
-    public void onCreate() {
-        log("started.");
-        AppWidgetManager widget_manager = AppWidgetManager
-                .getInstance(WidgetUpdater.this);
-        Schedule schedule = getNextSchedule();
-        String schedule_string;
+	@Override
+	public void onCreate() {
+		log("started.");
+		AppWidgetManager widget_manager = AppWidgetManager
+				.getInstance(WidgetUpdater.this);
+		Schedule schedule = getNextSchedule();
+		String schedule_string;
 
-        if (schedule != null) {
-            log("next schedule found.");
-            schedule_string = buildWidgetString(schedule);
-            setupNext(schedule);
-        } else {
-            log("next schedule not found.");
-            schedule_string = getText(R.string.no_schedule).toString();
-            setupNext();
+		if (schedule != null) {
+			log("next schedule found.");
+			schedule_string = buildWidgetString(schedule);
+			setupNext(schedule);
+		} else {
+			log("next schedule not found.");
+			schedule_string = getText(R.string.no_schedule).toString();
+			setupNext();
 
-        }
+		}
 
-        RemoteViews views;
-        ComponentName widget_class;
+		RemoteViews views;
+		ComponentName widget_class;
 
-        PendingIntent pending_intent = PendingIntent.getActivity(
-                WidgetUpdater.this, 0, new Intent(WidgetUpdater.this,
-                        MainActivity.class), 0);
+		PendingIntent pending_intent = PendingIntent.getActivity(
+				WidgetUpdater.this, 0, new Intent(WidgetUpdater.this,
+						MainActivity.class), 0);
 
-        log("Update 1x1");
-        views = new RemoteViews(getPackageName(), R.layout.widget_layout_1x1);
-        views.setTextViewText(R.id.next_log, schedule_string);
-        views.setOnClickPendingIntent(R.id.widget_main, pending_intent);
-        widget_class = new ComponentName(this, KyoAniWidget1.class);
-        widget_manager.updateAppWidget(widget_class, views);
+		log("Update 1x1");
+		views = new RemoteViews(getPackageName(), R.layout.widget_layout_1x1);
+		views.setTextViewText(R.id.next_log, schedule_string);
+		views.setOnClickPendingIntent(R.id.widget_main, pending_intent);
+		widget_class = new ComponentName(this, KyoAniWidget1.class);
+		widget_manager.updateAppWidget(widget_class, views);
 
-        log("Update 2x2");
-        views = new RemoteViews(getPackageName(), R.layout.widget_layout_2x2);
-        views.setTextViewText(R.id.next_log, schedule_string);
-        views.setOnClickPendingIntent(R.id.widget_main, pending_intent);
-        widget_class = new ComponentName(this, KyoAniWidget2.class);
-        widget_manager.updateAppWidget(widget_class, views);
+		log("Update 2x2");
+		views = new RemoteViews(getPackageName(), R.layout.widget_layout_2x2);
+		views.setTextViewText(R.id.next_log, schedule_string);
+		views.setOnClickPendingIntent(R.id.widget_main, pending_intent);
+		widget_class = new ComponentName(this, KyoAniWidget2.class);
+		widget_manager.updateAppWidget(widget_class, views);
 
-        stopSelf();
-    }
+		stopSelf();
+	}
 
-    protected void setupNext(Schedule schedule) {
-        setupUpdater(schedule);
-        setupNotification(schedule);
-    }
+	protected void setupNext(Schedule schedule) {
+		setupUpdater(schedule);
+		setupNotification(schedule);
+	}
 
-    protected void setupUpdater(Schedule schedule) {
-        log("setup alart for next show");
-        Intent intent = new Intent(WidgetUpdater.this, WidgetUpdater.class);
-        intent.putExtra("ToastMessage", String.format("%sで%sがはじまります", schedule
-                .getChannel(), schedule.getName()));
-        PendingIntent pending_intent = PendingIntent.getService(
-                WidgetUpdater.this, 0, intent, 0);
+	protected void setupUpdater(Schedule schedule) {
+		log("setup alart for next show");
+		Intent intent = new Intent(WidgetUpdater.this, WidgetUpdater.class);
+		intent.putExtra("ToastMessage", String.format("%sで%sがはじまります", schedule
+				.getChannel(), schedule.getName()));
+		PendingIntent pending_intent = PendingIntent.getService(
+				WidgetUpdater.this, 0, intent, 0);
 
-        AnimeCalendar calendar = schedule.getStart();
-        calendar.add(AnimeCalendar.MINUTE, 3);
-        log(String.format("scheduled to update widget at %s", calendar
-                .toString()));
-        AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                pending_intent);
+		AnimeCalendar calendar = schedule.getStart();
+		calendar.add(AnimeCalendar.MINUTE, 3);
+		log(String.format("scheduled to update widget at %s", calendar
+				.toString()));
+		AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+				pending_intent);
 
-    }
+	}
 
-    protected void setupNotification(Schedule schedule) {
-        log("setup notification for next show");
-        Intent intent = new Intent(WidgetUpdater.this,
-                NotificationService.class);
-        PendingIntent pending_intent = PendingIntent.getService(
-                WidgetUpdater.this, 0, intent, 0);
+	protected void setupNotification(Schedule schedule) {
+		log("setup notification for next show");
+		Intent intent = new Intent(WidgetUpdater.this,
+				NotificationService.class);
+		PendingIntent pending_intent = PendingIntent.getService(
+				WidgetUpdater.this, 0, intent, 0);
 
-        AnimeCalendar calendar = schedule.getStart();
-        calendar.add(AnimeCalendar.MINUTE, -2);
-        log(String.format("scheduled to notification at %s", calendar
-                .toString()));
-        AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                pending_intent);
-    }
+		AnimeCalendar calendar = schedule.getStart();
+		calendar.add(AnimeCalendar.MINUTE, -2);
+		log(String.format("scheduled to notification at %s", calendar
+				.toString()));
+		AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+				pending_intent);
+	}
 
-    protected void setupNext() {
-        log("setup alart for next day");
-        Intent intent = new Intent(WidgetUpdater.this, DailyUpdater.class);
-        PendingIntent pending_intent = PendingIntent.getService(
-                WidgetUpdater.this, 0, intent, 0);
+	protected void setupNext() {
+		log("setup alart for next day");
+		Intent intent = new Intent(WidgetUpdater.this, DailyUpdater.class);
+		PendingIntent pending_intent = PendingIntent.getService(
+				WidgetUpdater.this, 0, intent, 0);
 
-        AnimeCalendar calendar = AnimeCalendar.tomorrow();
-        log(String.format("scheduled to daily update at %s", calendar
-                .toString()));
-        AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                pending_intent);
-    }
+		AnimeCalendar calendar = AnimeCalendar.tomorrow();
+		log(String.format("scheduled to daily update at %s", calendar
+				.toString()));
+		AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+		alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+				pending_intent);
+	}
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
 
-    public void onDestroy() {
-        log("destroyed.");
-        super.onDestroy();
-    }
+	public void onDestroy() {
+		log("destroyed.");
+		super.onDestroy();
+	}
 
-    public void log(String message) {
-        android.util.Log.d("KyoAni", "[WidgetUpdater] " + message);
-    }
+	public void log(String message) {
+		App.Log.d("[WidgetUpdater] " + message);
+	}
 }
