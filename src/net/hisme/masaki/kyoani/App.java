@@ -3,6 +3,9 @@ package net.hisme.masaki.kyoani;
 import net.hisme.masaki.kyoani.models.Account;
 import android.app.Application;
 
+/**
+ * @author masaki
+ */
 public class App extends Application {
 	public static App li;
 
@@ -16,7 +19,7 @@ public class App extends Application {
 	public Account account() {
 		if (account == null) {
 			try {
-				account = new Account(this);
+				account = new Account();
 			} catch (Account.BlankException e) {
 
 			}

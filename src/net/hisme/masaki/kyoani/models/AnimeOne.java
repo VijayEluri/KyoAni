@@ -21,7 +21,6 @@ import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import java.util.regex.*;
 import java.util.ArrayList;
-import android.content.Context;
 import java.util.Calendar;
 import java.io.IOException;
 import java.io.FileNotFoundException;
@@ -44,17 +43,10 @@ public class AnimeOne extends AbstractScheduleService {
     public static final int NETWORK_ERROR = 2;
 
     /**
-     * create new AnimeOne
-     */
-    public AnimeOne() {
-    }
-
-    /**
      * @param context
      * @throws Account.BlankException
      */
-    public AnimeOne(Context context) throws Account.BlankException {
-        setContext(context);
+    public AnimeOne() throws Account.BlankException {
         initAccount();
         initHttpClient();
 
@@ -70,7 +62,7 @@ public class AnimeOne extends AbstractScheduleService {
     }
 
     private void initAccount() throws Account.BlankException {
-        setAccount(new Account(getContext()));
+        setAccount(new Account());
     }
 
     public void setAccount(Account account) {
@@ -104,7 +96,7 @@ public class AnimeOne extends AbstractScheduleService {
             return reloadSchedules();
         } else {
             log("Cached");
-            return Schedule.loadSchedules(context);
+            return Schedule.loadSchedules();
         }
     }
 
@@ -126,12 +118,12 @@ public class AnimeOne extends AbstractScheduleService {
             log("Use Session");
             try {
                 ArrayList<Schedule> schedules = mypage();
-                if (Schedule.saveSchedules(context, schedules)) {
+                if (Schedule.saveSchedules(schedules)) {
                     log("Update cached date");
                     AnimeCalendar today = new AnimeCalendar();
                     try {
                         BufferedWriter writer = new BufferedWriter(
-                                new OutputStreamWriter(context.openFileOutput(
+                                new OutputStreamWriter(App.li.openFileOutput(
                                         DATE_FILE, 0)));
                         writer.write(String.format("%04d-%02d-%02d", today
                                 .get(Calendar.YEAR),

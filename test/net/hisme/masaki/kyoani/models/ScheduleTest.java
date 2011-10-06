@@ -1,4 +1,4 @@
-package net.hisme.masaki.kyoani.test.model;
+package net.hisme.masaki.kyoani.models;
 
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;

@@ -20,7 +20,7 @@ import android.widget.RemoteViews;
 public class WidgetUpdater extends Service {
 	public Schedule getNextSchedule() {
 		try {
-			return new AnimeOne(this).getNextSchedule();
+			return new AnimeOne().getNextSchedule();
 		} catch (Exception e) {
 			log(e.toString());
 			return null;

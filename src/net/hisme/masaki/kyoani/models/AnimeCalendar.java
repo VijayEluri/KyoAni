@@ -8,7 +8,7 @@ import java.util.TimeZone;
 /**
  * 25時 などの表記に特化したカレンダークラス
  * 
- * @author masarakki
+ * @author masaki
  */
 public class AnimeCalendar extends GregorianCalendar {
     private static final long serialVersionUID = 1L;

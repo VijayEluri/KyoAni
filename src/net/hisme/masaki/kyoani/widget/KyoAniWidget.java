@@ -33,7 +33,7 @@ abstract public class KyoAniWidget extends AppWidgetProvider {
 
     protected String buildWidgetString(Context context) {
         try {
-            AnimeOne anime_one = new AnimeOne(context);
+            AnimeOne anime_one = new AnimeOne();
             Schedule schedule = anime_one.getNextSchedule();
 
             String schedule_str = context.getText(R.string.no_schedule)

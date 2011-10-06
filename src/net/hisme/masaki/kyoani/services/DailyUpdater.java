@@ -20,7 +20,7 @@ public class DailyUpdater extends Service {
         super.onStart(intent, startId);
         log("started.");
         try {
-            new AnimeOne(this).fetchSchedules();
+            new AnimeOne().fetchSchedules();
             startService(new Intent(DailyUpdater.this, WidgetUpdater.class));
         } catch (BlankException e) {
             e.printStackTrace();

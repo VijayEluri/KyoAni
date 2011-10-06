@@ -31,7 +31,7 @@ public class KyoAniService extends Service {
 	public void onCreate() {
 		dailyUpdate();
 		try {
-			this.schedule_service = new AnimeOne(this);
+			this.schedule_service = new AnimeOne();
 		} catch (BlankException e) {
 
 		}
