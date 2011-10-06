@@ -2,7 +2,6 @@ package net.hisme.masaki.kyoani.activities;
 
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
-import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.AnimeOne;
 import net.hisme.masaki.kyoani.models.Schedule;
 import net.hisme.masaki.kyoani.services.WidgetUpdater;
@@ -81,47 +80,48 @@ public class MainActivity extends Activity {
 		if (retry_count > 0) {
 			new Thread() {
 				public void run() {
-					try {
-						AnimeOne anime_one = new AnimeOne();
-						final ArrayList<Schedule> list;
-						if (force_reload) {
-							App.Log.d("refetch schedules.");
+					if (!App.li.account().is_blank()) {
+						try {
+							AnimeOne anime_one = new AnimeOne();
+							final ArrayList<Schedule> list;
+							if (force_reload) {
+								App.Log.d("refetch schedules.");
+								handler.post(new Runnable() {
+									public void run() {
+										ListView schedule_list = (ListView) MainActivity.this
+												.findViewById(R.id.schedule_list);
+										ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
+												MainActivity.this,
+												android.R.layout.simple_list_item_1);
+										array_adapter.add("更新中...");
+										schedule_list.setAdapter(array_adapter);
+									}
+								});
+								list = anime_one.reloadSchedules();
+								startService(new Intent(MainActivity.this,
+										WidgetUpdater.class));
+							} else {
+								list = anime_one.getSchedules();
+							}
+
 							handler.post(new Runnable() {
 								public void run() {
-									ListView schedule_list = (ListView) MainActivity.this
-											.findViewById(R.id.schedule_list);
-									ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
-											MainActivity.this,
-											android.R.layout.simple_list_item_1);
-									array_adapter.add("更新中...");
-									schedule_list.setAdapter(array_adapter);
+									MainActivity.this.displaySchedule(list,
+											retry_count);
 								}
 							});
-							list = anime_one.reloadSchedules();
-							startService(new Intent(MainActivity.this,
-									WidgetUpdater.class));
-						} else {
-							list = anime_one.getSchedules();
+						} catch (AnimeOne.LoginFailureException e) {
+							displayErrorMessage(R.string.error_account_cant_authorize);
+						} catch (AnimeOne.NetworkUnavailableException e) {
+							displayErrorMessage(R.string.error_network_disable);
 						}
-
-						handler.post(new Runnable() {
-							public void run() {
-								MainActivity.this.displaySchedule(list,
-										retry_count);
-							}
-						});
-					} catch (Account.BlankException e) {
+					} else {
 						handler.post(new Runnable() {
 							public void run() {
 								MainActivity.this
 										.displayErrorMessage(R.string.error_account_is_blank);
 							}
 						});
-					} catch (AnimeOne.LoginFailureException e) {
-						displayErrorMessage(R.string.error_account_cant_authorize);
-					} catch (AnimeOne.NetworkUnavailableException e) {
-						displayErrorMessage(R.string.error_network_disable);
-
 					}
 				}
 			}.start();
@@ -146,7 +146,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_account:
-			startActivity(new Intent(MainActivity.this, AccountActivity.class));
+			startActivity(new Intent(MainActivity.this, SettingActivity.class));
 			return true;
 		case R.id.menu_reload:
 			reloadSchedule();

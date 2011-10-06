@@ -2,6 +2,8 @@ package net.hisme.masaki.kyoani;
 
 import net.hisme.masaki.kyoani.models.Account;
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
  * @author masaki
@@ -16,13 +18,21 @@ public class App extends Application {
 		App.li = this;
 	}
 
+	private Account load_account() {
+		SharedPreferences pref = PreferenceManager
+				.getDefaultSharedPreferences(App.li);
+		String user_id = pref.getString("account", "");
+		String password = pref.getString("password", "");
+		return new Account(user_id, password);
+	}
+
+	public void reset_account() {
+		this.account = null;
+	}
+
 	public Account account() {
 		if (account == null) {
-			try {
-				account = new Account();
-			} catch (Account.BlankException e) {
-
-			}
+			account = load_account();
 		}
 		return account;
 	}
@@ -45,5 +55,10 @@ public class App extends Application {
 		public static void w(String str) {
 			android.util.Log.w(tag, str);
 		}
+	}
+
+	public static class BlankAccontError extends RuntimeException {
+		private static final long serialVersionUID = 1L;
+
 	}
 }

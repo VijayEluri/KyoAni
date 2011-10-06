@@ -11,7 +11,6 @@ import android.os.IBinder;
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.ScheduleService;
 import net.hisme.masaki.kyoani.models.AnimeOne;
-import net.hisme.masaki.kyoani.models.Account.BlankException;
 
 /**
  * KyoAniService provides Schedules
@@ -30,10 +29,8 @@ public class KyoAniService extends Service {
 	@Override
 	public void onCreate() {
 		dailyUpdate();
-		try {
+		if(!App.li.account().is_blank()) {
 			this.schedule_service = new AnimeOne();
-		} catch (BlankException e) {
-
 		}
 	}
 
