@@ -13,11 +13,13 @@ import java.util.regex.Pattern;
 
 import net.hisme.masaki.kyoani.App;
 
+import org.apache.http.ProtocolVersion;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpProtocolParams;
 
 /**
  * @author masaki
@@ -55,14 +57,17 @@ public abstract class AbstractScheduleService implements ScheduleService {
 	/**
 	 * initialize http client
 	 */
-	protected void initHttpClient() {
+	protected DefaultHttpClient get_client() {
 		BasicHttpParams params = new BasicHttpParams();
 		int timeout = 0;
 		HttpConnectionParams.setConnectionTimeout(params, timeout);
 		HttpConnectionParams.setSoTimeout(params, timeout);
+		HttpProtocolParams
+				.setVersion(params, new ProtocolVersion("HTTP", 1, 2));
+		HttpProtocolParams.setUserAgent(params,
+				"net.hisme.masaki.kyoani.browser");
 
-		this.http = new DefaultHttpClient(params);
-		loadSessionID();
+		return new DefaultHttpClient(params);
 	}
 
 	/**
