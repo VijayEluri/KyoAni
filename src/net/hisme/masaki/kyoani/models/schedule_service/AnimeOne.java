@@ -1,13 +1,21 @@
-package net.hisme.masaki.kyoani.models;
+package net.hisme.masaki.kyoani.models.schedule_service;
 
 import net.hisme.masaki.kyoani.App;
+import net.hisme.masaki.kyoani.models.AnimeCalendar;
+import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.ScheduleService;
+import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
+import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
 
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpEntity;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.cookie.Cookie;
 import java.lang.StringBuffer;
 import java.net.UnknownHostException;
@@ -19,18 +27,18 @@ import java.io.BufferedReader;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
+
 import java.util.regex.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-public class AnimeOne extends AbstractScheduleService {
-	private Account account = null;
+public class AnimeOne extends Base {
 
 	public static final String REGISTER_URI = "https://anime.biglobe.ne.jp/regist/regist_user";
 	private static final String MYPAGE_URI = "http://anime.biglobe.ne.jp/program/myprogram";
-	private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login/index";
+	private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login/";
 	private static final String LOGIN_URI = "https://anime.biglobe.ne.jp/login/login_ajax";
 	private static final String LOGOUT_URI = "https://anime.biglobe.ne.jp/login/logout_ajax";
 	private static final String SESSION_FILE_NAME = "_session";
@@ -42,30 +50,9 @@ public class AnimeOne extends AbstractScheduleService {
 	public static final int LOGIN_NG = 1;
 	public static final int NETWORK_ERROR = 2;
 
-	/**
-	 * @param context
-	 */
 	public AnimeOne() {
-		initAccount();
-		initHttpClient();
-
-	}
-
-	private void initAccount() {
-		setAccount(App.li.account());
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
-	}
-
-	public Account getAccount() {
-		return this.account;
-	}
-
-	@Override
-	protected boolean isAccountPresent() {
-		return getAccount() != null;
+		this.http = get_client();
+		loadSessionID();
 	}
 
 	@Override
@@ -76,18 +63,6 @@ public class AnimeOne extends AbstractScheduleService {
 	@Override
 	protected String getSessionKeyName() {
 		return SESSION_KEY_NAME;
-	}
-
-	public ArrayList<Schedule> getSchedules() throws LoginFailureException,
-			NetworkUnavailableException {
-		log("Get Schedules");
-		if (needUpdate()) {
-			log("Need Update");
-			return reloadSchedules();
-		} else {
-			log("Cached");
-			return Schedule.loadSchedules();
-		}
 	}
 
 	public Schedule getNextSchedule() throws LoginFailureException,
@@ -115,10 +90,10 @@ public class AnimeOne extends AbstractScheduleService {
 						BufferedWriter writer = new BufferedWriter(
 								new OutputStreamWriter(App.li.openFileOutput(
 										DATE_FILE, 0)));
-						writer.write(String.format("%04d-%02d-%02d", today
-								.get(Calendar.YEAR),
-								today.get(Calendar.MONTH) + 1, today
-										.get(Calendar.DAY_OF_MONTH)));
+						writer.write(String.format("%04d-%02d-%02d",
+								today.get(Calendar.YEAR),
+								today.get(Calendar.MONTH) + 1,
+								today.get(Calendar.DAY_OF_MONTH)));
 						writer.flush();
 						writer.close();
 					} catch (FileNotFoundException e) {
@@ -155,6 +130,7 @@ public class AnimeOne extends AbstractScheduleService {
 
 	public ArrayList<Schedule> mypage(int retry_count)
 			throws SessionExpiredException {
+
 		log("MyPage Start");
 		ArrayList<Schedule> result = new ArrayList<Schedule>();
 		boolean retry = true;
@@ -203,8 +179,8 @@ public class AnimeOne extends AbstractScheduleService {
 					for (int j = 0; j < tmp.getLength(); j++) {
 						ArrayList<String> values = null;
 						if (tmp.item(j).getNodeName().compareTo("img") == 0
-								&& tmp.item(j).getAttributes().getNamedItem(
-										"alt").getNodeValue()
+								&& tmp.item(j).getAttributes()
+										.getNamedItem("alt").getNodeValue()
 										.compareTo("ネット配信") != 0) {
 							String channel = "";
 							String name = "";
@@ -269,21 +245,42 @@ public class AnimeOne extends AbstractScheduleService {
 		return "";
 	}
 
+	@Override
 	public boolean login() throws NetworkUnavailableException {
 		log("Login Start");
 		boolean result = false;
 		try {
-			HttpPost post = new HttpPost(LOGIN_URI);
-			post.addHeader("Referer", LOGIN_FORM);
-			post.addHeader("X-Requested-With", "XMLHttpRequest");
-			post.addHeader("User-Agent",
-					"Mozilla/5.0(net.hisme.masaki.KyoAni;Android)");
-			post.addHeader("Content-Type",
-					"application/x-www-form-urlencoded; charset=UTF-8");
-			post.setEntity(new StringEntity("mail=" + App.li.account().username()
-					+ "&password=" + App.li.account().password()));
+			http = get_client();
+			HttpHost host = new HttpHost("anime.biglobe.ne.jp", 443, "https");
+			HttpPost post = new HttpPost("/login/login_ajax");
 
-			http.execute(post);
+			ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
+			params.add(new BasicNameValuePair("mail", App.li.account()
+					.username()));
+			params.add(new BasicNameValuePair("password", App.li.account()
+					.password()));
+			post.setEntity(new UrlEncodedFormEntity(params));
+			post.setHeader("Accept-Language", "ja");
+			post.setHeader("X-requested-With", "XMLHttpRequest");
+			post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			post.setHeader("Accept",
+					"text/javascript, application/javascript, */*");
+			App.Log.d("post headers");
+			for (Header header : post.getAllHeaders()) {
+				App.Log.d(header.toString());
+			}
+
+			HttpResponse response = http.execute(host, post);
+			App.Log.d("response headers");
+			for (Header header : response.getAllHeaders()) {
+				App.Log.d(header.toString());
+			}
+			String str;
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			while ((str = reader.readLine()) != null) {
+				App.Log.d(str);
+			}
 
 			for (Cookie cookie : http.getCookieStore().getCookies()) {
 				if (cookie.getName().equals(getSessionKeyName()))
@@ -291,6 +288,11 @@ public class AnimeOne extends AbstractScheduleService {
 				if (cookie.getName().equals("user[id_nick]"))
 					result = true;
 			}
+			App.Log.d("cookies");
+			for (Cookie cookie : http.getCookieStore().getCookies()) {
+				App.Log.d(cookie.getName() + ": " + cookie.getValue());
+			}
+
 			post.abort();
 
 			if (result)
@@ -348,6 +350,11 @@ public class AnimeOne extends AbstractScheduleService {
 
 	class SessionExpiredException extends Exception {
 		private static final long serialVersionUID = 1L;
+	}
+
+	@Override
+	protected boolean isAccountPresent() {
+		return !App.li.account().is_blank();
 	}
 
 }

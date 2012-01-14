@@ -1,4 +1,4 @@
-package net.hisme.masaki.kyoani.models;
+package net.hisme.masaki.kyoani.models.schedule_service;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,6 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.hisme.masaki.kyoani.App;
+import net.hisme.masaki.kyoani.models.AnimeCalendar;
+import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.ScheduleService;
+import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
+import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
 
 import org.apache.http.ProtocolVersion;
 import org.apache.http.cookie.Cookie;
@@ -24,7 +29,7 @@ import org.apache.http.params.HttpProtocolParams;
 /**
  * @author masaki
  */
-public abstract class AbstractScheduleService implements ScheduleService {
+public abstract class Base implements ScheduleService {
 	protected DefaultHttpClient http = null;
 	public static final String DATE_FILE = "updated.txt";
 
@@ -114,6 +119,18 @@ public abstract class AbstractScheduleService implements ScheduleService {
 
 		} catch (IOException e) {
 
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public ArrayList<Schedule> getSchedules() throws LoginFailureException,
+			NetworkUnavailableException {
+		if (this.needUpdate()) {
+			return this.fetchSchedules();
+		} else {
+			return Schedule.loadSchedules();
 		}
 	}
 

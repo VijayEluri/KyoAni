@@ -1,7 +1,7 @@
 package net.hisme.masaki.kyoani.services;
 
 import net.hisme.masaki.kyoani.App;
-import net.hisme.masaki.kyoani.models.AnimeOne;
+import net.hisme.masaki.kyoani.models.schedule_service.AnimeOne;
 
 import android.app.Service;
 import android.content.Intent;
