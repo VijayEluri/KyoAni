@@ -1,15 +1,13 @@
 package net.hisme.masaki.kyoani.test.models;
 
+import junit.framework.TestCase;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
-import static org.junit.Assert.*;
-import org.junit.*;
 
-public class ScheduleTest {
+public class ScheduleTest extends TestCase {
   private Schedule schedule;
 
-  @Before
-  public void before() {
+  public void setUp() {
     schedule = new Schedule("channel", "title", "25:30");
   }
 
@@ -17,8 +15,7 @@ public class ScheduleTest {
    * new with instance of AnimeCalendar, getStart() should equal to that
    * instance
    */
-  @Test
-  public void schedule() {
+  public void test_schedule() {
     assertEquals(schedule.getStart().hashCode(),
         new Schedule("channel", "title", schedule.getStart()).getStart().hashCode());
   }
@@ -26,40 +23,35 @@ public class ScheduleTest {
   /**
    * getChannel() should equal to channel parameter
    */
-  @Test
-  public void getChannel() {
+  public void test_getChannel() {
     assertEquals("channel", schedule.getChannel());
   }
 
   /**
    * getName() should equal to name parameter
    */
-  @Test
-  public void getName() {
+  public void test_getName() {
     assertEquals("title", schedule.getName());
   }
 
   /**
    * getStart() should equal to start parameter
    */
-  @Test
-  public void getStart() {
-    assertEquals(new AnimeCalendar("25:30"), schedule.getStart());
+  public void test_getStart() {
+    assertEquals(new AnimeCalendar("25:30").toString(), schedule.getStart().toString());
   }
 
   /**
    * getStartString() should call start.getStartString()
    */
-  @Test
-  public void getStartString() {
+  public void test_getStartString() {
     assertEquals("25:30", schedule.getStartString());
   }
 
   /**
    * toString() should format information
    */
-  @Test
-  public void testToString() {
+  public void test_toString() {
     assertEquals("[Schedule] channel = channel; name = title; start = 25:30", schedule.toString());
 
   }

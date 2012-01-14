@@ -1,35 +1,27 @@
 package net.hisme.masaki.kyoani.test.models;
 
+import junit.framework.TestCase;
 import net.hisme.masaki.kyoani.models.Account;
-import org.junit.*;
-import static org.junit.Assert.*;
 
-public class AccountTest {
+public class AccountTest extends TestCase {
   Account account = null;
+  Account blank_account = null;
 
-  @Before
-  public void before() {
+  public void setUp() {
     this.account = new Account("UserName", "PassWord");
+    this.blank_account = new Account("", "");
   }
 
-  @Test
-  public void username_should_eq_UserName() {
+  public void test_username() {
     assertEquals("UserName", this.account.username());
   }
 
-  @Test
-  public void password_should_eq_PassWord() {
+  public void test_password() {
     assertEquals("PassWord", this.account.password());
   }
 
-  @Test
-  public void is_blank_should_be_false() {
+  public void test_is_blank() {
     assertFalse(this.account.is_blank());
-  }
-
-  @Test
-  public void is_blank_should_be_true_if_username_and_password_is_blank() {
-    this.account = new Account("", "");
-    assertTrue(this.account.is_blank());
+    assertTrue(this.blank_account.is_blank());
   }
 }

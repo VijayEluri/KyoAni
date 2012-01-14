@@ -9,20 +9,7 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
     super(MainActivity.class);
   }
 
-  protected void setUp() throws Exception {
-    super.setUp();
+  public void test_add() {
+    assertEquals(1, 0 + 1);
   }
-
-  protected void tearDown() throws Exception {
-    super.tearDown();
-  }
-
-  public void test_a() {
-    assertEquals(2, 1 + 1);
-  }
-
-  public void test_b() {
-    assertEquals(2.0, 1.0 + 1.0);
-  }
-
 }

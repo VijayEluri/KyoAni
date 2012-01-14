@@ -3,25 +3,19 @@ package net.hisme.masaki.kyoani.test.models;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.TimeZone;
-
-import org.junit.*;
-
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 
-public class AnimeCalendarTest {
+public class AnimeCalendarTest extends TestCase {
   private AnimeCalendar cal = null;
 
-  @Before
-  public void before() {
+  public void setUp() {
     /* 2000/2/2 4:30 */
     cal = new AnimeCalendar(2000, 2, 2, 4, 30);
   }
 
-  @Test
-  public void hourWhenMidnight() {
+  public void testHourWhenMidnight() {
     AnimeCalendar cal1 = new AnimeCalendar("28:30");
     AnimeCalendar cal2 = new AnimeCalendar();
     assertEquals(cal1.get(Calendar.DAY_OF_MONTH), cal2.get(Calendar.DAY_OF_MONTH));
@@ -31,25 +25,19 @@ public class AnimeCalendarTest {
     assertEquals(30, cal1.get(Calendar.MINUTE));
   }
 
-  @Test
-  public void init() {
-    assertEquals(new AnimeCalendar(2010, 1, 1), new GregorianCalendar(2010, 1, 1));
-    assertEquals(new AnimeCalendar(2010, 1, 1, 0, 10, 30), new GregorianCalendar(2010, 1, 1, 0, 10, 30));
-    assertEquals(new AnimeCalendar(), new GregorianCalendar());
-    assertEquals(new AnimeCalendar(Locale.JAPAN), new GregorianCalendar(Locale.JAPAN));
-    TimeZone tz = TimeZone.getDefault();
-    assertEquals(new AnimeCalendar(tz), new GregorianCalendar(tz));
-    assertEquals(new AnimeCalendar(tz, Locale.JAPAN), new AnimeCalendar(tz, Locale.JAPAN));
+  public void testInit() {
+    assertEquals(new GregorianCalendar(2010, 1, 1), new AnimeCalendar(2010, 1, 1));
+    assertEquals(new GregorianCalendar(2010, 1, 1, 0, 10, 30), new AnimeCalendar(2010, 1, 1, 0, 10, 30));
+    assertEquals(new GregorianCalendar(), new AnimeCalendar());
+    assertEquals(new GregorianCalendar(Locale.JAPAN), new AnimeCalendar(Locale.JAPAN));
   }
 
-  @Test
-  public void isMidnight() {
-    assertEquals(true, cal.isMidnight());
-    assertEquals(false, new AnimeCalendar(2000, 2, 2, 5, 10).isMidnight());
+  public void testIsMidnight() {
+    assertTrue(cal.isMidnight());
+    assertFalse(new AnimeCalendar(2000, 2, 2, 5, 10).isMidnight());
   }
 
-  @Test
-  public void get() {
+  public void testGet() {
     assertEquals(1, cal.get(Calendar.DAY_OF_MONTH));
     assertEquals(28, cal.get(Calendar.HOUR_OF_DAY));
 
@@ -62,8 +50,7 @@ public class AnimeCalendarTest {
     assertEquals(28, cal3.get(Calendar.HOUR_OF_DAY));
   }
 
-  @Test
-  public void getTimeString() {
+  public void testGetTimeString() {
     assertEquals("28:30", cal.getTimeString());
   }
 }

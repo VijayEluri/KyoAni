@@ -1,14 +1,16 @@
 package net.hisme.masaki.kyoani.test.models.schedule_service;
 
+import junit.framework.TestCase;
 import net.hisme.masaki.kyoani.models.schedule_service.AnimeOne;
-import org.junit.*;
-import static org.junit.Assert.*;
 
-public class AnimeOneTest {
+public class AnimeOneTest extends TestCase {
   AnimeOne anime_one;
 
-  @Before
-  public void before() {
+  public void setUp() {
     this.anime_one = new AnimeOne();
+  }
+
+  public void test_need_update() {
+    assertTrue(anime_one.needUpdate());
   }
 }

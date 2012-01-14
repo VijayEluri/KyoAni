@@ -121,4 +121,8 @@ public class AnimeCalendar extends GregorianCalendar {
   public String toString() {
     return String.format("%s %s", getDateString(), getTimeString());
   }
+
+  public boolean equals(GregorianCalendar other) {
+    return super.equals(other);
+  }
 }
