@@ -7,10 +7,10 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 public class AnimeOneTest {
-	AnimeOne anime_one;
+  AnimeOne anime_one;
 
-	@Before
-	public void before() {
-		this.anime_one = new AnimeOne();
-	}
+  @Before
+  public void before() {
+    this.anime_one = new AnimeOne();
+  }
 }

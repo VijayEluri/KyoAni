@@ -7,37 +7,37 @@ package net.hisme.masaki.kyoani.models;
  * 
  */
 public class Account {
-	private String username = null;
-	private String password = null;
+  private String username = null;
+  private String password = null;
 
-	/**
-	 * create Account instance
-	 */
-	public Account(String username, String password) {
-		this.username = username;
-		this.password = password;
-	}
+  /**
+   * create Account instance
+   */
+  public Account(String username, String password) {
+    this.username = username;
+    this.password = password;
+  }
 
-	/**
-	 * get user name
-	 * 
-	 * @return user name
-	 */
-	public String username() {
-		return this.username;
-	}
+  /**
+   * get user name
+   * 
+   * @return user name
+   */
+  public String username() {
+    return this.username;
+  }
 
-	/**
-	 * get password
-	 * 
-	 * @return password
-	 */
-	public String password() {
-		return this.password;
-	}
+  /**
+   * get password
+   * 
+   * @return password
+   */
+  public String password() {
+    return this.password;
+  }
 
-	public boolean is_blank() {
-		return this.password == null || this.username == null
-				|| this.password == "" || this.username == "";
-	}
+  public boolean is_blank() {
+    return this.password == null || this.username == null
+        || this.password == "" || this.username == "";
+  }
 }
