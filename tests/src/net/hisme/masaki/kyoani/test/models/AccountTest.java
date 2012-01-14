@@ -1,4 +1,4 @@
-package net.hisme.masaki.kyoani.models;
+package net.hisme.masaki.kyoani.test.models;
 
 import net.hisme.masaki.kyoani.models.Account;
 import org.junit.*;
