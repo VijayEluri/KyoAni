@@ -15,6 +15,7 @@ public class AnimeOneTest extends AndroidTestCase {
 
   public void setUp() {
     this.anime_one = new AnimeOne();
+    anime_one.clearUpdatedDate();
   }
 
   public void testNeedUpdate() {

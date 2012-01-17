@@ -3,6 +3,7 @@ package net.hisme.masaki.kyoani.models.schedule_service;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -153,10 +154,15 @@ public abstract class Base implements ScheduleService {
 
   public boolean needUpdate() {
     GregorianCalendar updated = updatedDate();
-    if (updated == null)
-      return true;
+    return updated == null || AnimeCalendar.today().compareTo(updated) == 1;
+  }
 
-    return AnimeCalendar.today().compareTo(updated) == 1 ? true : false;
+  public boolean clearUpdatedDate() {
+    try {
+      App.li.openFileOutput(DATE_FILE, 0).close();
+      return true;
+    } catch (Exception e) {}
+    return false;
   }
 
   public GregorianCalendar updatedDate() {
