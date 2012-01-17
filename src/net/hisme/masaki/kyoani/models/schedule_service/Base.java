@@ -17,8 +17,10 @@ import net.hisme.masaki.kyoani.models.Schedule;
 import net.hisme.masaki.kyoani.models.ScheduleService;
 import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
 import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
+import net.hisme.masaki.kyoani.utils.StringUtils;
 
 import org.apache.http.ProtocolVersion;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -126,6 +128,26 @@ public abstract class Base implements ScheduleService {
       return this.fetchSchedules();
     } else {
       return Schedule.loadSchedules();
+    }
+  }
+
+  /**
+   * send GET request and return response body
+   * 
+   * @param url
+   *          URL
+   * @return response body
+   */
+  public String httpGet(String url) {
+    HttpGet get = new HttpGet(url);
+    String body;
+    try {
+      body = StringUtils.getString(http.execute(get).getEntity().getContent());
+      get.abort();
+      return body;
+    } catch (Exception e) {
+      get.abort();
+      throw new RuntimeException(e);
     }
   }
 

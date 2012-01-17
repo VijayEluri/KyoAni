@@ -6,6 +6,8 @@ import net.hisme.masaki.kyoani.models.Schedule;
 import net.hisme.masaki.kyoani.models.ScheduleService;
 import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
 import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
+import net.hisme.masaki.kyoani.utils.StringUtils;
+import net.hisme.masaki.kyoani.models.schedule_service.SessionExpiredException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -121,32 +123,15 @@ public class AnimeOne extends Base {
     return mypage(3);
   }
 
-  public ArrayList<Schedule> mypage(int retry_count) throws SessionExpiredException {
+  public ArrayList<Schedule> parseMyPage(String html) throws SessionExpiredException {
+    ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 
-    log("MyPage Start");
-    ArrayList<Schedule> result = new ArrayList<Schedule>();
-    boolean retry = true;
+    Pattern pattern = Pattern.compile(
+        "(<div class=\"w220Box program program2 marginLeft10px\">.*</div>).*<div class=\"w220Box program marginLeft10px\">",
+        Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE | Pattern.UNIX_LINES);
+    Matcher match = pattern.matcher(html);
     try {
-      HttpGet get = new HttpGet(MYPAGE_URI);
-      HttpResponse response = http.execute(get);
-      HttpEntity entity = response.getEntity();
-
-      BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
-      StringBuffer responseText = new StringBuffer();
-
-      char[] buf = new char[BUFFSIZE];
-      int read_size = 0;
-      while ((read_size = reader.read(buf, 0, BUFFSIZE)) != -1) {
-        responseText = responseText.append(buf, 0, read_size);
-      }
-      get.abort();
-
-      Pattern pattern = Pattern.compile(
-          "(<div class=\"w220Box program program2 marginLeft10px\">.*</div>).*<div class=\"w220Box program marginLeft10px\">",
-          Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE | Pattern.UNIX_LINES);
-      Matcher match = pattern.matcher(new String(responseText));
       if (match.find()) {
-        retry = false;
         NodeList tmp;
         String body = match.group(1);
         body = body.replace("&", "&amp;");
@@ -176,10 +161,7 @@ public class AnimeOne extends Base {
               }
               values = nodeMapString(td_list.item(i * TDNUMS + 2));
               name = values.get(0);
-              Schedule schedule = new Schedule(channel, name, start);
-              log(schedule.toString());
-              result.add(schedule);
-
+              schedules.add(new Schedule(channel, name, start));
               break;
             }
           }
@@ -187,20 +169,30 @@ public class AnimeOne extends Base {
       } else {
         throw new SessionExpiredException();
       }
-      log("Parse Finish: " + result.size() + " items found.");
-    } catch (org.apache.http.client.ClientProtocolException e) {
-      log(e.toString());
-    } catch (java.io.IOException e) {
-      log(e.toString());
-    } catch (ParserConfigurationException e) {
-      log(e.toString());
     } catch (org.xml.sax.SAXException e) {
       org.xml.sax.SAXParseException ex = (org.xml.sax.SAXParseException) e;
       log("row:" + ex.getLineNumber() + "   col: " + ex.getColumnNumber());
+      throw new RuntimeException(e);
+    } catch (Exception e) {
+      log(e.toString());
+      throw new RuntimeException(e);
     }
-    log("MyPage Finish");
-    if (retry && retry_count > 0) {
-      return mypage(retry_count - 1);
+    return schedules;
+  }
+
+  public ArrayList<Schedule> mypage(int retry_count) throws SessionExpiredException {
+    log("MyPage Start");
+    ArrayList<Schedule> result = new ArrayList<Schedule>();
+    boolean retry = true;
+    try {
+      String html = httpGet(MYPAGE_URI);
+      return parseMyPage(html);
+    } catch (SessionExpiredException e) {
+
+    } catch (RuntimeException e) {
+      if (retry && retry_count > 0) {
+        return mypage(retry_count - 1);
+      }
     }
     return result;
   }
@@ -319,10 +311,6 @@ public class AnimeOne extends Base {
 
   private void log(String str) {
     App.Log.d("[AnimeOne] " + str);
-  }
-
-  class SessionExpiredException extends Exception {
-    private static final long serialVersionUID = 1L;
   }
 
   @Override
