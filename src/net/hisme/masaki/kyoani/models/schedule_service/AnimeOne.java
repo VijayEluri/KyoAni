@@ -1,31 +1,21 @@
 package net.hisme.masaki.kyoani.models.schedule_service;
 
 import net.hisme.masaki.kyoani.App;
+import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.models.ScheduleService;
-import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
-import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
-import net.hisme.masaki.kyoani.utils.StringUtils;
 import net.hisme.masaki.kyoani.models.schedule_service.SessionExpiredException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.Header;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.cookie.Cookie;
-import java.lang.StringBuffer;
 import java.net.UnknownHostException;
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.io.BufferedReader;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
@@ -37,23 +27,23 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 
 public class AnimeOne extends Base {
-
+  public static final String HOST = "anime.biglobe.ne.jp";
   public static final String REGISTER_URI = "https://anime.biglobe.ne.jp/regist/regist_user";
   private static final String MYPAGE_URI = "http://anime.biglobe.ne.jp/program/myprogram";
-  private static final String LOGIN_FORM = "https://anime.biglobe.ne.jp/login/";
-  private static final String LOGIN_URI = "https://anime.biglobe.ne.jp/login/login_ajax";
-  private static final String LOGOUT_URI = "https://anime.biglobe.ne.jp/login/logout_ajax";
+  private static final String LOGIN_URI = "/login/login_ajax";
+  private static final String LOGOUT_URI = "/login/logout_ajax";
   private static final String SESSION_FILE_NAME = "_session";
   private static final String SESSION_KEY_NAME = "PHPSESSID";
-
-  private static final int BUFFSIZE = 1024;
 
   public static final int LOGIN_OK = 0;
   public static final int LOGIN_NG = 1;
   public static final int NETWORK_ERROR = 2;
+  public HttpHost http_host, https_host = null;
 
   public AnimeOne() {
     this.http = get_client();
+    this.http_host = new HttpHost(HOST, 80, "http");
+    this.https_host = new HttpHost(HOST, 443, "https");
     loadSessionID();
   }
 
@@ -119,17 +109,20 @@ public class AnimeOne extends Base {
     return null;
   }
 
-  public ArrayList<Schedule> mypage() throws SessionExpiredException {
-    return mypage(3);
-  }
-
-  public ArrayList<Schedule> parseMyPage(String html) throws SessionExpiredException {
+  /**
+   * parse MyPage HTML
+   * 
+   * @param html
+   *          HTML response body
+   * @return ArrayList of Schedule
+   */
+  public ArrayList<Schedule> parseMyPage(String html) {
     ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 
-    Pattern pattern = Pattern.compile(
+    Matcher match = Pattern.compile(
         "(<div class=\"w220Box program program2 marginLeft10px\">.*</div>).*<div class=\"w220Box program marginLeft10px\">",
-        Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE | Pattern.UNIX_LINES);
-    Matcher match = pattern.matcher(html);
+        Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE | Pattern.UNIX_LINES).matcher(html);
+
     try {
       if (match.find()) {
         NodeList tmp;
@@ -165,48 +158,67 @@ public class AnimeOne extends Base {
               break;
             }
           }
+
         }
-      } else {
-        throw new SessionExpiredException();
+        return schedules;
       }
     } catch (org.xml.sax.SAXException e) {
       org.xml.sax.SAXParseException ex = (org.xml.sax.SAXParseException) e;
       log("row:" + ex.getLineNumber() + "   col: " + ex.getColumnNumber());
-      throw new RuntimeException(e);
     } catch (Exception e) {
       log(e.toString());
-      throw new RuntimeException(e);
     }
-    return schedules;
+    throw new RuntimeException("Parse Error");
   }
 
+  /**
+   * access to MyPage
+   * 
+   * @return ArrayList of Schedule
+   * @throws SessionExpiredException
+   */
+  public ArrayList<Schedule> mypage() throws SessionExpiredException {
+    return mypage(3);
+  }
+
+  /**
+   * access to MyPage with retry
+   * 
+   * @param retry_count
+   * @return ArrayList of Schedule
+   * @throws SessionExpiredException
+   */
   public ArrayList<Schedule> mypage(int retry_count) throws SessionExpiredException {
-    log("MyPage Start");
-    ArrayList<Schedule> result = new ArrayList<Schedule>();
-    boolean retry = true;
     try {
       String html = httpGet(MYPAGE_URI);
       return parseMyPage(html);
-    } catch (SessionExpiredException e) {
-
     } catch (RuntimeException e) {
-      if (retry && retry_count > 0) {
-        return mypage(retry_count - 1);
+      if (retry_count > 0) {
+        try {
+          if (login()) {
+            return mypage(retry_count - 1);
+          }
+        } catch (NetworkUnavailableException ex) {}
+        log("MyPage: Giveup; relogin failure");
+        throw new SessionExpiredException();
+      } else {
+        log("MyPage: Giveup;");
+        throw new SessionExpiredException();
       }
     }
-    return result;
   }
 
   public void logout() {
     try {
       HttpPost post = new HttpPost(LOGOUT_URI);
-      http.execute(post);
+      http.execute(https_host, post);
       post.abort();
     } catch (Exception e) {
       log(e.toString());
     }
   }
 
+  @SuppressWarnings("unused")
   private String getSessionID() {
     for (Cookie cookie : this.http.getCookieStore().getCookies()) {
       if (cookie.getName().equals("PHPSESSID")) {
@@ -218,36 +230,28 @@ public class AnimeOne extends Base {
 
   @Override
   public boolean login() throws NetworkUnavailableException {
+    return login(App.li.account());
+  }
+
+  /**
+   * execution of login
+   * 
+   * @param account
+   * @return success or failure
+   * @throws NetworkUnavailableException
+   */
+  public boolean login(Account account) throws NetworkUnavailableException {
     log("Login Start");
     boolean result = false;
     try {
       http = get_client();
-      HttpHost host = new HttpHost("anime.biglobe.ne.jp", 443, "https");
-      HttpPost post = new HttpPost("/login/login_ajax");
+      HttpPost post = new HttpPost(LOGIN_URI);
 
       ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-      params.add(new BasicNameValuePair("mail", App.li.account().username()));
-      params.add(new BasicNameValuePair("password", App.li.account().password()));
+      params.add(new BasicNameValuePair("mail", account.username()));
+      params.add(new BasicNameValuePair("password", account.password()));
       post.setEntity(new UrlEncodedFormEntity(params));
-      post.setHeader("Accept-Language", "ja");
-      post.setHeader("X-requested-With", "XMLHttpRequest");
-      post.setHeader("Content-Type", "application/x-www-form-urlencoded");
-      post.setHeader("Accept", "text/javascript, application/javascript, */*");
-      App.Log.d("post headers");
-      for (Header header : post.getAllHeaders()) {
-        App.Log.d(header.toString());
-      }
-
-      HttpResponse response = http.execute(host, post);
-      App.Log.d("response headers");
-      for (Header header : response.getAllHeaders()) {
-        App.Log.d(header.toString());
-      }
-      String str;
-      BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-      while ((str = reader.readLine()) != null) {
-        App.Log.d(str);
-      }
+      http.execute(https_host, post);
 
       for (Cookie cookie : http.getCookieStore().getCookies()) {
         if (cookie.getName().equals(getSessionKeyName()))
@@ -255,11 +259,6 @@ public class AnimeOne extends Base {
         if (cookie.getName().equals("user[id_nick]"))
           result = true;
       }
-      App.Log.d("cookies");
-      for (Cookie cookie : http.getCookieStore().getCookies()) {
-        App.Log.d(cookie.getName() + ": " + cookie.getValue());
-      }
-
       post.abort();
 
       if (result)

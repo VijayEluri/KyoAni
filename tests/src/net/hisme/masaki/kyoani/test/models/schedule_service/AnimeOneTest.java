@@ -5,7 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.test.AndroidTestCase;
+import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.models.schedule_service.AnimeOne;
 import net.hisme.masaki.kyoani.models.schedule_service.SessionExpiredException;
 import net.hisme.masaki.kyoani.utils.StringUtils;
@@ -43,6 +45,10 @@ public class AnimeOneTest extends AndroidTestCase {
     Matcher match = Pattern.compile("<title>masarakki/KyoAni - GitHub</title>",
         Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE | Pattern.UNIX_LINES).matcher(body);
     assertTrue(match.find());
+  }
+
+  public void testLogin() throws NetworkUnavailableException {
+    assertFalse(anime_one.login(new Account("unko", "chinko")));
   }
 
   public String loadMypageTestData(String filename) {

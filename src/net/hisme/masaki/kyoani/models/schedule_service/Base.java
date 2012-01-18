@@ -3,7 +3,6 @@ package net.hisme.masaki.kyoani.models.schedule_service;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -16,8 +15,6 @@ import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
 import net.hisme.masaki.kyoani.models.ScheduleService;
-import net.hisme.masaki.kyoani.models.ScheduleService.LoginFailureException;
-import net.hisme.masaki.kyoani.models.ScheduleService.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.utils.StringUtils;
 
 import org.apache.http.ProtocolVersion;
