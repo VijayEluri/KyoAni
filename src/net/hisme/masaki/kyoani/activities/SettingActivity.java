@@ -9,14 +9,14 @@ import android.os.Bundle;
  * @author masaki
  */
 public class SettingActivity extends PreferenceActivity {
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.pref);
-	}
-	
-	public void onDestroy() {
-		App.li.reset_account();
-		super.onDestroy();
-	}
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    addPreferencesFromResource(R.xml.pref);
+  }
+
+  public void onDestroy() {
+    App.li.resetAccount();
+    super.onDestroy();
+  }
 }

@@ -23,7 +23,7 @@ public class Account {
    * 
    * @return user name
    */
-  public String username() {
+  public String getUserName() {
     return this.username;
   }
 
@@ -32,11 +32,11 @@ public class Account {
    * 
    * @return password
    */
-  public String password() {
+  public String getPassword() {
     return this.password;
   }
 
-  public boolean is_blank() {
+  public boolean isBlank() {
     return this.password == null || this.username == null
         || this.password == "" || this.username == "";
   }

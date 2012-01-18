@@ -9,7 +9,7 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
     super(MainActivity.class);
   }
 
-  public void test_add() {
+  public void testAdd() {
     assertEquals(1, 0 + 1);
   }
 }

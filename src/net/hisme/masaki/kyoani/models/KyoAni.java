@@ -16,12 +16,7 @@ public class KyoAni {
     this.context = context;
   }
 
-  /**
-   * get context
-   * 
-   * @return context
-   */
-  public Context context() {
+  public Context getContext() {
     return this.context;
   }
 

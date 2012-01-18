@@ -16,7 +16,7 @@ public class KyoAniTest extends ApplicationTestCase<App> {
     kyoani = new KyoAni(this.getContext());
   }
 
-  public void test_context() {
-    assertEquals(getContext(), kyoani.context());
+  public void testContext() {
+    assertEquals(getContext(), kyoani.getContext());
   }
 }

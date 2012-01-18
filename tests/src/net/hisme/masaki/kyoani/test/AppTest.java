@@ -13,7 +13,7 @@ public class AppTest extends ApplicationTestCase<App> {
 
   }
 
-  public void test_App_li_should_be_an_instance_of_App() {
+  public void testApp_li() {
     assertEquals(App.li, this.getApplication());
   }
 

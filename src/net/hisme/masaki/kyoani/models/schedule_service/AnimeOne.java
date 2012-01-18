@@ -41,7 +41,7 @@ public class AnimeOne extends Base {
   public HttpHost http_host, https_host = null;
 
   public AnimeOne() {
-    this.http = get_client();
+    this.http = getClient();
     this.http_host = new HttpHost(HOST, 80, "http");
     this.https_host = new HttpHost(HOST, 443, "https");
     loadSessionID();
@@ -230,7 +230,7 @@ public class AnimeOne extends Base {
 
   @Override
   public boolean login() throws NetworkUnavailableException {
-    return login(App.li.account());
+    return login(App.li.getAccount());
   }
 
   /**
@@ -244,12 +244,12 @@ public class AnimeOne extends Base {
     log("Login Start");
     boolean result = false;
     try {
-      http = get_client();
+      http = getClient();
       HttpPost post = new HttpPost(LOGIN_URI);
 
       ArrayList<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-      params.add(new BasicNameValuePair("mail", account.username()));
-      params.add(new BasicNameValuePair("password", account.password()));
+      params.add(new BasicNameValuePair("mail", account.getUserName()));
+      params.add(new BasicNameValuePair("password", account.getPassword()));
       post.setEntity(new UrlEncodedFormEntity(params));
       http.execute(https_host, post);
 
@@ -314,7 +314,7 @@ public class AnimeOne extends Base {
 
   @Override
   protected boolean isAccountPresent() {
-    return !App.li.account().is_blank();
+    return !App.li.getAccount().isBlank();
   }
 
 }

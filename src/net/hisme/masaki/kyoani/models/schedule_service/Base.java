@@ -62,7 +62,7 @@ public abstract class Base implements ScheduleService {
   /**
    * initialize http client
    */
-  protected DefaultHttpClient get_client() {
+  protected DefaultHttpClient getClient() {
     BasicHttpParams params = new BasicHttpParams();
     int timeout = 0;
     HttpConnectionParams.setConnectionTimeout(params, timeout);

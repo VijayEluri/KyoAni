@@ -12,16 +12,16 @@ public class AccountTest extends TestCase {
     this.blank_account = new Account("", "");
   }
 
-  public void test_username() {
-    assertEquals("UserName", this.account.username());
+  public void testUserName() {
+    assertEquals("UserName", this.account.getUserName());
   }
 
-  public void test_password() {
-    assertEquals("PassWord", this.account.password());
+  public void testPassword() {
+    assertEquals("PassWord", this.account.getPassword());
   }
 
-  public void test_is_blank() {
-    assertFalse(this.account.is_blank());
-    assertTrue(this.blank_account.is_blank());
+  public void testIsBlank() {
+    assertFalse(this.account.isBlank());
+    assertTrue(this.blank_account.isBlank());
   }
 }
