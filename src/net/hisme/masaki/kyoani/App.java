@@ -55,9 +55,4 @@ public class App extends Application {
       android.util.Log.w(tag, str);
     }
   }
-
-  public static class BlankAccontError extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-
-  }
 }
