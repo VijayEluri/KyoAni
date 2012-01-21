@@ -4,6 +4,9 @@ import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
+import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
+import net.hisme.masaki.kyoani.schedule_service.exception.SessionExpiredException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

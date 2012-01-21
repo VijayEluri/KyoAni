@@ -4,6 +4,8 @@ import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.models.Schedule;
 import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
+import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.services.WidgetUpdater;
 
 import java.util.ArrayList;
@@ -103,9 +105,9 @@ public class MainActivity extends Activity {
                   MainActivity.this.displaySchedule(list, retry_count);
                 }
               });
-            } catch (AnimeOne.LoginFailureException e) {
+            } catch (LoginFailureException e) {
               displayErrorMessage(R.string.error_account_cant_authorize);
-            } catch (AnimeOne.NetworkUnavailableException e) {
+            } catch (NetworkUnavailableException e) {
               displayErrorMessage(R.string.error_network_disable);
             }
           } else {

@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
+import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.utils.StringUtils;
 
 import org.apache.http.ProtocolVersion;

@@ -8,8 +8,8 @@ import android.test.AndroidTestCase;
 import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.Schedule;
 import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
-import net.hisme.masaki.kyoani.schedule_service.SessionExpiredException;
-import net.hisme.masaki.kyoani.schedule_service.ScheduleService.NetworkUnavailableException;
+import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
+import net.hisme.masaki.kyoani.schedule_service.exception.SessionExpiredException;
 import net.hisme.masaki.kyoani.utils.StringUtils;
 
 public class AnimeOneTest extends AndroidTestCase {
