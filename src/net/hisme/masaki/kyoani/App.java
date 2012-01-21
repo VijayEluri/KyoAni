@@ -1,6 +1,8 @@
 package net.hisme.masaki.kyoani;
 
 import net.hisme.masaki.kyoani.models.Account;
+import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -34,6 +36,10 @@ public class App extends Application {
       account = loadAccount();
     }
     return account;
+  }
+
+  public ScheduleService getScheduleService() {
+    return new AnimeOne();
   }
 
   public static class Log {
