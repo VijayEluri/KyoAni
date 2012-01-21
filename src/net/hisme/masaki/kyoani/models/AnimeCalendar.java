@@ -1,6 +1,5 @@
 package net.hisme.masaki.kyoani.models;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -92,9 +91,9 @@ public class AnimeCalendar extends GregorianCalendar {
    */
   public AnimeCalendar beginningOfDay() {
     AnimeCalendar cloned = (AnimeCalendar) this.clone();
-    cloned.set(Calendar.HOUR_OF_DAY, BEGINNING_OF_DAY);
-    cloned.set(Calendar.MINUTE, 0);
-    cloned.set(Calendar.SECOND, 0);
+    cloned.set(HOUR_OF_DAY, BEGINNING_OF_DAY);
+    cloned.set(MINUTE, 0);
+    cloned.set(SECOND, 0);
     return cloned;
   }
 
@@ -105,7 +104,7 @@ public class AnimeCalendar extends GregorianCalendar {
    */
   public static GregorianCalendar today() {
     AnimeCalendar now = new AnimeCalendar();
-    return new GregorianCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+    return new GregorianCalendar(now.get(YEAR), now.get(MONTH), now.get(DAY_OF_MONTH), 0, 0, 0);
   }
 
   /**
@@ -115,7 +114,7 @@ public class AnimeCalendar extends GregorianCalendar {
    */
   public static AnimeCalendar tomorrow() {
     AnimeCalendar now = new AnimeCalendar();
-    return new AnimeCalendar(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH) + 1).beginningOfDay();
+    return new AnimeCalendar(now.get(YEAR), now.get(MONTH), now.get(DAY_OF_MONTH) + 1).beginningOfDay();
   }
 
   public String toString() {
