@@ -12,5 +12,19 @@ import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableExce
 public interface ScheduleService {
   boolean login() throws NetworkUnavailableException;
 
+  /**
+   * 強制リロードしてスケジュールを取得
+   * 
+   * @return
+   */
+  ArrayList<Schedule> reloadSchedules() throws LoginFailureException, NetworkUnavailableException;
+
+  /**
+   * スケジュールを取得
+   * 
+   * @return
+   */
   ArrayList<Schedule> getSchedules() throws LoginFailureException, NetworkUnavailableException;
+
+  Schedule getNextSchedule() throws LoginFailureException, NetworkUnavailableException;
 }

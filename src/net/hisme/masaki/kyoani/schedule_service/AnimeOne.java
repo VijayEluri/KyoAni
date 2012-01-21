@@ -59,16 +59,6 @@ public class AnimeOne extends Base {
     return SESSION_KEY_NAME;
   }
 
-  public Schedule getNextSchedule() throws LoginFailureException, NetworkUnavailableException {
-    AnimeCalendar now = new AnimeCalendar();
-    for (Schedule schedule : getSchedules()) {
-      if (now.compareTo(schedule.getStart()) == -1) {
-        return schedule;
-      }
-    }
-    return null;
-  }
-
   public ArrayList<Schedule> reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
     log("Reload Schedule");
     if (hasSessionID() || login()) {

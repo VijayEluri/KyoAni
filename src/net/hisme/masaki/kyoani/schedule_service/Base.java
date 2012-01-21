@@ -119,15 +119,39 @@ public abstract class Base implements ScheduleService {
   }
 
   /**
-	 * 
-	 */
-  public ArrayList<Schedule> getSchedules() throws LoginFailureException,
-      NetworkUnavailableException {
-    if (this.needUpdate()) {
+   * 
+   * @param reload
+   *          強制リロードするかどうか
+   * @return スケジュール一覧
+   * @throws LoginFailureException
+   *           ログインできなかったとき
+   * @throws NetworkUnavailableException
+   *           ネットワークが繋がらなかったとき
+   */
+  protected ArrayList<Schedule> getSchedules(boolean reload) throws LoginFailureException, NetworkUnavailableException {
+    if (reload || this.needUpdate()) {
       return this.fetchSchedules();
     } else {
       return Schedule.loadSchedules();
     }
+  }
+
+  public ArrayList<Schedule> getSchedules() throws LoginFailureException, NetworkUnavailableException {
+    return getSchedules(false);
+  }
+
+  public ArrayList<Schedule> reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
+    return getSchedules(true);
+  }
+
+  public Schedule getNextSchedule() throws LoginFailureException, NetworkUnavailableException {
+    AnimeCalendar now = new AnimeCalendar();
+    for (Schedule schedule : getSchedules()) {
+      if (now.compareTo(schedule.getStart()) == -1) {
+        return schedule;
+      }
+    }
+    return null;
   }
 
   /**
