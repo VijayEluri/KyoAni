@@ -1,5 +1,6 @@
 package net.hisme.masaki.kyoani.models;
 
+import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 import android.content.Context;
 
 public class KyoAni {

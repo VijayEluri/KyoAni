@@ -12,7 +12,7 @@ import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.activities.MainActivity;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.models.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
 
 abstract public class KyoAniWidget extends AppWidgetProvider {
   protected final int widget_layout = 0;

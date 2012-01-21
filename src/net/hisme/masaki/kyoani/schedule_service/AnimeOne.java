@@ -1,10 +1,9 @@
-package net.hisme.masaki.kyoani.models.schedule_service;
+package net.hisme.masaki.kyoani.schedule_service;
 
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.models.schedule_service.SessionExpiredException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;

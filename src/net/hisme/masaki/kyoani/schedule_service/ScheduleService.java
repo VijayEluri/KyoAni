@@ -1,6 +1,8 @@
-package net.hisme.masaki.kyoani.models;
+package net.hisme.masaki.kyoani.schedule_service;
 
 import java.util.ArrayList;
+
+import net.hisme.masaki.kyoani.models.Schedule;
 
 /**
  * @author masaki

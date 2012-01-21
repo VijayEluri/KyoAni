@@ -3,7 +3,7 @@ package net.hisme.masaki.kyoani.activities;
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.models.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
 import net.hisme.masaki.kyoani.services.WidgetUpdater;
 
 import java.util.ArrayList;

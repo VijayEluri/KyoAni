@@ -9,8 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import net.hisme.masaki.kyoani.App;
-import net.hisme.masaki.kyoani.models.ScheduleService;
-import net.hisme.masaki.kyoani.models.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 
 /**
  * KyoAniService provides Schedules

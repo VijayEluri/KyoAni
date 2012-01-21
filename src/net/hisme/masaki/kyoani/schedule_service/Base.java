@@ -1,4 +1,4 @@
-package net.hisme.masaki.kyoani.models.schedule_service;
+package net.hisme.masaki.kyoani.schedule_service;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.models.ScheduleService;
 import net.hisme.masaki.kyoani.utils.StringUtils;
 
 import org.apache.http.ProtocolVersion;
