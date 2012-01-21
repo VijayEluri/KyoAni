@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import net.hisme.masaki.kyoani.App;
-import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
 import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 
 /**
@@ -30,7 +29,7 @@ public class KyoAniService extends Service {
   public void onCreate() {
     dailyUpdate();
     if (!App.li.getAccount().isBlank()) {
-      this.schedule_service = new AnimeOne();
+      this.schedule_service = App.li.getScheduleService();
     }
   }
 

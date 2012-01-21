@@ -5,6 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * 端末の起動時にアップデートの設定をする
+ * 
+ * @author masaki
+ * 
+ */
 public class StartupReceiver extends BroadcastReceiver {
 
   @Override

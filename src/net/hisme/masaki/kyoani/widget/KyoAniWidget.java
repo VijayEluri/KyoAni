@@ -12,7 +12,7 @@ import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.activities.MainActivity;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 
 abstract public class KyoAniWidget extends AppWidgetProvider {
   protected final int widget_layout = 0;
@@ -32,8 +32,8 @@ abstract public class KyoAniWidget extends AppWidgetProvider {
 
   protected String buildWidgetString(Context context) {
     try {
-      AnimeOne anime_one = new AnimeOne();
-      Schedule schedule = anime_one.getNextSchedule();
+      ScheduleService schedule_service = App.li.getScheduleService();
+      Schedule schedule = schedule_service.getNextSchedule();
 
       String schedule_str = context.getText(R.string.no_schedule).toString();
       if (schedule != null) {

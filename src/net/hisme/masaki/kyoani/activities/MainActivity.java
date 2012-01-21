@@ -3,7 +3,7 @@ package net.hisme.masaki.kyoani.activities;
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.services.WidgetUpdater;
@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
         public void run() {
           if (!App.li.getAccount().isBlank()) {
             try {
-              AnimeOne anime_one = new AnimeOne();
+              ScheduleService schedule_service = App.li.getScheduleService();
               final ArrayList<Schedule> list;
               if (force_reload) {
                 App.Log.d("refetch schedules.");
@@ -94,10 +94,10 @@ public class MainActivity extends Activity {
                     schedule_list.setAdapter(array_adapter);
                   }
                 });
-                list = anime_one.reloadSchedules();
+                list = schedule_service.reloadSchedules();
                 startService(new Intent(MainActivity.this, WidgetUpdater.class));
               } else {
-                list = anime_one.getSchedules();
+                list = schedule_service.getSchedules();
               }
 
               handler.post(new Runnable() {

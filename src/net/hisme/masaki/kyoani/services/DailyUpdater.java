@@ -2,7 +2,8 @@ package net.hisme.masaki.kyoani.services;
 
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.BlankAccontException;
-import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
+import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 
 import android.app.Service;
 import android.content.Intent;
@@ -21,9 +22,13 @@ public class DailyUpdater extends Service {
     log("started.");
     if (!App.li.getAccount().isBlank()) {
       try {
-        new AnimeOne().fetchSchedules();
+        App.li.getScheduleService().reloadSchedules();
         startService(new Intent(DailyUpdater.this, WidgetUpdater.class));
       } catch (BlankAccontException e) {
+        e.printStackTrace();
+      } catch (LoginFailureException e) {
+        e.printStackTrace();
+      } catch (NetworkUnavailableException e) {
         e.printStackTrace();
       }
     }

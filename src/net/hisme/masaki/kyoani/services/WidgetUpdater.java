@@ -5,7 +5,6 @@ import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.activities.MainActivity;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
 import net.hisme.masaki.kyoani.widget.KyoAniWidget1;
 import net.hisme.masaki.kyoani.widget.KyoAniWidget2;
 import android.app.AlarmManager;
@@ -17,10 +16,21 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
+/**
+ * ウィジェットを更新するサービス
+ * 
+ * @author masaki
+ * 
+ */
 public class WidgetUpdater extends Service {
+  /**
+   * 次のスケジュールを取得する
+   * 
+   * @return
+   */
   public Schedule getNextSchedule() {
     try {
-      return new AnimeOne().getNextSchedule();
+      return App.li.getScheduleService().getNextSchedule();
     } catch (Exception e) {
       log(e.toString());
       return null;
@@ -41,8 +51,7 @@ public class WidgetUpdater extends Service {
   @Override
   public void onCreate() {
     log("started.");
-    AppWidgetManager widget_manager = AppWidgetManager
-        .getInstance(WidgetUpdater.this);
+    AppWidgetManager widget_manager = AppWidgetManager.getInstance(WidgetUpdater.this);
     Schedule schedule = getNextSchedule();
     String schedule_string;
 
@@ -60,9 +69,8 @@ public class WidgetUpdater extends Service {
     RemoteViews views;
     ComponentName widget_class;
 
-    PendingIntent pending_intent = PendingIntent.getActivity(
-        WidgetUpdater.this, 0, new Intent(WidgetUpdater.this,
-            MainActivity.class), 0);
+    PendingIntent pending_intent = PendingIntent.getActivity(WidgetUpdater.this, 0,
+        new Intent(WidgetUpdater.this, MainActivity.class), 0);
 
     log("Update 1x1");
     views = new RemoteViews(getPackageName(), R.layout.widget_layout_1x1);
@@ -81,16 +89,25 @@ public class WidgetUpdater extends Service {
     stopSelf();
   }
 
+  /**
+   * 次のスケジュールが開始した時の更新を設定する
+   * 
+   * @param schedule
+   */
   protected void setupNext(Schedule schedule) {
     setupUpdater(schedule);
     setupNotification(schedule);
   }
 
+  /**
+   * 次の更新の設定をする
+   * 
+   * @param schedule
+   */
   protected void setupUpdater(Schedule schedule) {
     log("setup alart for next show");
     Intent intent = new Intent(WidgetUpdater.this, WidgetUpdater.class);
-    intent.putExtra("ToastMessage", String.format("%sで%sがはじまります",
-        schedule.getChannel(), schedule.getName()));
+    intent.putExtra("ToastMessage", String.format("%sで%sがはじまります", schedule.getChannel(), schedule.getName()));
     PendingIntent pending_intent = PendingIntent.getService(WidgetUpdater.this, 0, intent, 0);
 
     AnimeCalendar calendar = schedule.getStart();
@@ -100,6 +117,11 @@ public class WidgetUpdater extends Service {
     alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
   }
 
+  /**
+   * 次のアニメが始まる前にバイブレーションさせる設定をする
+   * 
+   * @param schedule
+   */
   protected void setupNotification(Schedule schedule) {
     log("setup notification for next show");
     Intent intent = new Intent(WidgetUpdater.this, NotificationService.class);
@@ -112,6 +134,9 @@ public class WidgetUpdater extends Service {
     alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
   }
 
+  /**
+   * 次の日の更新を設定する
+   */
   protected void setupNext() {
     log("setup alart for next day");
     Intent intent = new Intent(WidgetUpdater.this, DailyUpdater.class);

@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.Vibrator;
 
+/**
+ * バイブレーションを操作する
+ * 
+ * @author masaki
+ */
 public class NotificationService extends Service {
   @Override
   public void onStart(Intent intent, int startId) {
