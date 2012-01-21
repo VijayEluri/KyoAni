@@ -1,7 +1,7 @@
 package net.hisme.masaki.kyoani.services;
 
 import net.hisme.masaki.kyoani.App;
-import net.hisme.masaki.kyoani.BlankAccontError;
+import net.hisme.masaki.kyoani.BlankAccontException;
 import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
 
 import android.app.Service;
@@ -23,7 +23,7 @@ public class DailyUpdater extends Service {
       try {
         new AnimeOne().fetchSchedules();
         startService(new Intent(DailyUpdater.this, WidgetUpdater.class));
-      } catch (BlankAccontError e) {
+      } catch (BlankAccontException e) {
         e.printStackTrace();
       }
     }
