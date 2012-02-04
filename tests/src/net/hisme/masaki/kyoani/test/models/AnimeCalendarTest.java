@@ -26,10 +26,10 @@ public class AnimeCalendarTest extends TestCase {
   }
 
   public void testInit() {
-    assertEquals(new GregorianCalendar(2010, 1, 1), new AnimeCalendar(2010, 1, 1));
-    assertEquals(new GregorianCalendar(2010, 1, 1, 0, 10, 30), new AnimeCalendar(2010, 1, 1, 0, 10, 30));
-    assertEquals(new GregorianCalendar(), new AnimeCalendar());
-    assertEquals(new GregorianCalendar(Locale.JAPAN), new AnimeCalendar(Locale.JAPAN));
+    assertEquals(new GregorianCalendar(2010, 1, 1).getTimeInMillis(), new AnimeCalendar(2010, 1, 1).getTimeInMillis(), 1000);
+    assertEquals(new GregorianCalendar(2010, 1, 1, 0, 10, 30).getTimeInMillis(), new AnimeCalendar(2010, 1, 1, 0, 10, 30).getTimeInMillis(), 1000);
+    assertEquals(new GregorianCalendar().getTimeInMillis(), new AnimeCalendar().getTimeInMillis(), 1000);
+    assertEquals(new GregorianCalendar(Locale.JAPAN).getTimeInMillis(), new AnimeCalendar(Locale.JAPAN).getTimeInMillis(), 1000);
   }
 
   public void testIsMidnight() {
