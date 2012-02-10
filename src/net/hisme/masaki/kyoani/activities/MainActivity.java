@@ -106,9 +106,17 @@ public class MainActivity extends Activity {
                 }
               });
             } catch (LoginFailureException e) {
-              displayErrorMessage(R.string.error_account_cant_authorize);
+              handler.post(new Runnable() {
+                public void run() {
+                  MainActivity.this.displayErrorMessage(R.string.error_account_cant_authorize);
+                }
+              });
             } catch (NetworkUnavailableException e) {
-              displayErrorMessage(R.string.error_network_disable);
+              handler.post(new Runnable() {
+                public void run() {
+                  MainActivity.this.displayErrorMessage(R.string.error_network_disable);
+                }
+              });
             }
           } else {
             handler.post(new Runnable() {

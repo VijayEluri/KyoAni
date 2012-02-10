@@ -1,15 +1,21 @@
 package net.hisme.masaki.kyoani.test.activities;
 
 import net.hisme.masaki.kyoani.activities.MainActivity;
-import android.test.ActivityUnitTestCase;
+import net.hisme.masaki.kyoani.R;
+import android.test.ActivityInstrumentationTestCase2;
 
-public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
+public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
   public MainActivityTest() {
-    super(MainActivity.class);
+    super("net.hisme.masaki.kyoani", MainActivity.class);
   }
 
-  public void testAdd() {
-    assertEquals(1, 0 + 1);
+  protected void setUp() throws Exception {
+    super.setUp();
+    this.setActivityInitialTouchMode(false);
+  }
+
+  public void testDisplayErrorMessage() {
+   
   }
 }

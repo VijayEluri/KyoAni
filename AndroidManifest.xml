@@ -1,50 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="net.hisme.masaki.kyoani" android:versionCode="30"
-  android:versionName="0.11.0">
-  <application android:icon="@drawable/icon" android:label="@string/app_name"
-    android:name=".App">
-    <activity android:name=".activities.MainActivity"
-      android:label="@string/title_main">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="net.hisme.masaki.kyoani" android:versionCode="31" android:versionName="0.11.1">
+  <application android:icon="@drawable/icon" android:label="@string/app_name" android:name=".App">
+    <activity android:name=".activities.MainActivity" android:label="@string/title_main">
       <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name=".activities.SettingActivity"
-      android:label="@string/app_name" />
-    <activity android:name=".activities.HelpActivity"
-      android:label="@string/title_help" />
-    <activity android:name=".activities.AboutActivity"
-      android:label="@string/title_about" />
+    <activity android:name=".activities.SettingActivity" android:label="@string/app_name"/>
+    <activity android:name=".activities.HelpActivity" android:label="@string/title_help"/>
+    <activity android:name=".activities.AboutActivity" android:label="@string/title_about"/>
 
-    <receiver android:name=".widget.KyoAniWidget1"
-      android:label="@string/widget_1">
+    <receiver android:name=".widget.KyoAniWidget1" android:label="@string/widget_1">
       <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
       </intent-filter>
-      <meta-data android:name="android.appwidget.provider"
-        android:resource="@xml/widget_1x1" />
+      <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_1x1"/>
     </receiver>
-    <receiver android:name=".widget.KyoAniWidget2"
-      android:label="@string/widget_2">
+    <receiver android:name=".widget.KyoAniWidget2" android:label="@string/widget_2">
       <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
       </intent-filter>
-      <meta-data android:name="android.appwidget.provider"
-        android:resource="@xml/widget_2x2" />
+      <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_2x2"/>
     </receiver>
-    <service android:name=".services.KyoAniService"></service>
-    <service android:name=".services.DailyUpdater"></service>
-    <service android:name=".services.WidgetUpdater"></service>
-    <service android:name=".services.NotificationService"></service>
+    <service android:name=".services.KyoAniService"/>
+    <service android:name=".services.DailyUpdater"/>
+    <service android:name=".services.WidgetUpdater"/>
+    <service android:name=".services.NotificationService"/>
     <receiver android:name=".services.StartupReceiver">
       <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
       </intent-filter>
     </receiver>
   </application>
-  <uses-sdk android:minSdkVersion="4" />
-  <uses-permission android:name="android.permission.VIBRATE" />
-  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-sdk android:minSdkVersion="4"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
