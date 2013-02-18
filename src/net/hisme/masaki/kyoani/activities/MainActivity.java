@@ -146,7 +146,7 @@ public class MainActivity extends Activity {
 
   public void displayErrorMessage(int res_id) {
     String str = getText(res_id).toString();
-    Toast.makeText(MainActivity.this, str, 5).show();
+    Toast.makeText(MainActivity.this, str, Toast.LENGTH_LONG).show();
   }
 
   @Override
