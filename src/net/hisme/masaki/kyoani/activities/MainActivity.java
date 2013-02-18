@@ -40,11 +40,11 @@ public class MainActivity extends Activity {
     updateSchedule();
   }
 
-  public Button createReloadButton() {
+  public View createReloadButton() {
     LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    final Button reload_button = (Button) inflater.inflate(R.layout.reload_button, null);
+    View reload_button = inflater.inflate(R.layout.reload_button, null);
 
-    reload_button.setOnClickListener(new View.OnClickListener() {
+    ((Button) reload_button.findViewById(R.id.reload_button)).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         reloadSchedule();
