@@ -13,6 +13,7 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Button;
 import android.widget.Toast;
 import android.widget.ArrayAdapter;
+import android.content.Context;
 import android.content.Intent;
 
 /**
@@ -33,13 +35,23 @@ public class MainActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+    ListView schedule_list = (ListView) findViewById(R.id.schedule_list);
+    schedule_list.addFooterView(createReloadButton());
     updateSchedule();
-    ((Button) findViewById(R.id.reload_button)).setOnClickListener(new View.OnClickListener() {
+  }
+
+  public Button createReloadButton() {
+    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    final Button reload_button = (Button) inflater.inflate(R.layout.reload_button, null);
+
+    reload_button.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
         reloadSchedule();
       }
     });
+
+    return reload_button;
   }
 
   public void updateSchedule() {
