@@ -42,7 +42,7 @@ public class AnimeOneTest extends AndroidTestCase {
 
   public void testHttpGet() {
     String body = anime_one.httpGet("https://github.com/masarakki/KyoAni");
-    Matcher match = Pattern.compile("<title>masarakki/KyoAni - GitHub</title>",
+    Matcher match = Pattern.compile("masarakki/KyoAni",
         Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE | Pattern.UNIX_LINES).matcher(body);
     assertTrue(match.find());
   }
