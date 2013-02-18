@@ -25,8 +25,7 @@
   <!-- main view -->
   <string name="title_main">今日アニ</string>
   <string name="button_main_reload">更新</string>
-  <string name="label_main_setting_hint">設定変更はメニューボタンから</string>
-
+  
   <!-- account view -->
   <string name="title_account">今日アニ - アカウント設定</string>
   <string name="label_account_setting">アカウント設定</string>
@@ -67,7 +66,7 @@
   <string name="form_password_title">PASSWORD</string>
   <string name="login_failure">ログインに失敗しました。アカウントを再設定してください。
 	</string>
-  <string name="no_schedule">今日の予定は終了\nおやすみなさい...</string>
+  <string name="no_schedule">今日の予定は終了\nおやすみなさい</string>
 
 
 </resources>
