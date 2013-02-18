@@ -2,3 +2,7 @@ bin
 gen
 tests/bin
 tests/gen
+target/
+.project
+.classpath
+.settings
