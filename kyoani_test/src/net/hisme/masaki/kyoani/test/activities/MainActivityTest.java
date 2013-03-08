@@ -1,7 +1,6 @@
 package net.hisme.masaki.kyoani.test.activities;
 
 import net.hisme.masaki.kyoani.activities.MainActivity;
-import net.hisme.masaki.kyoani.R;
 import android.test.ActivityInstrumentationTestCase2;
 
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -16,6 +15,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
   }
 
   public void testDisplayErrorMessage() {
-   
+
   }
 }
