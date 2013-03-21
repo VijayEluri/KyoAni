@@ -6,9 +6,9 @@ import android.os.IBinder;
 import android.os.Vibrator;
 
 /**
- * バイブレーションを操作する
+ * control vibration
  * 
- * @author masaki
+ * @author masarakki
  */
 public class NotificationService extends Service {
   @Override

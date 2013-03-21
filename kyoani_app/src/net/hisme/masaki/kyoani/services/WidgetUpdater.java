@@ -17,16 +17,15 @@ import android.os.IBinder;
 import android.widget.RemoteViews;
 
 /**
- * ウィジェットを更新するサービス
+ * service to update widgets
  * 
- * @author masaki
+ * @author masarakki
  * 
  */
 public class WidgetUpdater extends Service {
+
   /**
-   * 次のスケジュールを取得する
-   * 
-   * @return
+   * @return next schedule
    */
   public Schedule getNextSchedule() {
     try {
@@ -37,6 +36,11 @@ public class WidgetUpdater extends Service {
     }
   }
 
+  /**
+   * @param schedule
+   *          schedule
+   * @return text of widget
+   */
   public String buildWidgetString(Schedule schedule) {
     StringBuffer str_buf = new StringBuffer();
     str_buf.append(schedule.getChannel());
@@ -63,7 +67,6 @@ public class WidgetUpdater extends Service {
       log("next schedule not found.");
       schedule_string = getText(R.string.no_schedule).toString();
       setupNext();
-
     }
 
     RemoteViews views;
@@ -90,7 +93,7 @@ public class WidgetUpdater extends Service {
   }
 
   /**
-   * 次のスケジュールが開始した時の更新を設定する
+   * setup timers for next schedule
    * 
    * @param schedule
    */
@@ -100,7 +103,7 @@ public class WidgetUpdater extends Service {
   }
 
   /**
-   * 次の更新の設定をする
+   * setup update timer
    * 
    * @param schedule
    */
@@ -118,7 +121,7 @@ public class WidgetUpdater extends Service {
   }
 
   /**
-   * 次のアニメが始まる前にバイブレーションさせる設定をする
+   * setup notification timer
    * 
    * @param schedule
    */
@@ -135,7 +138,7 @@ public class WidgetUpdater extends Service {
   }
 
   /**
-   * 次の日の更新を設定する
+   * setup timers for next day
    */
   protected void setupNext() {
     log("setup alart for next day");

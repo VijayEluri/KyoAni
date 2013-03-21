@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 /**
- * @author masaki
+ * @author masarakki
  */
 public class App extends Application {
   public static App li;
