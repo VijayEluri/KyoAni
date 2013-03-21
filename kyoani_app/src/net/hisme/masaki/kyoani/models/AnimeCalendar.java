@@ -5,9 +5,9 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * 25時 などの表記に特化したカレンダークラス
+ * Calendar for TV show that support like 25:00
  * 
- * @author masaki
+ * @author masarakki
  */
 public class AnimeCalendar extends GregorianCalendar {
   private static final long serialVersionUID = 1L;
@@ -45,7 +45,7 @@ public class AnimeCalendar extends GregorianCalendar {
 
   /**
    * @param time
-   *          25:30 のような形式の文字列
+   *          date time expression like 25:30
    */
   public AnimeCalendar(String time) {
     super();
@@ -68,9 +68,7 @@ public class AnimeCalendar extends GregorianCalendar {
   }
 
   /**
-   * 24時以降か?
-   * 
-   * @return
+   * @return is over 24:00 or not?
    */
   public boolean isMidnight() {
     return super.get(HOUR_OF_DAY) < BEGINNING_OF_DAY;
@@ -85,9 +83,7 @@ public class AnimeCalendar extends GregorianCalendar {
   }
 
   /**
-   * 日付の変わる時刻のインスタンスを取得する
-   * 
-   * @return
+   * @return new instance of AnimeCalender about beginning of day 
    */
   public AnimeCalendar beginningOfDay() {
     AnimeCalendar cloned = (AnimeCalendar) this.clone();
@@ -98,9 +94,7 @@ public class AnimeCalendar extends GregorianCalendar {
   }
 
   /**
-   * 今日の日付を返す ただし5時~29時
-   * 
-   * @return
+   * @return new instance of GregorianCalendar that means today
    */
   public static GregorianCalendar today() {
     AnimeCalendar now = new AnimeCalendar();
@@ -108,9 +102,7 @@ public class AnimeCalendar extends GregorianCalendar {
   }
 
   /**
-   * 明日の日付のオブジェクトを返す
-   * 
-   * @return
+   * @return new instance of AnimeCalendar of tomorrow 
    */
   public static AnimeCalendar tomorrow() {
     AnimeCalendar now = new AnimeCalendar();

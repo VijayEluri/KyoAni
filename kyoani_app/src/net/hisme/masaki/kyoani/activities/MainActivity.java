@@ -27,8 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * 
- * @author masaki
+ * @author masarakki
  */
 public class MainActivity extends Activity {
   @Override

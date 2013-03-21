@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import net.hisme.masaki.kyoani.App;
 
 /**
- * 番組単体を表すクラス
+ * Animation Program
  * 
- * @author masaki
+ * @author masarakki
  * 
  */
 public class Schedule implements Serializable {
@@ -20,11 +20,11 @@ public class Schedule implements Serializable {
   /**
    * 
    * @param channel
-   *          チャンネル名
+   *          channel name
    * @param name
-   *          番組名
+   *          program name
    * @param start
-   *          25:30のような時間を表す文字列
+   *          start time like '25:30'
    */
   public Schedule(String channel, String name, String start) {
     this.channel = channel;
@@ -35,11 +35,11 @@ public class Schedule implements Serializable {
   /**
    * 
    * @param channel
-   *          チャンネル名
+   *          channel name
    * @param name
-   *          番組名
+   *          program name
    * @param start
-   *          AnimeCalendarのインスタンス
+   *          instance of AnimeCalendar
    */
   public Schedule(String channel, String name, AnimeCalendar start) {
     this.channel = channel;
@@ -47,28 +47,40 @@ public class Schedule implements Serializable {
     this.start = start;
   }
 
+  /**
+   * @return channel name
+   */
   public String getChannel() {
     return this.channel;
   }
 
+  /**
+   * @return program name
+   */
   public String getName() {
     return this.name;
   }
 
+  /**
+   * @return start time
+   */
   public AnimeCalendar getStart() {
     return (AnimeCalendar) this.start.clone();
   }
 
+  /**
+   * @return start time as string
+   */
   public String getStartString() {
     return this.start.getTimeString();
   }
 
   /**
-   * ストレージにスケジュールを保存する
+   * store the schedules to storage
    * 
    * @param schedules
-   *          ScheduleのArrayList
-   * @return 保存に成功したかどうか
+   *          Schedules
+   * @return succeeded?
    */
   public static boolean saveSchedules(ArrayList<Schedule> schedules) {
     boolean ret = false;
@@ -86,9 +98,9 @@ public class Schedule implements Serializable {
   }
 
   /**
-   * ストレージからスケジュールをロードする
+   * load the schedules from storage
    * 
-   * @return ScheduleのArrayList
+   * @return schedules
    */
   @SuppressWarnings("unchecked")
   public static ArrayList<Schedule> loadSchedules() {

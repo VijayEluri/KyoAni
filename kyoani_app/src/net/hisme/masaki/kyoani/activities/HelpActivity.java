@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.content.Intent;
 import android.net.Uri;
 
+/**
+ * @author masarakki
+ */
 public class HelpActivity extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {

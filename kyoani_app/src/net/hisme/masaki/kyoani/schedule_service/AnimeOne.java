@@ -28,6 +28,10 @@ import java.util.Calendar;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
+/**
+ * adapter for AnimeOne 
+ * @author masarakki
+ */
 public class AnimeOne extends Base {
   public static final String HOST = "anime.biglobe.ne.jp";
   public static final String REGISTER_URI = "https://anime.biglobe.ne.jp/regist/regist_user";

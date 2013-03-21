@@ -28,7 +28,9 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpProtocolParams;
 
 /**
- * @author masaki
+ * base class of schedule service adapter
+ * 
+ * @author masarakki
  */
 public abstract class Base implements ScheduleService {
   protected DefaultHttpClient http = null;
@@ -54,9 +56,9 @@ public abstract class Base implements ScheduleService {
   abstract protected boolean isAccountPresent();
 
   /**
-   * サービスに接続してスケジュールリストを取得する
+   * fetch schedules from service
    * 
-   * @return スケジュールのリスト
+   * @return schedules
    */
   abstract public ArrayList<Schedule> fetchSchedules();
 
@@ -75,9 +77,7 @@ public abstract class Base implements ScheduleService {
   }
 
   /**
-   * return cookie has session id or not
-   * 
-   * @return has?
+   * @return cookie has session id?
    */
   protected boolean hasSessionID() {
     String cookie_key = getSessionKeyName();
@@ -91,7 +91,6 @@ public abstract class Base implements ScheduleService {
 
   /**
    * load SessionID from stored file
-   * 
    */
   protected void loadSessionID() {
     try {
@@ -121,12 +120,12 @@ public abstract class Base implements ScheduleService {
   /**
    * 
    * @param reload
-   *          強制リロードするかどうか
-   * @return スケジュール一覧
+   *          is force reload?
+   * @return schedules
    * @throws LoginFailureException
-   *           ログインできなかったとき
+   *           if couldn't login
    * @throws NetworkUnavailableException
-   *           ネットワークが繋がらなかったとき
+   *           if network unreachable
    */
   protected ArrayList<Schedule> getSchedules(boolean reload) throws LoginFailureException, NetworkUnavailableException {
     if (reload || this.needUpdate()) {

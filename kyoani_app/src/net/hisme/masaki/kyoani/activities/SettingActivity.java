@@ -6,7 +6,7 @@ import android.preference.PreferenceActivity;
 import android.os.Bundle;
 
 /**
- * @author masaki
+ * @author masarakki
  */
 public class SettingActivity extends PreferenceActivity {
   @Override

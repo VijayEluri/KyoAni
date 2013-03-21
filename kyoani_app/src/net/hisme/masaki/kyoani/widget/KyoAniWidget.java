@@ -14,6 +14,9 @@ import net.hisme.masaki.kyoani.activities.MainActivity;
 import net.hisme.masaki.kyoani.models.Schedule;
 import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 
+/**
+ * @author masarakki
+ */
 abstract public class KyoAniWidget extends AppWidgetProvider {
   protected final int widget_layout = 0;
 
