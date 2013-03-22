@@ -4,6 +4,7 @@ import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.Schedules;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.schedule_service.exception.SessionExpiredException;
@@ -63,13 +64,13 @@ public class AnimeOne extends Base {
     return SESSION_KEY_NAME;
   }
 
-  public ArrayList<Schedule> reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
+  public Schedules reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
     log("Reload Schedule");
     if (hasSessionID() || login()) {
       log("Use Session");
       try {
-        ArrayList<Schedule> schedules = mypage();
-        if (Schedule.saveSchedules(schedules)) {
+        Schedules schedules = mypage();
+        if (schedules.save()) {
           log("Update cached date");
           AnimeCalendar today = new AnimeCalendar();
           try {
@@ -93,7 +94,7 @@ public class AnimeOne extends Base {
   }
 
   @Override
-  public ArrayList<Schedule> fetchSchedules() {
+  public Schedules fetchSchedules() {
     log("fetchSchedule");
     try {
       return reloadSchedules();
@@ -112,8 +113,8 @@ public class AnimeOne extends Base {
    *          HTML response body
    * @return ArrayList of Schedule
    */
-  public ArrayList<Schedule> parseMyPage(String html) {
-    ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+  public Schedules parseMyPage(String html) {
+    Schedules schedules = new Schedules();
 
     Matcher match = Pattern.compile(
         "(<div class=\"w220Box program program2 marginLeft10px\">.*</div>).*<div class=\"w220Box program marginLeft10px\">",
@@ -170,10 +171,10 @@ public class AnimeOne extends Base {
   /**
    * access to MyPage
    * 
-   * @return ArrayList of Schedule
+   * @return schedules
    * @throws SessionExpiredException
    */
-  public ArrayList<Schedule> mypage() throws SessionExpiredException {
+  public Schedules mypage() throws SessionExpiredException {
     return mypage(3);
   }
 
@@ -184,7 +185,7 @@ public class AnimeOne extends Base {
    * @return ArrayList of Schedule
    * @throws SessionExpiredException
    */
-  public ArrayList<Schedule> mypage(int retry_count) throws SessionExpiredException {
+  public Schedules mypage(int retry_count) throws SessionExpiredException {
     try {
       String html = httpGet(MYPAGE_URI);
       return parseMyPage(html);

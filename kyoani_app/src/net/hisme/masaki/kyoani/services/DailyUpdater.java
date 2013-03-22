@@ -22,7 +22,7 @@ public class DailyUpdater extends Service {
       new Thread() {
         public void run() {
           try {
-            App.li.getScheduleService().reloadSchedules();
+            App.li.reload();
             log("finish reload schedule.");
             startService(new Intent(DailyUpdater.this, WidgetUpdater.class));
           } catch (BlankAccontException e) {

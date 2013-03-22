@@ -6,14 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
-import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.Schedules;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.utils.StringUtils;
@@ -60,10 +59,10 @@ public abstract class Base implements ScheduleService {
    * 
    * @return schedules
    */
-  abstract public ArrayList<Schedule> fetchSchedules();
+  abstract public Schedules fetchSchedules();
 
   /**
-   * initialize http client
+   * initialize HTTP client
    */
   protected DefaultHttpClient getClient() {
     BasicHttpParams params = new BasicHttpParams();
@@ -127,30 +126,20 @@ public abstract class Base implements ScheduleService {
    * @throws NetworkUnavailableException
    *           if network unreachable
    */
-  protected ArrayList<Schedule> getSchedules(boolean reload) throws LoginFailureException, NetworkUnavailableException {
+  protected Schedules getSchedules(boolean reload) throws LoginFailureException, NetworkUnavailableException {
     if (reload || this.needUpdate()) {
       return this.fetchSchedules();
     } else {
-      return Schedule.loadSchedules();
+      return Schedules.load();
     }
   }
 
-  public ArrayList<Schedule> getSchedules() throws LoginFailureException, NetworkUnavailableException {
+  public Schedules getSchedules() throws LoginFailureException, NetworkUnavailableException {
     return getSchedules(false);
   }
 
-  public ArrayList<Schedule> reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
+  public Schedules reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
     return getSchedules(true);
-  }
-
-  public Schedule getNextSchedule() throws LoginFailureException, NetworkUnavailableException {
-    AnimeCalendar now = new AnimeCalendar();
-    for (Schedule schedule : getSchedules()) {
-      if (now.compareTo(schedule.getStart()) == -1) {
-        return schedule;
-      }
-    }
-    return null;
   }
 
   /**

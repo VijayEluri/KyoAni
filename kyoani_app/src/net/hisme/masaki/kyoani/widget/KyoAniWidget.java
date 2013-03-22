@@ -12,7 +12,6 @@ import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.activities.MainActivity;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 
 /**
  * @author masarakki
@@ -35,9 +34,7 @@ abstract public class KyoAniWidget extends AppWidgetProvider {
 
   protected String buildWidgetString(Context context) {
     try {
-      ScheduleService schedule_service = App.li.getScheduleService();
-      Schedule schedule = schedule_service.getNextSchedule();
-
+      Schedule schedule = App.li.nextSchedule();
       String schedule_str = context.getText(R.string.no_schedule).toString();
       if (schedule != null) {
         StringBuffer str_buf = new StringBuffer();
@@ -52,7 +49,6 @@ abstract public class KyoAniWidget extends AppWidgetProvider {
       return schedule_str;
     } catch (Exception e) {
       App.Log.d(e.toString());
-
     }
     return "";
   }

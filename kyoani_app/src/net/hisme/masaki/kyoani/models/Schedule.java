@@ -1,8 +1,6 @@
 package net.hisme.masaki.kyoani.models;
 
-import java.io.*;
-import java.util.ArrayList;
-import net.hisme.masaki.kyoani.App;
+import java.io.Serializable;
 
 /**
  * Animation Program
@@ -73,54 +71,6 @@ public class Schedule implements Serializable {
    */
   public String getStartString() {
     return this.start.getTimeString();
-  }
-
-  /**
-   * store the schedules to storage
-   * 
-   * @param schedules
-   *          Schedules
-   * @return succeeded?
-   */
-  public static boolean saveSchedules(ArrayList<Schedule> schedules) {
-    boolean ret = false;
-    try {
-      ObjectOutputStream writer = new ObjectOutputStream(App.li.openFileOutput(LIST_FILE, 0));
-      writer.writeObject(schedules);
-      writer.close();
-      ret = true;
-    } catch (FileNotFoundException e) {
-      log("FileNotFound in save");
-    } catch (IOException e) {
-      log("IOException in save");
-    }
-    return ret;
-  }
-
-  /**
-   * load the schedules from storage
-   * 
-   * @return schedules
-   */
-  @SuppressWarnings("unchecked")
-  public static ArrayList<Schedule> loadSchedules() {
-    ArrayList<Schedule> schedules = new ArrayList<Schedule>();
-    try {
-      ObjectInputStream reader = new ObjectInputStream(App.li.openFileInput(LIST_FILE));
-      schedules = (ArrayList<Schedule>) reader.readObject();
-      reader.close();
-    } catch (FileNotFoundException e) {
-      log("FileNotFound in load");
-    } catch (ClassNotFoundException e) {
-      log("ClassNotFound in load");
-    } catch (IOException e) {
-      log("IOException in load");
-    }
-    return schedules;
-  }
-
-  private static void log(String str) {
-    App.Log.d("[Schedule] " + str);
   }
 
   public String toString() {

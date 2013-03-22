@@ -25,18 +25,6 @@ import android.widget.RemoteViews;
 public class WidgetUpdater extends Service {
 
   /**
-   * @return next schedule
-   */
-  public Schedule getNextSchedule() {
-    try {
-      return App.li.getScheduleService().getNextSchedule();
-    } catch (Exception e) {
-      log(e.toString());
-      return null;
-    }
-  }
-
-  /**
    * @param schedule
    *          schedule
    * @return text of widget
@@ -56,7 +44,7 @@ public class WidgetUpdater extends Service {
   public void onCreate() {
     log("started.");
     AppWidgetManager widget_manager = AppWidgetManager.getInstance(WidgetUpdater.this);
-    Schedule schedule = getNextSchedule();
+    Schedule schedule = App.li.nextSchedule();
     String schedule_string;
 
     if (schedule != null) {
