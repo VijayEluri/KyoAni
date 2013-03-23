@@ -3,11 +3,9 @@ package net.hisme.masaki.kyoani.services;
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.activities.MainActivity;
-import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
 import net.hisme.masaki.kyoani.widget.KyoAniWidget1;
 import net.hisme.masaki.kyoani.widget.KyoAniWidget2;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
@@ -48,13 +46,9 @@ public class WidgetUpdater extends Service {
     String schedule_string;
 
     if (schedule != null) {
-      log("next schedule found.");
       schedule_string = buildWidgetString(schedule);
-      setupNext(schedule);
     } else {
-      log("next schedule not found.");
       schedule_string = getText(R.string.no_schedule).toString();
-      setupNext();
     }
 
     RemoteViews views;
@@ -63,80 +57,23 @@ public class WidgetUpdater extends Service {
     PendingIntent pending_intent = PendingIntent.getActivity(WidgetUpdater.this, 0,
         new Intent(WidgetUpdater.this, MainActivity.class), 0);
 
-    log("Update 1x1");
+    log("Update Widget 1x1");
     views = new RemoteViews(getPackageName(), R.layout.widget_layout_1x1);
     views.setTextViewText(R.id.next_log, schedule_string);
     views.setOnClickPendingIntent(R.id.widget_main, pending_intent);
     widget_class = new ComponentName(this, KyoAniWidget1.class);
     widget_manager.updateAppWidget(widget_class, views);
 
-    log("Update 2x2");
+    log("Update Widget 2x2");
     views = new RemoteViews(getPackageName(), R.layout.widget_layout_2x2);
     views.setTextViewText(R.id.next_log, schedule_string);
     views.setOnClickPendingIntent(R.id.widget_main, pending_intent);
     widget_class = new ComponentName(this, KyoAniWidget2.class);
     widget_manager.updateAppWidget(widget_class, views);
 
+    App.li.resetServices();
+
     stopSelf();
-  }
-
-  /**
-   * setup timers for next schedule
-   * 
-   * @param schedule
-   */
-  protected void setupNext(Schedule schedule) {
-    setupUpdater(schedule);
-    setupNotification(schedule);
-  }
-
-  /**
-   * setup update timer
-   * 
-   * @param schedule
-   */
-  protected void setupUpdater(Schedule schedule) {
-    log("setup alart for next show");
-    Intent intent = new Intent(WidgetUpdater.this, WidgetUpdater.class);
-    intent.putExtra("ToastMessage", String.format("%sで%sがはじまります", schedule.getChannel(), schedule.getName()));
-    PendingIntent pending_intent = PendingIntent.getService(WidgetUpdater.this, 0, intent, 0);
-
-    AnimeCalendar calendar = schedule.getStart();
-    calendar.add(AnimeCalendar.MINUTE, 3);
-    log(String.format("scheduled to update widget at %s", calendar.toString()));
-    AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-    alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
-  }
-
-  /**
-   * setup notification timer
-   * 
-   * @param schedule
-   */
-  protected void setupNotification(Schedule schedule) {
-    log("setup notification for next show");
-    Intent intent = new Intent(WidgetUpdater.this, NotificationService.class);
-    PendingIntent pending_intent = PendingIntent.getService(WidgetUpdater.this, 0, intent, 0);
-
-    AnimeCalendar calendar = schedule.getStart();
-    calendar.add(AnimeCalendar.MINUTE, -2);
-    log(String.format("scheduled to notification at %s", calendar.toString()));
-    AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-    alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
-  }
-
-  /**
-   * setup timers for next day
-   */
-  protected void setupNext() {
-    log("setup alart for next day");
-    Intent intent = new Intent(WidgetUpdater.this, DailyUpdater.class);
-    PendingIntent pending_intent = PendingIntent.getService(WidgetUpdater.this, 0, intent, 0);
-
-    AnimeCalendar calendar = AnimeCalendar.tomorrow();
-    log(String.format("scheduled to daily update at %s", calendar.toString()));
-    AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-    alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
   }
 
   @Override

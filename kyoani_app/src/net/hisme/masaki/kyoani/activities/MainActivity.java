@@ -3,10 +3,9 @@ package net.hisme.masaki.kyoani.activities;
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.R;
 import net.hisme.masaki.kyoani.models.Schedule;
-import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
+import net.hisme.masaki.kyoani.models.Schedules;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
-import net.hisme.masaki.kyoani.services.WidgetUpdater;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class MainActivity extends Activity {
     setContentView(R.layout.main);
     ListView schedule_list = (ListView) findViewById(R.id.schedule_list);
     schedule_list.addFooterView(createReloadButton());
-    updateSchedule();
+    displaySchedules();
   }
 
   public View createReloadButton() {
@@ -46,101 +45,56 @@ public class MainActivity extends Activity {
     ((Button) reload_button.findViewById(R.id.reload_button)).setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View view) {
-        reloadSchedule();
+        reload();
       }
     });
 
     return reload_button;
   }
 
-  public void updateSchedule() {
-    updateSchedule(false);
+  public void reload() {
+    ListView schedule_list = (ListView) MainActivity.this.findViewById(R.id.schedule_list);
+    ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
+        MainActivity.this, android.R.layout.simple_list_item_1);
+    array_adapter.add("更新中...");
+    schedule_list.setAdapter(array_adapter);
+
+    final Handler handler = new Handler();
+    new Thread() {
+      public void run() {
+        try {
+          App.li.reload();
+          handler.post(new Runnable() {
+            public void run() {
+              MainActivity.this.displaySchedules();
+            }
+          });
+        } catch (LoginFailureException e) {
+          MainActivity.this.displayErrorMessage(R.string.error_account_cant_authorize);
+        } catch (NetworkUnavailableException e) {
+          MainActivity.this.displayErrorMessage(R.string.error_network_disable);
+        }
+      }
+    }.start();
   }
 
-  public void reloadSchedule() {
-    updateSchedule(true);
-  }
-
-  private void displaySchedule(ArrayList<Schedule> list, int retry_count) {
-    ArrayList<HashMap<String, String>> schedules = new ArrayList<HashMap<String, String>>();
+  private void displaySchedules() {
+    Schedules schedules = App.li.getSchedules();
+    ArrayList<HashMap<String, String>> schedules_hash = new ArrayList<HashMap<String, String>>();
     try {
-      for (Schedule schedule : list) {
+      for (Schedule schedule : schedules) {
         HashMap<String, String> hash = new HashMap<String, String>();
         hash.put("LINE_1", schedule.getName());
         hash.put("LINE_2", schedule.getChannel() + " " + schedule.getStartString());
-        schedules.add(hash);
+        schedules_hash.add(hash);
       }
-    } catch (NullPointerException e) {
-      updateSchedule(true, retry_count - 1);
-    }
-    SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, schedules,
+    } catch (NullPointerException e) {}
+    SimpleAdapter adapter = new SimpleAdapter(MainActivity.this, schedules_hash,
         android.R.layout.simple_list_item_2,
         new String[] { "LINE_1", "LINE_2" },
         new int[] { android.R.id.text1, android.R.id.text2 });
     ListView schedule_list = (ListView) findViewById(R.id.schedule_list);
     schedule_list.setAdapter(adapter);
-  }
-
-  private void updateSchedule(final boolean force_reload) {
-    updateSchedule(force_reload, 3);
-  }
-
-  private void updateSchedule(final boolean force_reload, final int retry_count) {
-    final Handler handler = new Handler();
-    if (retry_count > 0) {
-      new Thread() {
-        public void run() {
-          if (!App.li.getAccount().isBlank()) {
-            try {
-              ScheduleService schedule_service = App.li.getScheduleService();
-              final ArrayList<Schedule> list;
-              if (force_reload) {
-                App.Log.d("refetch schedules.");
-                handler.post(new Runnable() {
-                  public void run() {
-                    ListView schedule_list = (ListView) MainActivity.this.findViewById(R.id.schedule_list);
-                    ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
-                        MainActivity.this, android.R.layout.simple_list_item_1);
-                    array_adapter.add("更新中...");
-                    schedule_list.setAdapter(array_adapter);
-                  }
-                });
-                list = schedule_service.reloadSchedules();
-                startService(new Intent(MainActivity.this, WidgetUpdater.class));
-              } else {
-                list = schedule_service.getSchedules();
-              }
-
-              handler.post(new Runnable() {
-                public void run() {
-                  MainActivity.this.displaySchedule(list, retry_count);
-                }
-              });
-            } catch (LoginFailureException e) {
-              handler.post(new Runnable() {
-                public void run() {
-                  MainActivity.this.displayErrorMessage(R.string.error_account_cant_authorize);
-                }
-              });
-            } catch (NetworkUnavailableException e) {
-              handler.post(new Runnable() {
-                public void run() {
-                  MainActivity.this.displayErrorMessage(R.string.error_network_disable);
-                }
-              });
-            }
-          } else {
-            handler.post(new Runnable() {
-              public void run() {
-                MainActivity.this.displayErrorMessage(R.string.error_account_is_blank);
-              }
-            });
-          }
-        }
-      }.start();
-    } else {
-      displayErrorMessage(R.string.error_retry_over);
-    }
   }
 
   public void displayErrorMessage(int res_id) {
@@ -162,7 +116,7 @@ public class MainActivity extends Activity {
       startActivity(new Intent(MainActivity.this, SettingActivity.class));
       return true;
     case R.id.menu_reload:
-      reloadSchedule();
+      reload();
       return true;
     case R.id.menu_help:
       startActivity(new Intent(MainActivity.this, HelpActivity.class));

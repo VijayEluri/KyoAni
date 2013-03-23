@@ -11,6 +11,7 @@ import android.os.IBinder;
 
 /**
  * service to update schedules and widgets at beginning of day
+ * 
  * @author masarakki
  */
 public class DailyUpdater extends Service {
@@ -23,8 +24,6 @@ public class DailyUpdater extends Service {
         public void run() {
           try {
             App.li.reload();
-            log("finish reload schedule.");
-            startService(new Intent(DailyUpdater.this, WidgetUpdater.class));
           } catch (BlankAccontException e) {
             e.printStackTrace();
           } catch (LoginFailureException e) {
