@@ -1,13 +1,14 @@
 package net.hisme.masaki.kyoani.test.schedule_service;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.test.AndroidTestCase;
 import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.Schedules;
 import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.schedule_service.exception.SessionExpiredException;
 import net.hisme.masaki.kyoani.utils.StringUtils;
@@ -24,8 +25,8 @@ public class AnimeOneTest extends AndroidTestCase {
     assertTrue(anime_one.needUpdate());
   }
 
-  public void testParseMyPageOnSuccess() throws SessionExpiredException {
-    ArrayList<Schedule> schedules = anime_one.parseMyPage(loadMypageTestData("mypage_success"));
+  public void testParseMypageOnSuccess() throws SessionExpiredException, LoginFailureException {
+    Schedules schedules = anime_one.parseMypage(loadMypageTestData("mypage_success"), "1月15日");
     assertEquals(3, schedules.size());
 
     Schedule schedule = schedules.get(0);
@@ -37,7 +38,11 @@ public class AnimeOneTest extends AndroidTestCase {
     assertEquals("アクエリオンEVOL", schedule.getName());
     assertEquals("テレビ東京", schedule.getChannel());
     assertEquals("25:35", schedule.getStartString());
-
+  }
+  
+  public void testParseMypageNotIncludeTargetDay() throws SessionExpiredException, LoginFailureException {
+    Schedules schedules = anime_one.parseMypage(loadMypageTestData("mypage_success"), "3月22日");
+    assertEquals(0, schedules.size());
   }
 
   public void testHttpGet() {

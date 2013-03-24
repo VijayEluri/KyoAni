@@ -24,7 +24,6 @@ public class WidgetUpdater extends Service {
 
   /**
    * @param schedule
-   *          schedule
    * @return text of widget
    */
   public String buildWidgetString(Schedule schedule) {

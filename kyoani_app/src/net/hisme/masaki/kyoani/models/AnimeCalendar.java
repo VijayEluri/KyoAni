@@ -11,7 +11,8 @@ import java.util.TimeZone;
  */
 public class AnimeCalendar extends GregorianCalendar {
   private static final long serialVersionUID = 1L;
-  private static int BEGINNING_OF_DAY = 5;
+  private static final int BEGINNING_OF_DAY_HOUR = 5;
+  private static final int BEGINNING_OF_DAY_MINUTES = 0;
 
   public AnimeCalendar() {
     super();
@@ -71,24 +72,44 @@ public class AnimeCalendar extends GregorianCalendar {
    * @return is over 24:00 or not?
    */
   public boolean isMidnight() {
-    return super.get(HOUR_OF_DAY) < BEGINNING_OF_DAY;
+    return super.get(HOUR_OF_DAY) < BEGINNING_OF_DAY_HOUR || super.get(MINUTE) < BEGINNING_OF_DAY_MINUTES;
+  }
+
+  public int year() {
+    return get(YEAR);
+  }
+
+  public int month() {
+    return get(MONTH) + 1;
+  }
+
+  public int day() {
+    return get(DAY_OF_MONTH);
+  }
+  
+  public int hour() {
+    return get(HOUR_OF_DAY);
+  }
+  
+  public int minute() {
+    return get(MINUTE);
   }
 
   public String getDateString() {
-    return String.format("%02d-%02d", get(MONTH) + 1, get(DAY_OF_MONTH));
+    return String.format("%02d-%02d", month(), day());
   }
 
   public String getTimeString() {
-    return String.format("%02d:%02d", get(HOUR_OF_DAY), get(MINUTE));
+    return String.format("%02d:%02d", hour(), minute());
   }
 
   /**
-   * @return new instance of AnimeCalender about beginning of day 
+   * @return new instance of AnimeCalender about beginning of day
    */
   public AnimeCalendar beginningOfDay() {
     AnimeCalendar cloned = (AnimeCalendar) this.clone();
-    cloned.set(HOUR_OF_DAY, BEGINNING_OF_DAY);
-    cloned.set(MINUTE, 0);
+    cloned.set(HOUR_OF_DAY, BEGINNING_OF_DAY_HOUR);
+    cloned.set(MINUTE, BEGINNING_OF_DAY_MINUTES);
     cloned.set(SECOND, 0);
     return cloned;
   }
@@ -102,7 +123,7 @@ public class AnimeCalendar extends GregorianCalendar {
   }
 
   /**
-   * @return new instance of AnimeCalendar of tomorrow 
+   * @return new instance of AnimeCalendar of tomorrow
    */
   public static AnimeCalendar tomorrow() {
     AnimeCalendar now = new AnimeCalendar();
