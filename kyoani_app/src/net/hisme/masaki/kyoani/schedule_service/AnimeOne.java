@@ -4,6 +4,7 @@ import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.Account;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
 import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.Schedules;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.schedule_service.exception.SessionExpiredException;
@@ -14,13 +15,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.HttpHost;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.cookie.Cookie;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.net.UnknownHostException;
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
-import java.io.StringReader;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
 
 import java.util.regex.*;
 import java.util.ArrayList;
@@ -28,6 +29,11 @@ import java.util.Calendar;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
+/**
+ * adapter for AnimeOne
+ * 
+ * @author masarakki
+ */
 public class AnimeOne extends Base {
   public static final String HOST = "anime.biglobe.ne.jp";
   public static final String REGISTER_URI = "https://anime.biglobe.ne.jp/regist/regist_user";
@@ -59,13 +65,12 @@ public class AnimeOne extends Base {
     return SESSION_KEY_NAME;
   }
 
-  public ArrayList<Schedule> reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
+  public Schedules reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
     log("Reload Schedule");
     if (hasSessionID() || login()) {
-      log("Use Session");
       try {
-        ArrayList<Schedule> schedules = mypage();
-        if (Schedule.saveSchedules(schedules)) {
+        Schedules schedules = mypage();
+        if (schedules.save()) {
           log("Update cached date");
           AnimeCalendar today = new AnimeCalendar();
           try {
@@ -89,8 +94,7 @@ public class AnimeOne extends Base {
   }
 
   @Override
-  public ArrayList<Schedule> fetchSchedules() {
-    log("fetchSchedule");
+  public Schedules fetchSchedules() {
     try {
       return reloadSchedules();
     } catch (LoginFailureException e) {
@@ -101,75 +105,48 @@ public class AnimeOne extends Base {
     return null;
   }
 
-  /**
-   * parse MyPage HTML
-   * 
-   * @param html
-   *          HTML response body
-   * @return ArrayList of Schedule
-   */
-  public ArrayList<Schedule> parseMyPage(String html) {
-    ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+  public Schedules parseMypage(String html) throws LoginFailureException {
+    AnimeCalendar today = new AnimeCalendar();
+    String date_string = String.format("%d月%d日", today.month(), today.day());
+    return parseMypage(html, date_string);
+  }
 
-    Matcher match = Pattern.compile(
-        "(<div class=\"w220Box program program2 marginLeft10px\">.*</div>).*<div class=\"w220Box program marginLeft10px\">",
-        Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE | Pattern.UNIX_LINES).matcher(html);
-
-    try {
-      if (match.find()) {
-        NodeList tmp;
-        String body = match.group(1);
-        body = body.replace("&", "&amp;");
-        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document doc = builder.parse(new InputSource(new StringReader(body)));
-        Matcher date_matcher = Pattern.compile("([0-9]+)月([0-9]+)").matcher(nodeMapString(doc.getElementsByTagName("span").item(0)).get(0));
-        date_matcher.find();
-
-        NodeList td_list = doc.getElementsByTagName("td");
-        final int TDNUMS = 4;
-        for (int i = 0; i < td_list.getLength() / TDNUMS; i++) {
-          tmp = td_list.item(i * TDNUMS + 1).getChildNodes();
-          for (int j = 0; j < tmp.getLength(); j++) {
-            ArrayList<String> values = null;
-            if (tmp.item(j).getNodeName().compareTo("img") == 0
-                && tmp.item(j).getAttributes().getNamedItem("alt").getNodeValue().compareTo("ネット配信") != 0) {
-              String channel = "";
-              String name = "";
-              String start = "";
-
-              values = nodeMapString(td_list.item(i * TDNUMS + 0));
-              if (values.size() == 1) {
-                Matcher m = Pattern.compile("([0-9:]+) +(.+)").matcher(values.get(0));
-                m.find();
-                start = m.group(1);
-                channel = m.group(2);
-              }
-              values = nodeMapString(td_list.item(i * TDNUMS + 2));
-              name = values.get(0);
-              schedules.add(new Schedule(channel, name, start));
-              break;
-            }
+  public Schedules parseMypage(String html, String date_string) throws LoginFailureException {
+    html = replace_whitespaces(html);
+    Schedules schedules = new Schedules();
+    org.jsoup.nodes.Document document = Jsoup.parse(html);
+    if (document.select("#userName a").isEmpty()) {
+      log("not logined, retry");
+      throw new LoginFailureException();
+    }
+    Elements daily_lists = document.select(".program");
+    for (Element daily_list : daily_lists) {
+      if (daily_list.select(".fc_mm").text().contains(date_string)) {
+        Elements programs = daily_list.select("table");
+        for (Element program : programs) {
+          Elements informations = program.select("td");
+          if (informations.get(1).select("img").get(0).attr("alt").compareTo("ネット配信") != 0) {
+            Matcher date_and_channel = Pattern.compile("([0-9:]+) +(.+)").matcher(informations.get(0).text());
+            date_and_channel.find();
+            String start = date_and_channel.group(1).trim();
+            String channel = date_and_channel.group(2).trim();
+            String title = informations.get(2).select("a").text();
+            schedules.add(new Schedule(channel, title, start));
           }
-
         }
         return schedules;
       }
-    } catch (org.xml.sax.SAXException e) {
-      org.xml.sax.SAXParseException ex = (org.xml.sax.SAXParseException) e;
-      log("row:" + ex.getLineNumber() + "   col: " + ex.getColumnNumber());
-    } catch (Exception e) {
-      log(e.toString());
     }
-    throw new RuntimeException("Parse Error");
+    return schedules;
   }
 
   /**
    * access to MyPage
    * 
-   * @return ArrayList of Schedule
+   * @return schedules
    * @throws SessionExpiredException
    */
-  public ArrayList<Schedule> mypage() throws SessionExpiredException {
+  public Schedules mypage() throws SessionExpiredException {
     return mypage(3);
   }
 
@@ -180,17 +157,19 @@ public class AnimeOne extends Base {
    * @return ArrayList of Schedule
    * @throws SessionExpiredException
    */
-  public ArrayList<Schedule> mypage(int retry_count) throws SessionExpiredException {
+  public Schedules mypage(int retry_count) throws SessionExpiredException {
     try {
       String html = httpGet(MYPAGE_URI);
-      return parseMyPage(html);
-    } catch (RuntimeException e) {
+      return parseMypage(html);
+    } catch (LoginFailureException e) {
       if (retry_count > 0) {
         try {
           if (login()) {
             return mypage(retry_count - 1);
           }
-        } catch (NetworkUnavailableException ex) {}
+        } catch (NetworkUnavailableException ex) {
+
+        }
         log("MyPage: Giveup; relogin failure");
         throw new SessionExpiredException();
       } else {
@@ -208,16 +187,6 @@ public class AnimeOne extends Base {
     } catch (Exception e) {
       log(e.toString());
     }
-  }
-
-  @SuppressWarnings("unused")
-  private String getSessionID() {
-    for (Cookie cookie : this.http.getCookieStore().getCookies()) {
-      if (cookie.getName().equals("PHPSESSID")) {
-        return cookie.getValue();
-      }
-    }
-    return "";
   }
 
   @Override
@@ -266,28 +235,8 @@ public class AnimeOne extends Base {
     return false;
   }
 
-  private ArrayList<String> nodeMapString(Node node) {
-    ArrayList<String> res = new ArrayList<String>();
-    _nodeToString(res, node);
-    return res;
-  }
-
-  private void _nodeToString(ArrayList<String> list, Node node) {
-    Pattern p = Pattern.compile("[ 　\t\n\r]+", Pattern.DOTALL | Pattern.MULTILINE | Pattern.UNICODE_CASE | Pattern.UNIX_LINES);
-    switch (node.getNodeType()) {
-    case Node.TEXT_NODE:
-      Matcher match = p.matcher(node.getNodeValue());
-      if (match.replaceAll("").compareTo("") != 0) {
-        list.add(match.replaceAll(" "));
-      }
-      break;
-    default:
-      NodeList nl = node.getChildNodes();
-      for (int i = 0; i < nl.getLength(); i++) {
-        _nodeToString(list, nl.item(i));
-      }
-      break;
-    }
+  private String replace_whitespaces(String src) {
+    return src.replaceAll("[ 　\t\n\r]+", " ");
   }
 
   @SuppressWarnings("unused")

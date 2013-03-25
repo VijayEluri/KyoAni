@@ -1,30 +1,26 @@
 package net.hisme.masaki.kyoani.schedule_service;
 
-import java.util.ArrayList;
-
-import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.Schedules;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 
 /**
- * @author masaki
+ * @author masarakki
  */
 public interface ScheduleService {
   boolean login() throws NetworkUnavailableException;
 
   /**
-   * 強制リロードしてスケジュールを取得
+   * fetch schedules by force reloading
    * 
    * @return
    */
-  ArrayList<Schedule> reloadSchedules() throws LoginFailureException, NetworkUnavailableException;
+  Schedules reloadSchedules() throws LoginFailureException, NetworkUnavailableException;
 
   /**
-   * スケジュールを取得
+   * get schedules
    * 
-   * @return
+   * @return schedules
    */
-  ArrayList<Schedule> getSchedules() throws LoginFailureException, NetworkUnavailableException;
-
-  Schedule getNextSchedule() throws LoginFailureException, NetworkUnavailableException;
+  Schedules getSchedules() throws LoginFailureException, NetworkUnavailableException;
 }

@@ -6,14 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.hisme.masaki.kyoani.App;
 import net.hisme.masaki.kyoani.models.AnimeCalendar;
-import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.Schedules;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 import net.hisme.masaki.kyoani.utils.StringUtils;
@@ -28,7 +27,9 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpProtocolParams;
 
 /**
- * @author masaki
+ * base class of schedule service adapter
+ * 
+ * @author masarakki
  */
 public abstract class Base implements ScheduleService {
   protected DefaultHttpClient http = null;
@@ -54,14 +55,14 @@ public abstract class Base implements ScheduleService {
   abstract protected boolean isAccountPresent();
 
   /**
-   * サービスに接続してスケジュールリストを取得する
+   * fetch schedules from service
    * 
-   * @return スケジュールのリスト
+   * @return schedules
    */
-  abstract public ArrayList<Schedule> fetchSchedules();
+  abstract public Schedules fetchSchedules();
 
   /**
-   * initialize http client
+   * initialize HTTP client
    */
   protected DefaultHttpClient getClient() {
     BasicHttpParams params = new BasicHttpParams();
@@ -75,9 +76,7 @@ public abstract class Base implements ScheduleService {
   }
 
   /**
-   * return cookie has session id or not
-   * 
-   * @return has?
+   * @return cookie has session id?
    */
   protected boolean hasSessionID() {
     String cookie_key = getSessionKeyName();
@@ -91,7 +90,6 @@ public abstract class Base implements ScheduleService {
 
   /**
    * load SessionID from stored file
-   * 
    */
   protected void loadSessionID() {
     try {
@@ -121,37 +119,27 @@ public abstract class Base implements ScheduleService {
   /**
    * 
    * @param reload
-   *          強制リロードするかどうか
-   * @return スケジュール一覧
+   *          is force reload?
+   * @return schedules
    * @throws LoginFailureException
-   *           ログインできなかったとき
+   *           if couldn't login
    * @throws NetworkUnavailableException
-   *           ネットワークが繋がらなかったとき
+   *           if network unreachable
    */
-  protected ArrayList<Schedule> getSchedules(boolean reload) throws LoginFailureException, NetworkUnavailableException {
+  protected Schedules getSchedules(boolean reload) throws LoginFailureException, NetworkUnavailableException {
     if (reload || this.needUpdate()) {
       return this.fetchSchedules();
     } else {
-      return Schedule.loadSchedules();
+      return Schedules.load();
     }
   }
 
-  public ArrayList<Schedule> getSchedules() throws LoginFailureException, NetworkUnavailableException {
+  public Schedules getSchedules() throws LoginFailureException, NetworkUnavailableException {
     return getSchedules(false);
   }
 
-  public ArrayList<Schedule> reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
+  public Schedules reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
     return getSchedules(true);
-  }
-
-  public Schedule getNextSchedule() throws LoginFailureException, NetworkUnavailableException {
-    AnimeCalendar now = new AnimeCalendar();
-    for (Schedule schedule : getSchedules()) {
-      if (now.compareTo(schedule.getStart()) == -1) {
-        return schedule;
-      }
-    }
-    return null;
   }
 
   /**

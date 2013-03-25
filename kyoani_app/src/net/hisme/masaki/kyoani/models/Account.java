@@ -3,8 +3,7 @@ package net.hisme.masaki.kyoani.models;
 /**
  * アカウント情報
  * 
- * @author masaki
- * 
+ * @author masarakki
  */
 public class Account {
   private String username = null;

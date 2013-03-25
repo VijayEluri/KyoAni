@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * @author masarakki
+ */
 public class AboutActivity extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {

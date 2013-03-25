@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import android.content.res.AssetManager;
 import android.text.TextUtils;
 
+/**
+ * @author masarakki
+ */
 public class StringUtils {
   public static String getString(AssetManager asset, String filename) {
     try {

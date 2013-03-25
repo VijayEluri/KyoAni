@@ -8,7 +8,7 @@ import android.content.Intent;
 /**
  * 端末の起動時にアップデートの設定をする
  * 
- * @author masaki
+ * @author masarakki
  * 
  */
 public class StartupReceiver extends BroadcastReceiver {

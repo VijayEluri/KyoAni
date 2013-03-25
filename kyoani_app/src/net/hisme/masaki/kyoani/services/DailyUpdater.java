@@ -10,10 +10,9 @@ import android.content.Intent;
 import android.os.IBinder;
 
 /**
- * 朝のアップデートをするサービス
+ * service to update schedules and widgets at beginning of day
  * 
- * @author masaki
- * 
+ * @author masarakki
  */
 public class DailyUpdater extends Service {
   @Override
@@ -21,16 +20,19 @@ public class DailyUpdater extends Service {
     super.onStart(intent, startId);
     log("started.");
     if (!App.li.getAccount().isBlank()) {
-      try {
-        App.li.getScheduleService().reloadSchedules();
-        startService(new Intent(DailyUpdater.this, WidgetUpdater.class));
-      } catch (BlankAccontException e) {
-        e.printStackTrace();
-      } catch (LoginFailureException e) {
-        e.printStackTrace();
-      } catch (NetworkUnavailableException e) {
-        e.printStackTrace();
-      }
+      new Thread() {
+        public void run() {
+          try {
+            App.li.reload();
+          } catch (BlankAccontException e) {
+            e.printStackTrace();
+          } catch (LoginFailureException e) {
+            e.printStackTrace();
+          } catch (NetworkUnavailableException e) {
+            e.printStackTrace();
+          }
+        }
+      }.start();
     }
     stopSelf();
   }
