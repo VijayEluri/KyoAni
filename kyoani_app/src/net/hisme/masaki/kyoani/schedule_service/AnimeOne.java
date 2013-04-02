@@ -122,9 +122,14 @@ public class AnimeOne extends Base {
     Elements daily_lists = document.select(".program");
     for (Element daily_list : daily_lists) {
       if (daily_list.select(".fc_mm").text().contains(date_string)) {
+        if (daily_list.select("table img").size() == 0) {
+          return schedules;
+        }
         Elements programs = daily_list.select("table");
+
         for (Element program : programs) {
           Elements informations = program.select("td");
+
           if (informations.get(1).select("img").get(0).attr("alt").compareTo("ネット配信") != 0) {
             Matcher date_and_channel = Pattern.compile("([0-9:]+) +(.+)").matcher(informations.get(0).text());
             date_and_channel.find();

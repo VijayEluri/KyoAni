@@ -40,6 +40,12 @@ public class AnimeOneTest extends AndroidTestCase {
     assertEquals("25:35", schedule.getStartString());
   }
   
+  public void testParseMypageNoPrograms() throws SessionExpiredException, LoginFailureException {
+    Schedules schedules = anime_one.parseMypage(loadMypageTestData("mypage_no_programs"), "4月3日");
+    assertEquals(0, schedules.size());
+   }
+  
+  
   public void testParseMypageNotIncludeTargetDay() throws SessionExpiredException, LoginFailureException {
     Schedules schedules = anime_one.parseMypage(loadMypageTestData("mypage_success"), "3月22日");
     assertEquals(0, schedules.size());

@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" xmlns:mixi="http://mixi-platform.com/ns#">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>My番組表｜アニメワン</title>
+<meta name="Keywords" content="アニメ,動画,無料,評判,口コミ,感想,ランキング,アニメワン,BIGLOBE" />
+<meta name="Description" content="アニメのことならBIGLOBEが運営する[アニメワン]。新作アニメの無料動画配信、作品の情報や評判、ニュースなどアニメの総合ポータルサイトです。" />
+<meta name="robots" content="noydir,noodp" />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="http://anime.biglobe.ne.jp/" />
+<link rel="mixi-check-image" type="image/jpeg" href="http://anime.biglobe.ne.jp/img/common/header/al_hd_lg.jpg" />
+<script type="text/javascript" src="/script/jquery/jquery-1.3.1.js"></script>
+<script type="text/javascript" src="/script/jquery/jquery.innerfade.js"></script>
+<script type="text/javascript" src="/script/jquery/jquery-validate/jquery.validate.js"></script>
+<script type="text/javascript" src="/script/common.js"></script>
+<script type="text/javascript" src="/script/menu.js" charset="shift_jis"></script><link href="/css/program.css?88" rel="stylesheet" type="text/css" media="all">
+<link href="/css/common.css?88" rel="stylesheet" type="text/css" media="all">
+<script type="text/javascript" src="/script/jquery/jquery.ui.draggable.js" charset="shift_jis"></script>
+
+<script type="text/javascript" src="/script/watch_result/watch_view_list.js?88"></script>
+<script type="text/javascript" src="/script/jquery/thickbox/thickbox.js"></script>
+<link href="/css/jquery/thickbox.css" rel="stylesheet" type="text/css" media="all">
+<link rel="mixi-check-image" type="image/jpeg" href="http://anime.biglobe.ne.jp/img/common/header/al_hd_lg.jpg" />
+<link type='text/css' href='/css/jquery/alert/jquery.alerts.css' rel='stylesheet' media='screen' />
+<script type="text/javascript" src="/script/jquery/jquery.alerts.js"></script>
+<script type="text/javascript" src="/script/jquery/jquery.alert.custom.js"></script>
+
+<script type="text/javascript">
+
+$(function(){
+	$("#searchButton").click(function()
+	{
+		if ($("#q").val() == '' || $("#q").val() == '好きなキーワードで検索！') {
+			jAlertCustom('検索キーワードを入力してください','作品・声優情報検索',"#searchButton");
+			return false;
+		} else {
+			$("#searchTA").submit();
+		}
+	})
+});
+
+// login
+function login() {
+	document.cookie = 'login_info[url]' + '=' + escape(document.URL) + '; path=' + escape(document.URL) + ';';
+	location.href = 'https://' + document.domain + '/login/';
+}
+
+// logout
+function logout() {
+	$.ajax({
+		url : '/login/logout_ajax'
+		, type: 'post'
+		, dataType: 'script'
+		, data: $('#login_form').serialize()
+	});
+}
+
+
+</script>
+
+
+</head>
+<body>
+
+<!-- mainWrapper -->
+<div id="mainWrapper">
+
+<div id="main_header">
+	<div id="logoArea">
+		<p><a href="http://anime.biglobe.ne.jp/" title="アニメワン" id="top_logo"><span class="dnone">アニメワン</span></a></p>
+
+				<div id="catch">あなたのアニメライフを応援する</div>
+				
+	</div>
+
+	<ul id="personal">
+				<li><a href="http://anime.biglobe.ne.jp/mypage/index" title="マイページ" id="perMypage">マイページ</a></li>
+				<li><a href="http://anime.biglobe.ne.jp/viewlist/" title="見たログ" id="perMitalog">見たログ</a></li>
+		<li><a href="http://anime.biglobe.ne.jp/program/myprogram" title="My番組表" id="perMyprogram">My番組表</a></li>
+	</ul>
+
+
+	<div id="loginSearch">
+		<ul id="hLogin" class="clearfix">
+			<li id="userName"><strong><a href="http://anime.biglobe.ne.jp/profile/76383/">まさらっき</a></strong>さん</li>
+
+							<li><a href="#" onClick="logout();" id="hdLogoutBtn"><span class="dnone">ログアウト</span></a></li>
+					</ul>
+
+		<div id="hSearch">
+			<form id="searchTA" action="http://anime.biglobe.ne.jp/search/index" method="get">
+				<input type="text" maxlength="100" class="sBox fc_mm" value="好きなキーワードで検索！" id="q" name="q" onBlur="if(this.value==''){this.style.color=''; this.form.reset()}" onFocus="if (this.value == '好きなキーワードで検索！') {this.value = ''; this.style.color = '#333333';}" />
+
+				<a href="#" id="searchButton">検索</a>
+			</form>
+		</div>
+	</div>
+
+
+
+	<div id="glonav" style="position: relative;">
+			<ul id="naviMain">
+			<li><a href="http://anime.biglobe.ne.jp/title/all/free/" title="作品" id="top_naviTitle">無料動画</a></li>
+			<li><a href="http://anime.biglobe.ne.jp/program/" title="番組表" id="top_naviProgram">番組表</a></li>
+			<li><a href="http://anime.biglobe.ne.jp/cast/match/" title="声優" id="top_naviCast">声優</a></li>
+			<li><a href="http://anime.biglobe.ne.jp/ranking/title/total/onair/" title="ランキング" id="top_naviRank">ランキング</a></li>
+			<li><a href="http://anime.biglobe.ne.jp/userranking/" title="投票" id="top_naviVote">投票</a></li>
+			<li><a href="http://anime.biglobe.ne.jp/t_news/" title="ニュース" id="top_naviNews">ニュース</a></li>
+			<li><a href="http://anime.biglobe.ne.jp/animelog/" title="アニメログ" id="top_naviAnimelog">アニメログ</a></li>
+			<li><a href="http://anime.biglobe.ne.jp/goods/" title="グッズ" id="top_naviGoods">グッズ</a></li>
+			<li><a href="http://anime.biglobe.ne.jp/avatar/" title="アバター" id="top_naviAvater">アバター</a></li>
+			<li class="lastChild"><a href="http://anime.biglobe.ne.jp/feature/" title="特集" id="top_naviFeature">特集</a></li>
+
+		</ul>
+		<ul id="naviExtra">
+			<li><a href="http://www.gamers1.jp/" target="_blank" title="ゲーム" id="top_naviGame">ゲーム</a></li>
+			<li class="lastChild"><a href="http://comics.cplaza.ne.jp/comic.html" target="_blank" title="コミック" id="top_naviComic" rel="nofollow">コミック</a></li>
+		</ul>
+	<!-- /glonav --></div>
+
+	
+	<p id="headerInfo" style="border:2px solid #609cff; font-weight:bold;padding:7px;">
+		<span style="color:#f00;">【お詫び】</span><a href="/feature/2012autumn_result/">アニメ人気ランキング結果発表における「リトルバスターズ！」情報の訂正について</a>
+
+		</p>
+
+<!-- /header --></div>
+ 
+
+<div class="breadcrumb">
+<a href="/">アニメワン</a><span>&gt;</span><a href="/mypage/">マイページ</a><span>&gt;</span>My番組表
+</div>
+
+
+<!-- mainLabel -->
+<div id="mainLabel" class="fc_mm">
+
+<div class="label">
+<img src="/img/common/title/AB_ml_lb.gif" width="159" height="15" alt="ネット配信/TV放送番組表" /><br />
+</div>
+
+</div>
+<!-- mainLabel -->
+
+<!-- mainContainer -->
+<div id="mainContainer" class="fc_mm">
+
+<!-- left -->
+<div id="left690Container">
+
+<a href="http://yomecolle.jp/" target="_blank"><img src="/img/common/banner/yomecolle_madoka_680120.jpg" alt="嫁コレ" style="padding-bottom:10px;" /></a>
+
+
+My番組表では、あなたがいま見ている番組だけを表示することができます。<br />
+My番組表への作品の追加は、<a href="/title/list/">作品一覧</a>、<a href="/program/">番組表(ぜんぶ)</a>、検索から行ってください。<br /><br />
+
+
+<div class="rankingTab">
+
+<div class="channelArea">
+<input type="image" onmouseover="this.src='/img/common/btn/ab_bt_myProgram_on.jpg'" onmouseout="this.src='/img/common/btn/ab_bt_myProgram_off.jpg'" src="/img/common/btn/ab_bt_myProgram_off.jpg" alt="My番組表" onclick="location.href = '/mypage/program/'; return false" />
+<input type="image" onmouseover="this.src='/img/common/btn/ab_bt_channel_on.jpg'" onmouseout="this.src='/img/common/btn/ab_bt_channel_off.jpg'" src="/img/common/btn/ab_bt_channel_off.jpg" alt="チャンネル設定" onclick="location.href = '/mypage/channel_set/'; return false" />
+</div>
+<input type="image" src="/img/common/btn/ab_bt_tab02_off.gif" alt="My番組表" />
+
+ <div class="rankingStabTxt">
+　  <strong class="cl02">4月3日(水)</strong>
+　  <a href="/program/myprogram/20130404/"><strong>4月4日(木)</strong></a>
+　  <a href="/program/myprogram/20130405/"><strong>4月5日(金)</strong></a>
+　  <a href="/program/myprogram/20130406/"><strong>4月6日(土)</strong></a>
+　  <a href="/program/myprogram/20130407/"><strong>4月7日(日)</strong></a>
+　  <a href="/program/myprogram/20130408/"><strong>4月8日(月)</strong></a>
+　  <a href="/program/myprogram/20130409/"><strong>4月9日(火)</strong></a>
+  <br />
+ </div>
+</div>
+<div class="marginTop10px">
+<!-- 220 -->
+<div class="w220Box program">
+<div class="w220MainLabel">
+<div class="label fc_mm"><span>4月2日(火)</span></div>
+</div>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td class="date">
+23:00
+　TOKYO MX</td>
+<td>
+<img src="/img/common/icon/al_ic_tv.gif" width="51" height="13" alt="TV放送" />
+</td>
+</tr>
+
+<tr>
+<td colspan="2" class="contents">
+<a href="/title/4571/">黒子のバスケ</a><br />
+第1話　第1Q 黒子はボクです</td>
+</tr>
+<tr>
+<td colspan="2" class="buttontd">
+<a href="/viewlist/regist_view_list?title_id=4571&layer=1&TB_iframe=true&width=760" target="viewlist_regist" class="thickbox"><img class="regViewListArea" onmouseover="this.src='/img/common/btn/al_bt_watchResTxt_on.gif'" onmouseout="this.src='/img/common/btn/al_bt_watchResTxt_off.gif'" src="/img/common/btn/al_bt_watchResTxt_off.gif" alt="見たログ登録" /></a>
+</td>
+</tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td class="date">
+25:30
+　TOKYO MX</td>
+<td>
+<img src="/img/common/icon/al_ic_tv.gif" width="51" height="13" alt="TV放送" />
+</td>
+</tr>
+
+<tr>
+<td colspan="2" class="contents">
+<a href="/title/4800/">直球表題ロボットアニメ</a><br />
+第9話　ダイキュウワ</td>
+</tr>
+<tr>
+<td colspan="2" class="buttontd">
+<a href="/viewlist/regist_view_list?title_id=4800&layer=1&TB_iframe=true&width=760" target="viewlist_regist" class="thickbox"><img class="regViewListArea" onmouseover="this.src='/img/common/btn/al_bt_watchResTxt_on.gif'" onmouseout="this.src='/img/common/btn/al_bt_watchResTxt_off.gif'" src="/img/common/btn/al_bt_watchResTxt_off.gif" alt="見たログ登録" /></a>
+</td>
+</tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td class="date">
+25:35
+　テレビ東京</td>
+<td>
+<img src="/img/common/icon/al_ic_tv.gif" width="51" height="13" alt="TV放送" />
+</td>
+</tr>
+
+<tr>
+<td colspan="2" class="contents">
+<a href="/title/4770/">戦勇。</a><br />
+第13話　勇者、残される。</td>
+</tr>
+<tr>
+<td colspan="2" class="buttontd">
+<a href="/viewlist/regist_view_list?title_id=4770&layer=1&TB_iframe=true&width=760" target="viewlist_regist" class="thickbox"><img class="regViewListArea" onmouseover="this.src='/img/common/btn/al_bt_watchResTxt_on.gif'" onmouseout="this.src='/img/common/btn/al_bt_watchResTxt_off.gif'" src="/img/common/btn/al_bt_watchResTxt_off.gif" alt="見たログ登録" /></a>
+</td>
+</tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td class="date">
+25:59
+　日本テレビ</td>
+<td>
+<img src="/img/common/icon/al_ic_tv.gif" width="51" height="13" alt="TV放送" />
+</td>
+</tr>
+
+<tr>
+<td colspan="2" class="contents">
+<a href="/title/4542/">宇宙兄弟</a><br />
+</td>
+</tr>
+<tr>
+<td colspan="2" class="buttontd">
+<a href="/viewlist/regist_view_list?title_id=4542&layer=1&TB_iframe=true&width=760" target="viewlist_regist" class="thickbox"><img class="regViewListArea" onmouseover="this.src='/img/common/btn/al_bt_watchResTxt_on.gif'" onmouseout="this.src='/img/common/btn/al_bt_watchResTxt_off.gif'" src="/img/common/btn/al_bt_watchResTxt_off.gif" alt="見たログ登録" /></a>
+</td>
+</tr>
+</table>
+</div>
+<!-- /220 -->
+<!-- 220 -->
+<div class="w220Box program program2 marginLeft10px">
+<div class="w220MainLabel">
+<div class="label fc_mm"><span>4月3日(水)</span></div>
+</div>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr><td height="103" valign="middle">
+<div style="margin-left: 5px;">
+My番組表に登録されている作品で、<br />
+この日にネット配信・TV放送予定の<br />
+ものはありません。
+</div>
+</td></tr>
+</table>
+</div>
+<!-- /220 -->
+<!-- 220 -->
+<div class="w220Box program marginLeft10px">
+<div class="w220MainLabel">
+<div class="label fc_mm"><span>4月4日(木)</span></div>
+</div>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td class="date">
+18:00
+　テレビ東京</td>
+<td>
+<img src="/img/common/icon/al_ic_tv.gif" width="51" height="13" alt="TV放送" />
+</td>
+</tr>
+
+<tr>
+<td colspan="2" class="contents">
+<a href="/title/4724/">アイカツ！</a><br />
+第25話　</td>
+</tr>
+<tr>
+<td colspan="2" class="buttontd">
+<a href="/viewlist/regist_view_list?title_id=4724&layer=1&TB_iframe=true&width=760" target="viewlist_regist" class="thickbox"><img class="regViewListArea" onmouseover="this.src='/img/common/btn/al_bt_watchResTxt_on.gif'" onmouseout="this.src='/img/common/btn/al_bt_watchResTxt_off.gif'" src="/img/common/btn/al_bt_watchResTxt_off.gif" alt="見たログ登録" /></a>
+</td>
+</tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td class="date">
+23:00
+　<a href="http://live.nicovideo.jp/">ニコニコ生放送</a></td>
+<td>
+<img src="/img/common/icon/al_ic_net.gif" width="51" height="13" alt="ネット配信" />
+</td>
+</tr>
+
+<tr>
+<td colspan="2" class="contents">
+<a href="/title/4735/">ジョジョの奇妙な冒険</a><br />
+第25話　</td>
+</tr>
+<tr>
+<td colspan="2" class="buttontd">
+<a href="/viewlist/regist_view_list?title_id=4735&layer=1&TB_iframe=true&width=760" target="viewlist_regist" class="thickbox"><img class="regViewListArea" onmouseover="this.src='/img/common/btn/al_bt_watchResTxt_on.gif'" onmouseout="this.src='/img/common/btn/al_bt_watchResTxt_off.gif'" src="/img/common/btn/al_bt_watchResTxt_off.gif" alt="見たログ登録" /></a>
+</td>
+</tr>
+</table>
+</div>
+<!-- /220 -->
+
+<div class="clear"></div>
+
+</div>
+
+
+</div>
+<!-- left -->
+
+<!-- right -->
+<div id="right260Container">
+
+<!-- ログイン -->
+
+<!-- 事務局ピックアップ -->
+
+
+
+
+
+<div class="marginBottom10px" >
+<a href="http://yomecolle.jp/" target="_blank"><img src="/img/common/banner/yomecolle_denpa_260100.jpg" alt="ボイスが聴けるカードコレクションアプリ：嫁コレ" /></a>
+</div>
+
+
+<div class="marginTop10px marginBottom10px"><a href="http://twipple.jp/unlogin/index.html" target="_blank" rel="nofollow">
+<img src="/img/common/banner/tiger_and_bunny_s_260100.jpg" alt="ついっぷる/タイバニ" /></a></div>
+
+<div class="marginTop10px marginBottom10px" >
+<a href="/title/4379/"><img src="/img/common/banner/lastexile_260100.gif" alt="ラストエグザイル-銀翼のファム-" /></a>
+</div>
+
+<div class="marginTop10px marginBottom10px" >
+<a href="http://pipli.jp/category/smachar"><img src="/img/common/banner/smachar_banner_260100.jpg" alt="スマキャラコレクション" /></a>
+</div>   
+<!-- viewPickup -->
+<div class="mainLabel">
+
+<div class="label"><h2>毎週更新の新作アニメ</h2></div>
+</div>
+<div class="w260Box marginBottom10px recomend">
+<img src="/img/common/bg/al_w260_hd.jpg" width="260" height="10" alt="" /><br />
+<div class="contentsBox">
+
+
+<script type="text/javascript">
+$(function(){
+    if ($('#newTitleMoreBtn')){ $("#newTitleMoreBtn").click ( function(e){ location.href = 'http://anime.biglobe.ne.jp/title/list?service=new_title'; }) }
+});
+</script>
+
+
+
+</div>
+<img src="/img/common/bg/al_w260_ft.jpg" width="260" height="10" alt="" /><br />
+</div>
+<!-- /viewPickup -->  
+</div>
+<!-- right -->
+
+<div class="clear"></div>
+</div>
+<!-- mainContainer -->
+
+<!-- footer -->
+<div id="footer">
+
+<div style="margin-bottom: 20px; position: relative;" id="footerSp">
+<a href="/guide/smartphone/"><img src="/img/common/banner/footer_smartPhone.jpg" alt="アニメワンスマートフォンサイトできました！" /></a>
+	<div style="position: absolute; top: 23px; right: 10px;"><a href="http://twitter.com/animeone" target="_blank" rel="nofollow"><img src="/img/common/banner/footer_spTwitter.gif" alt="Twitter公式アカウント" /></a></div>
+	<div style="position: absolute; top: 88px; right: 10px;"><a href="http://www.facebook.com/animeone.BIGLOBE" target="_blank" rel="nofollow"><img src="/img/common/banner/footer_spFacebook.gif" alt="Facebookページ" /></a></div>
+</div>
+
+<div id="linkContainer" class="fc_ml">
+<a href="http://anime.biglobe.ne.jp/agreement/index">利用規約</a>
+<a href="http://anime.biglobe.ne.jp/criterion/index">掲載基準</a>
+<a href="https://anime.biglobe.ne.jp/opinion/index" rel="nofollow">ご意見・ご要望</a>
+<a href="http://anime.biglobe.ne.jp/faq/index#a14">お支払い方法</a>
+<a href="http://anime.biglobe.ne.jp/faq/index">ヘルプ</a>
+</div>
+
+<div id="biglobeLink" class="fc_ml">
+
+	<div class="runby">
+	運営会社：NECビッグローブ株式会社
+	<a href="http://www.biglobe.ne.jp/" title="BIGLOBE" target="_blank" rel="nofollow"><img src="/img/common/header/biglobe.gif" alt="BIGLOBE" /></a>
+	</div>
+	
+	<div class="runby">
+	パートナー会社：ニフティ株式会社
+	<a href="http://www.nifty.com/" title="アット・ニフティロゴ" target="_blank" rel="nofollow"><img src="/img/common/header/niftyLogo.gif" width="88" height="31" alt="アット・ニフティロゴ" /></a>
+	</div>
+
+<div class="clear"></div>
+
+
+<div id="footerContainer">
+	
+<!--フッターサーチここから-->
+<div id="footerSearch">
+	<a href="http://search.biglobe.ne.jp/">ウェブ</a>｜<a href="http://image.search.biglobe.ne.jp/">画像</a>｜<a href="http://news.biglobe.ne.jp/">ニュース</a>｜<a href="http://search.biglobe.ne.jp/twitter/index.html">ツイッター</a>｜<a href="http://map.biglobe.ne.jp/">地図</a>｜<a href="http://search.biglobe.ne.jp/dic/">辞書</a>｜<a href="http://search.biglobe.ne.jp/shopping/">買い物</a>｜<a href="http://soudan.biglobe.ne.jp/">相談</a>｜<a href="http://www.biglobe.ne.jp/guide/">BIGLOBE内</a><br />
+	<table border="0" align="center" cellpadding="0" cellspacing="0" summary="search form">
+	<tr>
+		<form name="srh2" id="srh2" method="get" action="http://cgi.search.biglobe.ne.jp/cgi-bin/search2-f">
+		<td>
+			<input type="hidden" name="search" value="検索" />
+			<input type="text" name="q" size="18" style="width:216px" value="" /> <input type="submit" name="btn2" value="検索" />
+		</td>
+		</form>
+	</tr>
+	</table>
+</div>
+<!--/フッターサーチ-->
+
+<!--おすすめサイト-->
+<div id="footerRecommend"><strong class="bold">おすすめサイト：</strong><a href="http://gpoint.biglobe.ne.jp/">Ｇポイント</a>｜<a href="http://news.biglobe.ne.jp/">ニュース</a>｜<a href="http://travel.biglobe.ne.jp/">旅行</a>｜<a href="http://twipple.jp/">ツイッター</a>｜<a href="http://anime.biglobe.ne.jp/">アニメ</a>｜<a href="http://kirei.biglobe.ne.jp/">キレイ</a>｜<a href="http://shopping.biglobe.ne.jp/">ショッピング</a>
+</div>
+<!--/おすすめサイト-->
+
+<!--BIGLOBEリンク-->
+<div id="footerLink">
+	<div id="footerLinkBox1">&nbsp;</div>
+	<div id="footerLinkBox2">
+		<a href="http://www.biglobe.ne.jp/" target="_blank">BIGLOBEトップ</a>｜<a href="http://join.biglobe.ne.jp/" target="_blank" rel="nofollow">インターネット接続</a>（<a href="http://join.biglobe.ne.jp/ftth/flets/" target="_blank" rel="nofollow">フレッツ光</a>・<a href="http://join.biglobe.ne.jp/mobile/wimax/" target="_blank" rel="nofollow">ＷｉＭＡＸ</a>）｜<a href="http://ad.biglobe.ne.jp/" target="_blank" rel="nofollow">広告掲載</a>｜<a href="http://business.biglobe.ne.jp/" target="_blank" rel="nofollow">企業向けサービス</a>
+		<br />
+		<a href="http://www.biglobe.co.jp/" target="_blank">会社概要</a>｜<a href="http://www.biglobe.ne.jp/whatsnew/news.html" target="_blank" rel="nofollow">ニュースリリース</a>｜<a href="http://www.biglobe.co.jp/recruit/index.html" target="_blank" rel="nofollow">採用情報</a>｜<a href="http://www.biglobe.ne.jp/privacy.html" target="_blank" rel="nofollow">個人情報保護</a>｜<a href="http://www.biglobe.ne.jp/safesecurity.html" target="_blank" rel="nofollow">安全安心</a>｜<a href="http://support.biglobe.ne.jp/" target="_blank" rel="nofollow">お問い合わせ</a>
+	</div>
+
+	<div id="footerLinkBox3">
+		<img src="/img/common/icon/footer_icon.png" alt="seal" width="210" height="66" usemap="#FooterMap" />
+		<map name="FooterMap" id="FooterMap">
+		<area shape="rect" coords="3,0,62,64" href="http://privacymark.jp/" target="_blank" alt="プライバシーマーク" onclick="B.gae('footer', 'click', 'footer');" />
+		<area shape="rect" coords="65,2,118,64" href="http://www.biglobe.ne.jp/safesecurity.html" target="_blank" alt="インターネット接続サービス安全・安心マーク" onclick="B.gae('footer', 'click', 'footer');" />
+		<area shape="rect" coords="125,21,207,45" href="http://www.nec.co.jp/" target="_blank" alt="NEC" onclick="B.gae('footer', 'click', 'footer');" />
+		</map>
+	</div>
+</div>
+<!--/BIGLOBEリンク-->
+
+<!--/footerContainer--></div>
+
+<!--/biglobeLink--></div>
+
+
+<p id="copyright">Copyright(C)NEC BIGLOBE, Ltd. 1996-2013</p>
+
+<!-- loop -->
+<div id="contentsCopyright" class="fc_sm">
+&copy; 2010 吉野弘幸・佐藤健悦・チャンピオンRED／聖痕のクェイサー製作委員会&nbsp;&nbsp;
+&copy; 上月司／アスキー・メディアワークス／『れでぃ×ばと！』製作委員会&nbsp;&nbsp;
+&copy; 2009 葵せきな・狗神煌／富士見書房／碧陽学園生徒会&nbsp;&nbsp;
+&copy; 2009竜騎士07／右代宮一族&nbsp;&nbsp;
+&copy; (C)2009 Ricotta／私立秀峰学園社交部&nbsp;&nbsp;
+&copy; 2008 池上永一／角川書店／シャングリ・ラ製作委員会　　illustrated by Range Murata&nbsp;&nbsp;
+&copy; 2008 清水栄一・下口智裕・秋田書店/GONZO/ラインバレルパートナーズ&nbsp;&nbsp;
+ (C)2011 GONZO／ファムパートナーズ
+</div>
+
+<!--/footer--></div>
+
+
+</div>
+<!-- mainWrapper --><!-- EBiS tag version2.10 start -->
+<img src="https://ac.ebis.ne.jp/log.php?argument=rUHC3Ubb&ebisPageID=anime1_myprogram&ebisMember=&ebisAmount=&ebisOther1=&ebisOther2=&ebisOther3=&ebisOther4=&ebisOther5=" width="0" height="0">
+<!-- EBiS tag end -->
+
+
+
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9969232-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
+<script type="text/JavaScript">
+<!--
+if (location.protocol == "http:") {
+	document.write('<scr'+'ipt type="text/JavaScript" charset="UTF-8" src="http://ak.dr.cyberwing.co.jp/common/bcnload_BL.js?_' + (new Date()).getTime() + '"></scr' + 'ipt>');
+} else if (location.protocol == "https:") {
+	document.write('<scr'+'ipt type="text/JavaScript" charset="UTF-8" src="https://wwws.er.cyberwing.co.jp/common/bcnload_BL.js?_' + (new Date()).getTime() + '"></scr' + 'ipt>');
+}
+//-->
+</script>
+
+
+
+</body>
+</html>
