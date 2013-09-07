@@ -9,6 +9,7 @@ import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableExce
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -113,7 +114,7 @@ public class MainActivity extends Activity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
     case R.id.menu_account:
-      startActivity(new Intent(MainActivity.this, SettingActivity.class));
+      startActivity(new Intent(MainActivity.this, AccountActivity.class));
       return true;
     case R.id.menu_reload:
       reload();

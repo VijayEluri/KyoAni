@@ -1,7 +1,14 @@
 package net.hisme.masaki.kyoani;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Calendar;
+
+import net.hisme.masaki.kyoani.life_plan.AccessToken;
 import net.hisme.masaki.kyoani.models.*;
-import net.hisme.masaki.kyoani.schedule_service.AnimeOne;
+import net.hisme.masaki.kyoani.schedule_service.LifePlan;
 import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
@@ -36,6 +43,30 @@ public class App extends Application {
     return new Account(user_id, password);
   }
 
+  public void saveToken(AccessToken token) {
+    try {
+      ObjectOutputStream out = new ObjectOutputStream(openFileOutput("oauth.dat", MODE_PRIVATE));
+      out.writeObject(token);
+      out.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public AccessToken loadToken() {
+    AccessToken token = null;
+    try {
+      ObjectInputStream reader = new ObjectInputStream(openFileInput("oauth.dat"));
+      token = (AccessToken) reader.readObject();
+      reader.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return token;
+  }
+
   public void resetAccount() {
     this.account = null;
   }
@@ -55,7 +86,9 @@ public class App extends Application {
   }
 
   public ScheduleService getScheduleService() {
-    return new AnimeOne();
+    LifePlan lifeplan = new LifePlan();
+    lifeplan.setAccessToken(loadToken());
+    return lifeplan;
   }
 
   public void reload() throws LoginFailureException, NetworkUnavailableException {
@@ -126,6 +159,7 @@ public class App extends Application {
     PendingIntent pending_intent = PendingIntent.getService(this, 0, intent, 0);
 
     AnimeCalendar calendar = AnimeCalendar.tomorrow();
+    calendar.add(Calendar.MINUTE, 5);
     Log.d(String.format("scheduled to daily update at %s", calendar.toString()));
     AlarmManager alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
     alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
