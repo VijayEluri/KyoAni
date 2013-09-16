@@ -11,7 +11,7 @@
 
     <!-- menu -->
     <string name="menu_reload">Reload</string>
-    <string name="menu_account">Settings</string>
+    <string name="menu_account">Account</string>
     <string name="menu_help">Help</string>
     <string name="menu_about">Info</string>
 
@@ -29,22 +29,25 @@
     <!-- account view -->
     <string name="title_account">KyoAni - Account setting</string>
     <string name="label_account_setting">Account setting</string>
+    <string name="authorized">Authorized? </string>
     <string name="label_account_test">接続テスト</string>
+    <string name="button_account_authorization">Authorization with LifePlan</string>
 
     <!-- help view -->
     <string name="title_help">KyoAni - Help</string>
-    <string name="help_description">		｢今日アニ」はアニメのスケジュールをウィジェットとして表示するアプリです。\n
+    <string name="help_description">｢今日アニ」はアニメのスケジュールをウィジェットとして表示するアプリです。\n
+        スケジュール管理には『LifePlan』という外部サービスを使います。\n
 		以下の手順でセットアップしてください。</string>
-    <string name="help_step_1_title">STEP1: アニメワンのアカウントを用意する</string>
-    <string name="help_step_1_description">        		アニメワンのアカウントを持っていない場合は新規に取得してください。\n
-		すでに持っている場合はSTEP2に進んでください。</string>
+    <string name="help_step_1_title">STEP1: LifePlanにログインする</string>
+    <string name="help_step_1_description">Googleアカウントを使ってLifePlanにログインします。\n
+        アカウントの作成は必要ありません。\n
+		すでにログインしている場合はSTEP2に進んでください。</string>
     <string name="help_step_2_title">STEP2: アカウントの設定をする</string>
-    <string name="help_step_2_description">		取得したアニメワンのアカウント情報を設定します。</string>
+    <string name="help_step_2_description">LifePlanとOauth認証で接続します。</string>
     <string name="help_step_3_title">STEP3: ウィジェットを登録する</string>
-    <string name="help_step_3_description">		ホーム画面を長押しするとウィジェットの登録ができます。\n
-		10分ごとにアニメワンにアクセスしMy番組表を表示します。</string>
-    <string name="help_link_to_get_animeone_account">アカウントを取得する</string>
-    <string name="help_link_to_setting">アカウント設定を開く</string>
+    <string name="help_step_3_description">ホーム画面を長押しするとウィジェットの登録ができます。</string>
+    <string name="help_link_to_get_animeone_account">Open LifePlan</string>
+    <string name="help_link_to_setting">Connect to LiefPlan</string>
 
     <!-- about view -->
     <string name="title_about">KyoAni - about</string>

@@ -1,72 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <!-- global values -->
-  <string name="app_name">今日アニ</string>
-  <string name="app_version">0.10.0</string>
-  <string name="app_author_name">masarakki</string>
-  <string name="app_author_mail">masaki@hisme.net</string>
 
-  <string name="widget_1">今日アニ(1x1)</string>
-  <string name="widget_2">今日アニ(2x2)</string>
+    <!-- global values -->
+    <string name="app_name">今日アニ</string>
+    <string name="app_version">0.10.0</string>
+    <string name="app_author_name">masarakki</string>
+    <string name="app_author_mail">masaki@hisme.net</string>
+    <string name="widget_1">今日アニ(1x1)</string>
+    <string name="widget_2">今日アニ(2x2)</string>
 
-  <!-- menu -->
-  <string name="menu_reload">更新</string>
-  <string name="menu_account">設定</string>
-  <string name="menu_help">ヘルプ</string>
-  <string name="menu_about">インフォ</string>
+    <!-- menu -->
+    <string name="menu_reload">更新</string>
+    <string name="menu_account">アカウント</string>
+    <string name="menu_help">ヘルプ</string>
+    <string name="menu_about">インフォ</string>
 
-  <!-- error messages -->
-  <string name="error_account_is_blank">アカウントが設定されていません。\nメニューからアカウントを設定してください。</string>
-  <string name="error_account_cant_authorize">アカウントの認証に失敗します。\nメニューからアカウントを修正してください。</string>
-  <string name="error_network_disable">ネットワークに接続できません。</string>
-  <string name="error_animeone_disable">アニメワンのサーバに接続できません。しばらく待ってから再試行してください。</string>
-  <string name="error_retry_over">リトライ回数を超えて失敗しました。しばらく待っても直らない場合はバグ報告ください。</string>
+    <!-- error messages -->
+    <string name="error_account_is_blank">アカウントが設定されていません。\nメニューからアカウントを設定してください。</string>
+    <string name="error_account_cant_authorize">アカウントの認証に失敗します。\nメニューからアカウントを修正してください。</string>
+    <string name="error_network_disable">ネットワークに接続できません。</string>
+    <string name="error_animeone_disable">アニメワンのサーバに接続できません。しばらく待ってから再試行してください。</string>
+    <string name="error_retry_over">リトライ回数を超えて失敗しました。しばらく待っても直らない場合はバグ報告ください。</string>
 
-  <!-- main view -->
-  <string name="title_main">今日アニ</string>
-  <string name="button_main_reload">更新</string>
-  
-  <!-- account view -->
-  <string name="title_account">今日アニ - アカウント設定</string>
-  <string name="label_account_setting">アカウント設定</string>
-  <string name="label_account_test">接続テスト</string>
+    <!-- main view -->
+    <string name="title_main">今日アニ</string>
+    <string name="button_main_reload">更新</string>
 
-  <!-- help view -->
-  <string name="title_help">今日アニ - ヘルプ</string>
-  <string name="help_description">
-    ｢今日アニ」はアニメのスケジュールをウィジェットとして表示するアプリです。\n
-    以下の手順でセットアップしてください。
-	</string>
-  <string name="help_step_1_title">STEP1: アニメワンのアカウントを用意する</string>
-  <string name="help_step_1_description">
-    アニメワンのアカウントを持っていない場合は新規に取得してください。\n
-    すでに持っている場合はSTEP2に進んでください。
-	</string>
-  <string name="help_step_2_title">STEP2: アカウントの設定をする</string>
-  <string name="help_step_2_description">
-    取得したアニメワンのアカウント情報を設定します。
-	</string>
-  <string name="help_step_3_title">STEP3: ウィジェットを登録する</string>
-  <string name="help_step_3_description">
-    ホーム画面を長押しするとウィジェットの登録ができます。\n
-    10分ごとにアニメワンにアクセスしMy番組表を表示します。
-	</string>
-  <string name="help_link_to_get_animeone_account">アカウントを取得する</string>
-  <string name="help_link_to_setting">アカウント設定を開く</string>
+    <!-- account view -->
+    <string name="title_account">今日アニ - アカウント設定</string>
+    <string name="label_account_setting">アカウント設定</string>
+    <string name="authorized">認証情報</string>
+    <string name="label_account_test">接続テスト</string>
+    <string name="button_account_authorization">LifePlanで認証</string>
 
-  <!-- about view -->
-  <string name="title_about">今日アニ - about</string>
-  <string name="label_about_version">バージョン</string>
-  <string name="label_about_author">作成者</string>
+    <!-- help view -->
+    <string name="title_help">KyoAni - Help</string>
+    <string name="help_description">｢今日アニ」はアニメのスケジュールをウィジェットとして表示するアプリです。\n
+        スケジュール管理には『LifePlan』という外部サービスを使います。\n
+        以下の手順でセットアップしてください。</string>
+    <string name="help_step_1_title">STEP1: LifePlanにログインする</string>
+    <string name="help_step_1_description">Googleアカウントを使ってLifePlanにログインします。\n
+        アカウントの作成は必要ありません。\n
+        すでにログインしている場合はSTEP2に進んでください。</string>
+    <string name="help_step_2_title">STEP2: アカウントの設定をする</string>
+    <string name="help_step_2_description">LifePlanとOauth認証で接続します。</string>
+    <string name="help_step_3_title">STEP3: ウィジェットを登録する</string>
+    <string name="help_step_3_description">ホーム画面を長押しするとウィジェットの登録ができます。</string>
+    <string name="help_link_to_get_animeone_account">ブラウザでLifePlanを開く</string>
+    <string name="help_link_to_setting">Oauth認証の設定をする</string>
 
-  <string name="form_title">アニメワンIDの登録/変更</string>
-  <string name="form_description">アニメワンのIDを使ってアクセスします。</string>
-  <string name="form_account_title">ACCOUNT</string>
-  <string name="form_account_description">アニメワンに登録したメールアドレス</string>
-  <string name="form_password_title">PASSWORD</string>
-  <string name="login_failure">ログインに失敗しました。アカウントを再設定してください。
-	</string>
-  <string name="no_schedule">今日の予定は終了\nおやすみなさい</string>
-
+    <!-- about view -->
+    <string name="title_about">今日アニ - about</string>
+    <string name="label_about_version">バージョン</string>
+    <string name="label_about_author">作成者</string>
+    <string name="form_title">アニメワンIDの登録/変更</string>
+    <string name="form_description">アニメワンのIDを使ってアクセスします。</string>
+    <string name="form_account_title">ACCOUNT</string>
+    <string name="form_account_description">アニメワンに登録したメールアドレス</string>
+    <string name="form_password_title">PASSWORD</string>
+    <string name="login_failure">ログインに失敗しました。アカウントを再設定してください。</string>
+    <string name="no_schedule">今日の予定は終了\nおやすみなさい</string>
 
 </resources>

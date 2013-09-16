@@ -19,7 +19,7 @@ public class DailyUpdater extends Service {
   public void onStart(Intent intent, int startId) {
     super.onStart(intent, startId);
     log("started.");
-    if (!App.li.getAccount().isBlank()) {
+    if (App.li.loadToken() != null) {
       new Thread() {
         public void run() {
           try {

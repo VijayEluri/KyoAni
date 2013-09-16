@@ -1,5 +1,6 @@
 package net.hisme.masaki.kyoani.models;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -16,6 +17,11 @@ public class AnimeCalendar extends GregorianCalendar {
 
   public AnimeCalendar() {
     super();
+  }
+
+  public AnimeCalendar(long unixtime) {
+    super();
+    setTime(new Date(unixtime * 1000));
   }
 
   public AnimeCalendar(int year, int month, int dayOfMonth) {
@@ -86,11 +92,11 @@ public class AnimeCalendar extends GregorianCalendar {
   public int day() {
     return get(DAY_OF_MONTH);
   }
-  
+
   public int hour() {
     return get(HOUR_OF_DAY);
   }
-  
+
   public int minute() {
     return get(MINUTE);
   }
