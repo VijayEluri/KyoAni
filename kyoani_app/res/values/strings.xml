@@ -19,7 +19,6 @@
     <string name="error_account_is_blank">アカウントが設定されていません。\nメニューからアカウントを設定してください。</string>
     <string name="error_account_cant_authorize">アカウントの認証に失敗します。\nメニューからアカウントを修正してください。</string>
     <string name="error_network_disable">ネットワークに接続できません。</string>
-    <string name="error_animeone_disable">アニメワンのサーバに接続できません。しばらく待ってから再試行してください。</string>
     <string name="error_retry_over">リトライ回数を超えて失敗しました。しばらく待っても直らない場合はバグ報告ください。</string>
 
     <!-- main view -->
@@ -30,7 +29,6 @@
     <string name="title_account">KyoAni - Account setting</string>
     <string name="label_account_setting">Account setting</string>
     <string name="authorized">Authorized? </string>
-    <string name="label_account_test">接続テスト</string>
     <string name="button_account_authorization">Authorization with LifePlan</string>
 
     <!-- help view -->
@@ -53,11 +51,6 @@
     <string name="title_about">KyoAni - about</string>
     <string name="label_about_version">version</string>
     <string name="label_about_author">creator</string>
-    <string name="form_title">アニメワンIDの登録/変更</string>
-    <string name="form_description">アニメワンのIDを使ってアクセスします。</string>
-    <string name="form_account_title">ACCOUNT</string>
-    <string name="form_account_description">アニメワンに登録したメールアドレス</string>
-    <string name="form_password_title">PASSWORD</string>
     <string name="login_failure">ログインに失敗しました。アカウントを再設定してください。</string>
     <string name="no_schedule">今日の予定は終了\nおやすみなさい</string>
 

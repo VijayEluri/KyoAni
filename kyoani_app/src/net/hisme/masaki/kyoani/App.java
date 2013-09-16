@@ -7,7 +7,9 @@ import java.io.ObjectOutputStream;
 import java.util.Calendar;
 
 import net.hisme.masaki.kyoani.life_plan.AccessToken;
-import net.hisme.masaki.kyoani.models.*;
+import net.hisme.masaki.kyoani.models.AnimeCalendar;
+import net.hisme.masaki.kyoani.models.Schedule;
+import net.hisme.masaki.kyoani.models.Schedules;
 import net.hisme.masaki.kyoani.schedule_service.LifePlan;
 import net.hisme.masaki.kyoani.schedule_service.ScheduleService;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
@@ -19,8 +21,6 @@ import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 /**
  * @author masarakki
@@ -29,18 +29,10 @@ public class App extends Application {
   public static App li;
   public static final String schedules_file = "list.obj";
   private Schedules schedules;
-  private Account account;
 
   public App() {
     super();
     App.li = this;
-  }
-
-  private Account loadAccount() {
-    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(App.li);
-    String user_id = pref.getString("account", "");
-    String password = pref.getString("password", "");
-    return new Account(user_id, password);
   }
 
   public void saveToken(AccessToken token) {
@@ -65,17 +57,6 @@ public class App extends Application {
       e.printStackTrace();
     }
     return token;
-  }
-
-  public void resetAccount() {
-    this.account = null;
-  }
-
-  public Account getAccount() {
-    if (account == null) {
-      account = loadAccount();
-    }
-    return account;
   }
 
   public Schedules getSchedules() {

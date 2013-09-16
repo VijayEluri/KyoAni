@@ -8,7 +8,6 @@ import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableExce
  * @author masarakki
  */
 public interface ScheduleService {
-  boolean login() throws NetworkUnavailableException;
 
   /**
    * fetch schedules by force reloading

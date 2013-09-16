@@ -37,12 +37,6 @@ public class LifePlan implements ScheduleService {
   }
 
   @Override
-  public boolean login() throws NetworkUnavailableException {
-    // TODO Auto-generated method stub
-    return false;
-  }
-
-  @Override
   public Schedules reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
     if (access_token == null) {
       throw new LoginFailureException();

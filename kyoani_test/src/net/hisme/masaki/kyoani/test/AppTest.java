@@ -18,7 +18,7 @@ public class AppTest extends ApplicationTestCase<App> {
   }
 
   public void testScheduleService() {
-    assertEquals("net.hisme.masaki.kyoani.schedule_service.AnimeOne", this.getApplication().getScheduleService().getClass().getName());
+    assertEquals("net.hisme.masaki.kyoani.schedule_service.LifePlan", this.getApplication().getScheduleService().getClass().getName());
   }
 
 }
