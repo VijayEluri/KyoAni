@@ -1,7 +1,6 @@
 package net.hisme.masaki.kyoani.services;
 
 import net.hisme.masaki.kyoani.App;
-import net.hisme.masaki.kyoani.BlankAccontException;
 import net.hisme.masaki.kyoani.schedule_service.exception.LoginFailureException;
 import net.hisme.masaki.kyoani.schedule_service.exception.NetworkUnavailableException;
 
@@ -24,8 +23,6 @@ public class DailyUpdater extends Service {
         public void run() {
           try {
             App.li.reload();
-          } catch (BlankAccontException e) {
-            e.printStackTrace();
           } catch (LoginFailureException e) {
             e.printStackTrace();
           } catch (NetworkUnavailableException e) {
