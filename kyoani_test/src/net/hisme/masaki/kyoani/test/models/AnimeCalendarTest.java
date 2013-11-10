@@ -53,4 +53,8 @@ public class AnimeCalendarTest extends TestCase {
   public void testGetTimeString() {
     assertEquals("28:30", cal.getTimeString());
   }
+  
+  public void testGetDateString() {
+    assertEquals("03-01", cal.getDateString());
+  }
 }

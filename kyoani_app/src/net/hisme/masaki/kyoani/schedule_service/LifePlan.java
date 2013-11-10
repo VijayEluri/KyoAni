@@ -37,7 +37,7 @@ public class LifePlan implements ScheduleService {
   }
 
   @Override
-  public Schedules reloadSchedules() throws LoginFailureException, NetworkUnavailableException {
+  public Schedules getSchedules() throws LoginFailureException, NetworkUnavailableException {
     if (access_token == null) {
       throw new LoginFailureException();
     }
@@ -46,10 +46,5 @@ public class LifePlan implements ScheduleService {
       App.li.saveToken(access_token);
     }
     return client.getSchedules(access_token);
-  }
-
-  @Override
-  public Schedules getSchedules() throws LoginFailureException, NetworkUnavailableException {
-    return reloadSchedules();
   }
 }

@@ -73,7 +73,7 @@ public class App extends Application {
   }
 
   public void reload() throws LoginFailureException, NetworkUnavailableException {
-    schedules = getScheduleService().reloadSchedules();
+    schedules = getScheduleService().getSchedules();
     schedules.save();
     updateWidgets();
   }
